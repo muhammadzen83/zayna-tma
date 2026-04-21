@@ -105,6 +105,11 @@
         @keyframes to{to{opacity:0;transform:translateY(-12px)}}
         @media(max-width:540px){.app-shell{max-width:100%}.p-slot .p-label{display:none}.slot-btn{padding:6px 10px;font-size:11px}}
         @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+        .next-reminder-bar{margin:0 20px 8px;padding:10px 14px;border-radius:10px;background:var(--card);border:1px solid var(--border);display:flex;align-items:center;gap:10px;font-size:12px}
+        .next-reminder-bar i{color:var(--accent);font-size:14px}
+        .next-reminder-bar .nr-label{color:var(--muted)}
+        .next-reminder-bar .nr-value{color:var(--fg);font-weight:600}
+        .next-reminder-bar .nr-countdown{color:var(--accent);font-weight:700;margin-left:auto;font-variant-numeric:tabular-nums}
     </style>
 </head>
 <body>
@@ -121,6 +126,12 @@
         </header>
 
         <div class="bot-bar"><i class="fa-brands fa-telegram"></i><span>Reminder via Telegram Bot — selalu tepat waktu</span></div>
+        <div class="next-reminder-bar" id="nextReminder">
+            <i class="fa-solid fa-bell"></i>
+            <span class="nr-label">Berikutnya:</span>
+            <span class="nr-value" id="nrLabel">—</span>
+            <span class="nr-countdown" id="nrCountdown">—:—</span>
+        </div>
 
         <div class="progress-strip"><div class="progress-slots" id="progressSlots">
             <div class="p-slot" data-slot="dini-hari"><div class="p-time">02:00</div><div class="p-label">GDS</div></div>
@@ -313,12 +324,50 @@ var autoSlot=params.get('slot');
 if(autoSlot)selectSlot(autoSlot);
 
 // ====== INIT ======
+// ====== COUNTDOWN ======
+var SCHEDULES_CK=[
+    {hour:2,minute:0,slot:'dini-hari',label:'Cek GDS Dini Hari'},
+    {hour:6,minute:0,slot:'sarapan',label:'GDS + Insulin Sarapan'},
+    {hour:12,minute:0,slot:'siang',label:'GDS + Insulin Siang'},
+    {hour:18,minute:0,slot:'malam',label:'GDS + Insulin Malam'},
+    {hour:20,minute:30,slot:'levemir',label:'Suntik Levemir'},
+];
+function updateCountdown(){
+    var now=new Date(),nowT=now.getHours()*60+now.getMinutes(),today=getTodayKey();
+    var todayData=allData.filter(function(e){return normalizeDate(e.date)===today;});
+    var done={};
+    SCHEDULES_CK.forEach(function(s){done[s.slot]=todayData.some(function(e){return e.slot===s.slot;});});
+    var next=null;
+    for(var i=0;i<SCHEDULES_CK.length;i++){
+        var s=SCHEDULES_CK[i];
+        if(done[s.slot])continue;
+        var sT=s.hour*60+s.minute;
+        if(sT>nowT){if(!next||sT<next.total)next={hour:s.hour,minute:s.minute,label:s.label,total:sT,tomorrow:false};}
+        else if(!next){next={hour:s.hour,minute:s.minute,label:s.label,total:sT+1440,tomorrow:true};}
+    }
+    if(!next){var f=SCHEDULES_CK[0];next={hour:f.hour,minute:f.minute,label:f.label,total:f.hour*60+f.minute+1440,tomorrow:true};}
+    var diff=next.total-nowT,h=Math.floor(diff/60),m=diff%60;
+    document.getElementById('nrLabel').textContent=(next.tomorrow?'Besok ':'')+String(next.hour).padStart(2,'0')+':'+String(next.minute).padStart(2,'0')+' '+next.label.split('+')[0].trim();
+    document.getElementById('nrCountdown').textContent=String(h).padStart(2,'0')+':'+String(m).padStart(2,'0');
+
+    // Update active slot indicator
+    SCHEDULES_CK.forEach(function(s){
+        var sT=s.hour*60+s.minute;
+        if(!done[s.slot]&&Math.abs(nowT-sT)<=15){
+            var el=document.querySelector('.p-slot[data-slot="'+s.slot+'"]');
+            if(el&&!el.classList.contains('active-slot'))el.classList.add('active-slot');
+        }
+    });
+}
+setInterval(updateCountdown,1000);
+    
 async function init(){
     document.getElementById('statsGrid').innerHTML='<div class="loading-box" style="grid-column:span 2"><i class="fa-solid fa-spinner"></i><p>Memuat data...</p></div>';
     allData=await fetchData();
     updateProgress();renderHistory();
     document.getElementById('statsGrid').innerHTML='<div class="stat-card neutral"><div class="stat-val" id="statDone">—</div><div class="stat-label">Selesai Hari Ini</div></div><div class="stat-card neutral"><div class="stat-val" id="statTotal">5</div><div class="stat-label">Total Jadwal</div></div>';
     updateProgress();
+    updateCountdown();
 }
 init();
 </script>
