@@ -179,7 +179,10 @@ try{Telegram.WebApp.ready();Telegram.WebApp.expand();Telegram.WebApp.setHeaderCo
 
 // ====== HELPERS ======
 function normalizeDate(r){if(!r||r==='')return '';if(/^\d{4}-\d{2}-\d{2}$/.test(String(r)))return String(r);var d=new Date(r);if(!isNaN(d.getTime()))return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');var p=String(r).split(/[\/\-\.]/);if(p.length===3){var a=parseInt(p[0]),b=parseInt(p[1]),c=parseInt(p[2]);if(c>100)return c+'-'+String(b).padStart(2,'0')+'-'+String(a).padStart(2,'0');else if(a>100)return a+'-'+String(b).padStart(2,'0')+'-'+String(c).padStart(2,'0');}return String(r);}
-function getTodayKey(){return new Date().toISOString().slice(0,10);}
+function getTodayKey(){
+    var d=new Date();
+    return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
 function getTimeStr(){return String(new Date().getHours()).padStart(2,'0')+':'+String(new Date().getMinutes()).padStart(2,'0');}
 function calcDose(gds,slot){var d=DEFAULT_DOSES[slot];if(gds>300)d+=2;else if(gds>200)d+=1;else if(gds<100)d-=1;return Math.max(0,d);}
 function getCat(gds){if(gds>300)return{label:'Sangat Tinggi',cls:'danger'};if(gds>200)return{label:'Tinggi',cls:'warn'};if(gds<70)return{label:'Hipo',cls:'danger'};if(gds<100)return{label:'Rendah',cls:'warn'};return{label:'Normal',cls:'good'};}
