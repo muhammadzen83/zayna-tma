@@ -396,8 +396,8 @@ function renderGdsChart(){
 
 /* ====== CHART DOSIS ====== */
 function renderDoseChart(){
-    var sec = document.getElementById('doseSection');
-    if(!sec) return; // ✅ penting banget
+    var container = document.getElementById('doseContent');
+    if(!container) return; // ✅ aman
 
     var entries = allData.filter(e => e.dose !== null && typeof e.dose === 'number');
     var filtered = filterByPeriod(entries, dosePeriod);
@@ -407,11 +407,15 @@ function renderDoseChart(){
     }
 
     if(!filtered.length){
-        sec.innerHTML = '<div class="empty-box"><i class="fa-solid fa-prescription-bottle-medical"></i><p>Tidak ada data dosis</p></div>';
+        container.innerHTML = `
+        <div class="empty-box">
+            <i class="fa-solid fa-prescription-bottle-medical"></i>
+            <p>Tidak ada data dosis</p>
+        </div>`;
         return;
     }
 
-    // group data
+    // grouping
     var grouped = {};
     filtered.forEach(function(e){
         var d = normalizeDate(e.date);
@@ -423,8 +427,8 @@ function renderDoseChart(){
 
     var dates = Object.keys(grouped).sort();
 
-    // ✅ render ulang DOM (aman)
-    sec.innerHTML = `
+    // render isi saja (AMAN)
+    container.innerHTML = `
     <div class="chart-section">
         <div class="chart-wrap">
             <canvas id="doseCanvas"></canvas>
@@ -440,7 +444,7 @@ function renderDoseChart(){
     </div>`;
 
     var canvas = document.getElementById('doseCanvas');
-    if(!canvas) return; // ✅ extra safety
+    if(!canvas) return;
 
     var ctx = canvas.getContext('2d');
 
@@ -474,7 +478,7 @@ function renderDoseChart(){
         }
     });
 }
-
+    
 /* ====== HISTORY ====== */
 function renderHistory(){
     var entries=filterByPeriod(allData,historyPeriod);
