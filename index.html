@@ -283,14 +283,20 @@ function renderGdsChart(){
 
     if(!state.gdsChart) return;
 
+    // 🔥 SORT BERDASARKAN DATETIME
+    entries.sort((a, b) => {
+        const da = new Date(normalizeDate(a.date) + 'T' + (a.time || '00:00'));
+        const db = new Date(normalizeDate(b.date) + 'T' + (b.time || '00:00'));
+        return da - db;
+    });
+
     const labels = entries.map(e => fmtLabel(e.date, e.time));
     const vals   = entries.map(e => e.gds);
-    const colors = entries.map(e => ptColor(e.gds)); // 🔥 DI SINI
+    const colors = entries.map(e => ptColor(e.gds));
 
     state.gdsChart.data.labels = labels;
     state.gdsChart.data.datasets[0].data = vals;
 
-    // 🔥 warna per titik
     state.gdsChart.data.datasets[0].pointBackgroundColor = colors;
     state.gdsChart.data.datasets[0].pointBorderColor = colors;
     state.gdsChart.data.datasets[0].pointRadius = 5;
@@ -316,7 +322,11 @@ function renderDoseChart(){
         if(e.doseType==='rapid') grouped[d].ins += e.dose;
         if(e.doseType==='levemir') grouped[d].lev += e.dose;
     });
-
+    entries.sort((a, b) => {
+        const da = new Date(normalizeDate(a.date));
+        const db = new Date(normalizeDate(b.date));
+        return da - db;
+    });
     var dates = Object.keys(grouped).sort();
 
     state.doseChart.data.labels = dates;
