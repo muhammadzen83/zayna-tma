@@ -176,7 +176,7 @@
         <div class="section-head"><div class="section-title"><i class="fa-solid fa-chart-line"></i>Grafik GDS</div><button class="section-toggle open" id="gdsToggle"><i class="fa-solid fa-chevron-down"></i></button></div>
         <div id="gdsSection">
             <div class="filter-bar" id="gdsFilters"><button class="fb active" data-period="today">Hari Ini</button><button class="fb" data-period="7">7 Hari</button><button class="fb" data-period="30">30 Hari</button><button class="fb" data-period="all">Semua</button></div>
-            <div class="chart-section"><div class="chart-wrap"><canvas id="gdsCanvas"></canvas><div class="chart-legend"><div class="chart-legend-item"><div class="chart-legend-dot" style="background:var(--accent)"></div>Normal</div><div class="chart-legend-item"><div class="chart-legend-dot" style="background:var(--warning)"></div>Rendah/Tinggi</div><div class="chart-legend-item"><div class="chart-legend-dot" style="background:var(--danger)"></div>Kritis</div></div></div>
+            <div class="chart-section"><div class="chart-wrap"><div class="dose-stats" id="gdsStats"></div><canvas id="gdsCanvas"></canvas><div class="chart-legend"><div class="chart-legend-item"><div class="chart-legend-dot" style="background:var(--accent)"></div>Normal</div><div class="chart-legend-item"><div class="chart-legend-dot" style="background:var(--warning)"></div>Rendah/Tinggi</div><div class="chart-legend-item"><div class="chart-legend-dot" style="background:var(--danger)"></div>Kritis</div></div></div>
         </div>
 
         <!-- Grafik Dosis -->
@@ -224,6 +224,18 @@ async function submitData(entry){try{var r=await fetch(API_URL+'?action=submit',
 
 function filterByPeriod(entries,period){if(period==='today'){const t=getTodayKey();return entries.filter(function(e){return normalizeDate(e.date)===t;});}var days=period==='7'?7:30;if(period==='all')return entries;var cutoff=new Date();cutoff.setDate(cutoff.getDate()-days);var cutStr=cutoff.toISOString().slice(0,10);return entries.filter(function(e){return normalizeDate(e.date)>=cutStr;});}
 
+    function calcStats(arr){
+    if(!arr.length){
+        return {min:0, max:0, avg:0};
+    }
+
+    const min = Math.min(...arr);
+    const max = Math.max(...arr);
+    const avg = Math.round(arr.reduce((a,b)=>a+b,0) / arr.length);
+
+    return {min, max, avg};
+}
+    
 function updateProgress(){
     const today = getTodayKey();
 
@@ -310,6 +322,36 @@ function renderGdsChart(){
     state.gdsChart.data.datasets[0].pointHoverRadius = 6;
 
     state.gdsChart.update();
+    
+    const stats = calcStats(vals);
+
+    const statsEl = document.getElementById('gdsStats');
+    if(statsEl){
+    
+        if(vals.length === 0){
+            statsEl.innerHTML = `
+                <div class="dose-stat total-stat"><div class="dv">-</div><div class="dl">Min</div></div>
+                <div class="dose-stat total-stat"><div class="dv">-</div><div class="dl">Max</div></div>
+                <div class="dose-stat total-stat"><div class="dv">-</div><div class="dl">Avg</div></div>
+            `;
+            return;
+        }
+    
+        statsEl.innerHTML = `
+            <div class="dose-stat total-stat">
+                <div class="dv">${stats.min}</div>
+                <div class="dl">Min</div>
+            </div>
+            <div class="dose-stat total-stat">
+                <div class="dv">${stats.max}</div>
+                <div class="dl">Max</div>
+            </div>
+            <div class="dose-stat total-stat">
+                <div class="dv">${stats.avg}</div>
+                <div class="dl">Avg</div>
+            </div>
+        `;
+    }
 }
 
 /* ====== CHART DOSIS ====== */
@@ -346,59 +388,54 @@ function renderDoseChart(){
     state.doseChart.update();
 
     // stats aman
-    const statsEl = document.getElementById('doseStats');
-    
-    if(statsEl){
-        let ins = 0, lev = 0;
+    // stats
+const statsEl = document.getElementById('doseStats');
 
-        entries.forEach(e=>{
-            if(e.doseType==='rapid') ins += e.dose || 0;
-            if(e.doseType==='levemir') lev += e.dose || 0;
-        });
+if(statsEl){
+
+    let insulinArr = [];
+    let levemirArr = [];
+    let totalArr = [];
+
+    entries.forEach(e=>{
+        if(e.doseType === 'rapid'){
+            insulinArr.push(e.dose || 0);
+            totalArr.push(e.dose || 0);
+        }
+        if(e.doseType === 'levemir'){
+            levemirArr.push(e.dose || 0);
+            totalArr.push(e.dose || 0);
+        }
+    });
+
+    // 🔥 HANDLE DATA KOSONG
+    if(totalArr.length === 0){
         statsEl.innerHTML = `
-            <div class="dose-stat insulin-stat"><div class="dv">${ins}</div></div>
-            <div class="dose-stat levemir-stat"><div class="dv">${lev}</div></div>
-            <div class="dose-stat total-stat"><div class="dv">${ins+lev}</div></div>
+            <div class="dose-stat insulin-stat"><div class="dv">-</div><div class="dl">Ins Avg</div></div>
+            <div class="dose-stat levemir-stat"><div class="dv">-</div><div class="dl">Lev Avg</div></div>
+            <div class="dose-stat total-stat"><div class="dv">-</div><div class="dl">Max</div></div>
         `;
-    }
-}
-
-function initCharts(){
-    const gdsCanvas = document.getElementById('gdsCanvas');
-    const doseCanvas = document.getElementById('doseCanvas');
-
-    if(gdsCanvas && !state.gdsChart){
-        state.gdsChart = new Chart(gdsCanvas.getContext('2d'), {
-            type:'line',
-            data:{
-                labels:[],
-                datasets:[{
-                    data:[],
-                    borderColor:'rgba(0,217,166,0.8)',
-                    tension:0.3,
-                    fill:true
-                }]
-            },
-            options:{
-                responsive:true,
-                plugins:{legend:{display:false}}
-            }
-        });
+        return;
     }
 
-    if(doseCanvas && !state.doseChart){
-        state.doseChart = new Chart(doseCanvas.getContext('2d'), {
-            type:'bar',
-            data:{
-                labels:[],
-                datasets:[
-                    {label:'Insulin',data:[]},
-                    {label:'Levemir',data:[]}
-                ]
-            },
-            options:{responsive:true,plugins:{legend:{display:false}}}
-        });
-    }
+    const insStats = calcStats(insulinArr);
+    const levStats = calcStats(levemirArr);
+    const totStats = calcStats(totalArr);
+
+    statsEl.innerHTML = `
+        <div class="dose-stat insulin-stat">
+            <div class="dv">${insStats.avg}</div>
+            <div class="dl">Ins Avg</div>
+        </div>
+        <div class="dose-stat levemir-stat">
+            <div class="dv">${levStats.avg}</div>
+            <div class="dl">Lev Avg</div>
+        </div>
+        <div class="dose-stat total-stat">
+            <div class="dv">${totStats.max}</div>
+            <div class="dl">Max</div>
+        </div>
+    `;
 }
     
 /* ====== HISTORY ====== */
