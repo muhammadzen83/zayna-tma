@@ -396,49 +396,53 @@ function renderGdsChart(){
 
 /* ====== CHART DOSIS ====== */
 function renderDoseChart(){
+    var sec = document.getElementById('doseSection');
+    if(!sec) return; // ✅ penting banget
+
     var entries = allData.filter(e => e.dose !== null && typeof e.dose === 'number');
-    var filtered = filterByPeriod(entries,dosePeriod);
+    var filtered = filterByPeriod(entries, dosePeriod);
 
     if(doseType !== 'all'){
         filtered = filtered.filter(e => e.doseType === doseType);
     }
-
-    filtered.sort((a,b)=>
-        (normalizeDate(a.date)+' '+a.time)
-        .localeCompare(normalizeDate(b.date)+' '+b.time)
-    );
-
-    var sec = document.getElementById('doseSection');
 
     if(!filtered.length){
         sec.innerHTML = '<div class="empty-box"><i class="fa-solid fa-prescription-bottle-medical"></i><p>Tidak ada data dosis</p></div>';
         return;
     }
 
-    // Group per tanggal
-    var grouped={};
+    // group data
+    var grouped = {};
     filtered.forEach(function(e){
-        var d=normalizeDate(e.date);
-        if(!grouped[d]) grouped[d]={ins:0,lev:0};
-        if(e.doseType==='rapid') grouped[d].ins+=e.dose;
-        if(e.doseType==='levemir') grouped[d].lev+=e.dose;
+        var d = normalizeDate(e.date);
+        if(!grouped[d]) grouped[d] = {ins:0, lev:0};
+
+        if(e.doseType === 'rapid') grouped[d].ins += e.dose;
+        if(e.doseType === 'levemir') grouped[d].lev += e.dose;
     });
 
-    var dates=Object.keys(grouped).sort();
+    var dates = Object.keys(grouped).sort();
 
-    // Render DOM dulu
+    // ✅ render ulang DOM (aman)
     sec.innerHTML = `
     <div class="chart-section">
         <div class="chart-wrap">
             <canvas id="doseCanvas"></canvas>
             <div class="chart-legend">
-                <div class="chart-legend-item"><div class="chart-legend-dot" style="background:var(--insulin)"></div>Insulin</div>
-                <div class="chart-legend-item"><div class="chart-legend-dot" style="background:var(--levemir)"></div>Levemir</div>
+                <div class="chart-legend-item">
+                    <div class="chart-legend-dot" style="background:var(--insulin)"></div>Insulin
+                </div>
+                <div class="chart-legend-item">
+                    <div class="chart-legend-dot" style="background:var(--levemir)"></div>Levemir
+                </div>
             </div>
         </div>
     </div>`;
 
-    var ctx = document.getElementById('doseCanvas').getContext('2d');
+    var canvas = document.getElementById('doseCanvas');
+    if(!canvas) return; // ✅ extra safety
+
+    var ctx = canvas.getContext('2d');
 
     if(doseChart) doseChart.destroy();
 
@@ -465,7 +469,7 @@ function renderDoseChart(){
             plugins:{legend:{display:false}},
             scales:{
                 x:{stacked:true},
-                y:{stacked:true,beginAtZero:true}
+                y:{stacked:true, beginAtZero:true}
             }
         }
     });
