@@ -94,16 +94,66 @@
         .chart-legend{display:flex;gap:14px;justify-content:center;margin-top:10px;flex-wrap:wrap}
         .chart-legend-item{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--muted)}
         .chart-legend-dot{width:8px;height:8px;border-radius:50%}
-        .dose-stats{display:grid;grid-template-columns:repeat(auto-fit, minmax(90px, 1fr));gap:6px;margin-bottom:12px}
-        .dose-stat{padding:10px 8px;border-radius:10px;text-align:center}
-        .dose-stat .dv{font-size:20px;font-weight:700}
-        .dose-stat .dl{font-size:10px;color:var(--muted)}
-        .dose-stat.insulin-stat{background:rgba(68,136,255,.08);border:1px solid rgba(68,136,255,.15)}
-        .dose-stat.insulin-stat .dv{color:var(--insulin)}
-        .dose-stat.levemir-stat{background:rgba(255,181,71,.08);border:1px solid rgba(255,181,71,.15)}
-        .dose-stat.levemir-stat .dv{color:var(--levemir)}
-        .dose-stat.total-stat{background:var(--card);border:1px solid var(--border)}
-        .dose-stat.total-stat .dv{color:var(--fg)}
+        .dose-stats{
+            display:grid;
+            grid-template-columns:repeat(4, minmax(0,1fr));
+            gap:10px;
+            margin-bottom:14px;
+        }
+        
+        .dose-stat{
+            padding:14px 10px;
+            border-radius:14px;
+            text-align:center;
+            background:var(--card);
+            border:1px solid var(--border);
+            transition:all .25s ease;
+        }
+        
+        .dose-stat:hover{
+            transform:translateY(-2px);
+            border-color:rgba(0,217,166,.3);
+        }
+        
+        /* isi angka */
+        .dose-stat .dv{
+            font-size:22px;
+            font-weight:700;
+            margin-bottom:4px;
+        }
+        
+        /* label */
+        .dose-stat .dl{
+            font-size:11px;
+            color:var(--muted);
+            letter-spacing:.3px;
+        }
+        
+        /* total highlight */
+        .dose-stat.total-stat{
+            background:linear-gradient(135deg,#152035,#1A2740);
+            border:1px solid rgba(0,217,166,.2);
+        }
+        
+        /* warna opsional (kalau nanti dipakai lagi) */
+        .dose-stat.insulin-stat{
+            background:rgba(68,136,255,.08);
+            border:1px solid rgba(68,136,255,.15);
+        }
+        .dose-stat.insulin-stat .dv{
+            color:var(--insulin);
+        }
+        
+        .dose-stat.levemir-stat{
+            background:rgba(255,181,71,.08);
+            border:1px solid rgba(255,181,71,.15);
+        }
+        .dose-stat.levemir-stat .dv{
+            color:var(--levemir);
+        }
+        .dose-stat.total-stat .dv{
+            color:var(--accent);
+        }                    
         .history-section{padding:0 20px 14px}
         .hp-date-label{font-size:11px;font-weight:600;color:var(--muted);margin:12px 0 8px;text-transform:uppercase;letter-spacing:.5px}
         .hp-date-label:first-child{margin-top:0}
@@ -115,6 +165,28 @@
         .hp-item-val{font-size:16px;font-weight:700;flex-shrink:0}
         .hp-item-val.good{color:var(--accent)}.hp-item-val.warn{color:var(--warning)}.hp-item-val.bad{color:var(--danger)}
         .hp-item-val.insulin-v{color:var(--insulin)}.hp-item-val.levemir-v{color:var(--levemir)}
+        .hp-item{
+            display:flex;
+            align-items:center;
+            gap:12px;
+            padding:12px;
+            border-radius:12px;
+            background:var(--card);
+            border:1px solid var(--border);
+            margin-bottom:8px;
+            transition:all .25s ease;
+        }
+        
+        .hp-item:hover{
+            transform:translateX(4px);
+            border-color:rgba(0,217,166,.25);
+        }
+        
+        .hp-item-title{
+            font-size:13px;
+            font-weight:600;
+            text-transform:capitalize;
+        }
         .empty-box{text-align:center;padding:32px 20px;color:var(--muted)}
         .empty-box i{font-size:32px;opacity:.2;display:block;margin-bottom:10px}
         .empty-box p{font-size:13px}
@@ -450,10 +522,21 @@ if(statsEl){
     
 /* ====== HISTORY ====== */
 function renderHistory(){
+
     var entries = filterByPeriod(state.data, historyPeriod);
     var list = document.getElementById('historyList');
 
     if(!list) return;
+
+    if(entries.length === 0){
+        list.innerHTML = `
+            <div class="empty-box">
+                <i class="fa-solid fa-box-open"></i>
+                <p>Tidak ada data</p>
+            </div>
+        `;
+        return;
+    }
 
     var grouped = {};
 
@@ -466,13 +549,44 @@ function renderHistory(){
     let html = '';
 
     Object.keys(grouped).sort().reverse().forEach(date=>{
+
         html += `<div class="hp-date-label">${date}</div>`;
 
         grouped[date].forEach(e=>{
-            html += `<div class="hp-item">
-                <div>${e.slot}</div>
-                <div>${e.gds || '-'}</div>
-                ${e.dose ? e.dose + 'u' : ''}
+
+            let icon = 'fa-droplet';
+            let iconClass = 'gds';
+            let value = e.gds ? e.gds+' mg/dL' : '-';
+            let dose = e.dose ? e.dose+'u' : '';
+
+            if(e.doseType === 'rapid'){
+                icon = 'fa-syringe';
+                iconClass = 'insulin';
+                value = dose;
+            }
+
+            if(e.doseType === 'levemir'){
+                icon = 'fa-moon';
+                iconClass = 'levemir';
+                value = dose;
+            }
+
+            html += `
+            <div class="hp-item">
+                
+                <div class="hp-item-icon ${iconClass}">
+                    <i class="fa-solid ${icon}"></i>
+                </div>
+
+                <div class="hp-item-info">
+                    <div class="hp-item-title">${e.slot}</div>
+                    <div class="hp-item-sub">${e.time || ''}</div>
+                </div>
+
+                <div class="hp-item-val ${iconClass}-v">
+                    ${value}
+                </div>
+
             </div>`;
         });
     });
