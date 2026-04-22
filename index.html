@@ -213,7 +213,22 @@ function ptColor(gds){if(gds>300||gds<70)return'#FF5C5C';if(gds>200||gds<100)ret
 function fmtLabel(dateStr,timeStr){var nd=normalizeDate(dateStr);if(!nd)return timeStr||'?';var d=new Date(nd+'T00:00:00');return isNaN(d.getTime())?dateStr+' '+(timeStr||''):d.toLocaleDateString('id-ID',{day:'numeric',month:'short'})+' '+(timeStr||'');}
 function showToast(msg,type){type=type||'success';var c=document.getElementById('toastContainer'),t=document.createElement('div');t.className='toast '+type;t.innerHTML='<i class="fa-solid '+(type==='success'?'fa-circle-check':'fa-circle-xmark')+'"></i><span>'+msg+'</span>';c.appendChild(t);setTimeout(function(){t.remove();},3000);}
 
-async function fetchData(){try{var r=await fetch(API_URL+'?action=data',{redirect:'follow'});if(!r.ok)return[];var d=await r.json();return Array.isArray(d)?d:[];}catch(e){return[];}}
+async function fetchData(){
+    try{
+        var r=await fetch(API_URL+'?action=data',{redirect:'follow'});
+        console.log('Fetch status:',r.status);
+        var text=await r.text();
+        console.log('Raw response (200 chars):',text.substring(0,200));
+        if(!r.ok){console.log('Fetch FAILED status:',r.status);return[];}
+        var d=JSON.parse(text);
+        console.log('Parsed data count:',Array.isArray(d)?d.length:'not array');
+        if(Array.isArray(d)&&d.length>0)console.log('First item:',JSON.stringify(d[0]));
+        return d;
+    }catch(e){
+        console.log('Fetch ERROR:',e.message);
+        return[];
+    }
+}
 async function submitData(entry){try{var r=await fetch(API_URL+'?action=submit',{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(entry),redirect:'follow'});var d=await r.json();return d.status==='ok';}catch(e){return false;}}
 
 function filterByPeriod(entries,period){if(period==='today'){var t=getTodayKey();return entries.filter(function(e){return normalizeDate(e.date)===t;});}var days=period==='7'?7:30;if(period==='all')return entries;var cutoff=new Date();cutoff.setDate(cutoff.getDate()-days);var cutStr=cutoff.toISOString().slice(0,10);return entries.filter(function(e){return normalizeDate(e.date)>=cutStr;});}
