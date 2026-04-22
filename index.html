@@ -200,12 +200,12 @@
 const state = {
     data: [],
     gdsChart: null,
-    doseChart: null
+    doseChart: null,
+    selectedSlot: ''
 };
     
 var SLOTS=[{slot:'dini-hari',label:'Dini Hari',icon:'fa-moon',type:'gds-only'},{slot:'sarapan',label:'Sarapan',icon:'fa-sun',type:'gds-insulin'},{slot:'siang',label:'Siang',icon:'fa-cloud-sun',type:'gds-insulin'},{slot:'malam',label:'Malam',icon:'fa-cloud-moon',type:'gds-insulin'}];
 var DEFAULT_DOSES={sarapan:4,siang:5,malam:5},LEVEMIR_DOSE=8;
-var selectedSlot='',gdsChart=null,doseChart=null,state.data=[];
 var gdsPeriod='today',dosePeriod='7',doseType='all',historyPeriod='today';
 
 try{Telegram.WebApp.ready();Telegram.WebApp.expand();Telegram.WebApp.setHeaderColor('#0C1222');}catch(e){}
@@ -255,14 +255,23 @@ function updateProgress(){
 
 /* ====== INPUT ====== */
 var gdsInput=document.getElementById('gdsInput'),submitBtn=document.getElementById('submitBtn'),levemirBtn=document.getElementById('levemirBtn'),resultCard=document.getElementById('resultCard'),inputRow=document.getElementById('inputRow');
-function selectSlot(slot){selectedSlot=slot;document.querySelectorAll('.slot-btn').forEach(function(b){b.classList.toggle('active',b.dataset.slot===slot);});document.querySelectorAll('.p-slot').forEach(function(el){el.classList.toggle('active-slot',el.dataset.slot===slot);});if(slot==='levemir'){inputRow.style.display='none';levemirBtn.style.display='block';}else{inputRow.style.display='flex';levemirBtn.style.display='none';gdsInput.focus();}updateSubmitBtn();resultCard.classList.remove('show');}
-function updateSubmitBtn(){submitBtn.disabled=!(selectedSlot&&selectedSlot!=='levemir'&&gdsInput.value.trim()!==''&&Number(gdsInput.value)>=0);}
+function selectSlot(slot){state.selectedSlot=slot;document.querySelectorAll('.slot-btn').forEach(function(b){b.classList.toggle('active',b.dataset.slot===slot);});document.querySelectorAll('.p-slot').forEach(function(el){el.classList.toggle('active-slot',el.dataset.slot===slot);});if(slot==='levemir'){inputRow.style.display='none';levemirBtn.style.display='block';}else{inputRow.style.display='flex';levemirBtn.style.display='none';gdsInput.focus();}updateSubmitBtn();resultCard.classList.remove('show');}
+function updateSubmitBtn(){
+    const slot = state.selectedSlot;
+
+    submitBtn.disabled = !(
+        slot &&
+        slot !== 'levemir' &&
+        gdsInput.value.trim() !== '' &&
+        Number(gdsInput.value) >= 0
+    );
+}
 gdsInput.addEventListener('input',updateSubmitBtn);gdsInput.addEventListener('keydown',function(e){if(e.key==='Enter'&&!submitBtn.disabled)handleSubmit();});
 submitBtn.addEventListener('click',handleSubmit);levemirBtn.addEventListener('click',handleLevemir);
 document.querySelectorAll('.slot-btn').forEach(function(b){b.addEventListener('click',function(){selectSlot(b.dataset.slot);});});
 document.querySelectorAll('.p-slot').forEach(function(el){el.addEventListener('click',function(){selectSlot(el.dataset.slot);});});
 
-async function handleSubmit(){var slot=selectedSlot,gdsVal=parseInt(gdsInput.value.trim());if(!slot||slot==='levemir'||isNaN(gdsVal)||gdsVal<0)return;var s=SLOTS.find(function(s){return s.slot===slot;}),cat=getCat(gdsVal);var entry={date:getTodayKey(),time:getTimeStr(),slot:slot,gds:gdsVal,dose:null,doseType:null,category:cat.cls};if(s.type==='gds-insulin'){var dose=calcDose(gdsVal,slot);entry.dose=dose;entry.doseType='rapid';var adj=gdsVal>300?'+ 2':gdsVal>200?'+ 1':gdsVal<100?'- 1':'(sesuai)';var dcCls=gdsVal>300?'danger-card':'';var nh='';if(gdsVal>300)nh='<div class="result-note danger-note"><i class="fa-solid fa-circle-exclamation" style="margin-right:4px"></i>GDS sangat tinggi!</div>';else if(gdsVal<70)nh='<div class="result-note danger-note"><i class="fa-solid fa-circle-exclamation" style="margin-right:4px"></i>Hipoglikemia!</div>';resultCard.innerHTML='<div class="result-gds">GDS '+s.label+': <span class="'+cat.cls+'">'+gdsVal+' mg/dL</span> <span style="font-size:11px;color:var(--muted)">('+cat.label+')</span></div><div class="result-dose '+dcCls+'"><div class="label"><strong>Dosis Insulin</strong>Default '+DEFAULT_DOSES[slot]+' '+adj+'</div><div class="val">'+dose+' <small>unit</small></div></div>'+nh;}else{resultCard.innerHTML='<div class="result-gds">GDS Dini Hari: <span class="'+cat.cls+'">'+gdsVal+' mg/dL</span> <span style="font-size:11px;color:var(--muted)">('+cat.label+')</span></div>';}resultCard.classList.add('show');var ok=await submitData(entry);if(ok){showToast('Tersimpan');state.data.unshift(entry);updateProgress();renderAll();gdsInput.value='';selectedSlot='';document.querySelectorAll('.slot-btn').forEach(function(b){b.classList.remove('active');});document.querySelectorAll('.p-slot').forEach(function(el){el.classList.remove('active-slot');});inputRow.style.display='flex';levemirBtn.style.display='none';updateSubmitBtn();try{Telegram.WebApp.HapticFeedback.notificationOccurred('success');}catch(e){}}else showToast('Gagal menyimpan','error');}
+async function handleSubmit(){var slot=state.selectedSlot,gdsVal=parseInt(gdsInput.value.trim());if(!slot||slot==='levemir'||isNaN(gdsVal)||gdsVal<0)return;var s=SLOTS.find(function(s){return s.slot===slot;}),cat=getCat(gdsVal);var entry={date:getTodayKey(),time:getTimeStr(),slot:slot,gds:gdsVal,dose:null,doseType:null,category:cat.cls};if(s.type==='gds-insulin'){var dose=calcDose(gdsVal,slot);entry.dose=dose;entry.doseType='rapid';var adj=gdsVal>300?'+ 2':gdsVal>200?'+ 1':gdsVal<100?'- 1':'(sesuai)';var dcCls=gdsVal>300?'danger-card':'';var nh='';if(gdsVal>300)nh='<div class="result-note danger-note"><i class="fa-solid fa-circle-exclamation" style="margin-right:4px"></i>GDS sangat tinggi!</div>';else if(gdsVal<70)nh='<div class="result-note danger-note"><i class="fa-solid fa-circle-exclamation" style="margin-right:4px"></i>Hipoglikemia!</div>';resultCard.innerHTML='<div class="result-gds">GDS '+s.label+': <span class="'+cat.cls+'">'+gdsVal+' mg/dL</span> <span style="font-size:11px;color:var(--muted)">('+cat.label+')</span></div><div class="result-dose '+dcCls+'"><div class="label"><strong>Dosis Insulin</strong>Default '+DEFAULT_DOSES[slot]+' '+adj+'</div><div class="val">'+dose+' <small>unit</small></div></div>'+nh;}else{resultCard.innerHTML='<div class="result-gds">GDS Dini Hari: <span class="'+cat.cls+'">'+gdsVal+' mg/dL</span> <span style="font-size:11px;color:var(--muted)">('+cat.label+')</span></div>';}resultCard.classList.add('show');var ok=await submitData(entry);if(ok){showToast('Tersimpan');state.data.unshift(entry);updateProgress();renderAll();gdsInput.value='';state.selectedSlot='';document.querySelectorAll('.slot-btn').forEach(function(b){b.classList.remove('active');});document.querySelectorAll('.p-slot').forEach(function(el){el.classList.remove('active-slot');});inputRow.style.display='flex';levemirBtn.style.display='none';updateSubmitBtn();try{Telegram.WebApp.HapticFeedback.notificationOccurred('success');}catch(e){}}else showToast('Gagal menyimpan','error');}
 async function handleLevemir(){var entry={date:getTodayKey(),time:getTimeStr(),slot:'levemir',gds:null,dose:LEVEMIR_DOSE,doseType:'levemir',category:'good'};var ok=await submitData(entry);if(ok){showToast('Levemir 8 unit tercatat');state.data.unshift(entry);updateProgress();renderAll();try{Telegram.WebApp.HapticFeedback.notificationOccurred('success');Telegram.WebApp.close();}catch(e){}}else showToast('Gagal menyimpan','error');}
 
 /* ====== CHART GDS ====== */
@@ -284,8 +293,8 @@ function renderGdsChart(){
     // 🔥 warna per titik
     state.gdsChart.data.datasets[0].pointBackgroundColor = colors;
     state.gdsChart.data.datasets[0].pointBorderColor = colors;
-    pointRadius: 5,
-    pointHoverRadius: 6
+    state.gdsChart.data.datasets[0].pointRadius = 5;
+    state.gdsChart.data.datasets[0].pointHoverRadius = 6;
 
     state.gdsChart.update();
 }
