@@ -295,6 +295,7 @@ async function handleLevemir(){var entry={date:getTodayKey(),time:getTimeStr(),s
 
 /* ====== CHART GDS ====== */
 function renderGdsChart(){
+    if(!state.gdsChart) return;
     var entries = filterByPeriod(
         state.data.filter(e => e.gds != null),
         gdsPeriod
@@ -356,6 +357,7 @@ function renderGdsChart(){
 
 /* ====== CHART DOSIS ====== */
 function renderDoseChart(){
+    if(!state.doseChart) return;
     var entries = filterByPeriod(state.data, dosePeriod);
 
     // 🔥 FILTER TYPE YANG BENAR
@@ -513,6 +515,72 @@ setInterval(async ()=>{
 /* ====== AUTO SLOT FROM URL ====== */
 var params=new URLSearchParams(window.location.search);var autoSlot=params.get('slot');if(autoSlot)selectSlot(autoSlot);
 
+function initCharts(){
+
+    // ===== GDS CHART =====
+    const gdsCtx = document.getElementById('gdsCanvas').getContext('2d');
+
+    state.gdsChart = new Chart(gdsCtx, {
+        type: 'line',
+        data: {
+            labels: [],
+            datasets: [{
+                label: 'GDS',
+                data: [],
+                borderWidth: 2,
+                tension: 0.3,
+                fill: false
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: false }
+            },
+            scales: {
+                y: {
+                    beginAtZero: false
+                }
+            }
+        }
+    });
+
+    // ===== DOSE CHART =====
+    const doseCtx = document.getElementById('doseCanvas').getContext('2d');
+
+    state.doseChart = new Chart(doseCtx, {
+        type: 'bar',
+        data: {
+            labels: [],
+            datasets: [
+                {
+                    label: 'Insulin',
+                    data: [],
+                    borderWidth: 1
+                },
+                {
+                    label: 'Levemir',
+                    data: [],
+                    borderWidth: 1
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: true
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+}
+    
 /* ====== INIT ====== */
 async function init(){
     state.data = await fetchData();
