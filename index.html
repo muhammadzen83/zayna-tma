@@ -352,12 +352,59 @@ function renderHistory(){
         return;
     }
 
-    list.innerHTML = state.data.map(e=>`
-        <div class="hp-item">
-            <div>${e.slot}</div>
-            <div>${e.gds || e.dose || '-'}</div>
-        </div>
-    `).join('');
+    // 🔥 GROUP BY TANGGAL
+    const grouped = {};
+
+    state.data.forEach(e=>{
+        const d = normalizeDate(e.date);
+        if(!grouped[d]) grouped[d] = [];
+        grouped[d].push(e);
+    });
+
+    // 🔥 SORT TANGGAL (TERBARU DI ATAS)
+    const dates = Object.keys(grouped).sort().reverse();
+
+    let html = '';
+
+    dates.forEach(date=>{
+        const dt = new Date(date+'T00:00:00');
+
+        const label = isNaN(dt.getTime())
+            ? date
+            : dt.toLocaleDateString('id-ID',{
+                weekday:'long',
+                day:'numeric',
+                month:'long',
+                year:'numeric'
+            });
+
+        // HEADER TANGGAL
+        html += `<div class="hp-date-label">${label}</div>`;
+
+        // SORT JAM DALAM HARI
+        grouped[date].sort((a,b)=>
+            (a.time || '').localeCompare(b.time || '')
+        );
+
+        grouped[date].forEach(e=>{
+            let value = e.gds !== null ? e.gds : e.dose;
+            let unit  = e.gds !== null ? 'mg/dL' : 'unit';
+
+            html += `
+                <div class="hp-item">
+                    <div class="hp-item-info">
+                        <div class="hp-item-title">${e.slot}</div>
+                        <div class="hp-item-sub">${e.time || '-'}</div>
+                    </div>
+                    <div class="hp-item-val">
+                        ${value ?? '-'} <small>${unit}</small>
+                    </div>
+                </div>
+            `;
+        });
+    });
+
+    list.innerHTML = html;
 }
 
 function renderAll(){
@@ -384,11 +431,16 @@ document.getElementById('historyFilters').addEventListener('click',function(e){v
 /* ====== COUNTDOWN ====== */
 var SCHEDULES_CK=[{hour:2,minute:0,slot:'dini-hari',label:'Cek GDS Dini Hari'},{hour:6,minute:0,slot:'sarapan',label:'GDS + Insulin Sarapan'},{hour:12,minute:0,slot:'siang',label:'GDS + Insulin Siang'},{hour:18,minute:0,slot:'malam',label:'GDS + Insulin Malam'},{hour:20,minute:30,slot:'levemir',label:'Suntik Levemir'}];
 function updateCountdown(){var now=new Date(),nowT=now.getHours()*60+now.getMinutes(),today=getTodayKey();var todayData=allData.filter(function(e){return normalizeDate(e.date)===today;});var done={};SCHEDULES_CK.forEach(function(s){done[s.slot]=todayData.some(function(e){return e.slot===s.slot;});});var next=null;for(var i=0;i<SCHEDULES_CK.length;i++){var s=SCHEDULES_CK[i];if(done[s.slot])continue;var sT=s.hour*60+s.minute;if(sT>nowT){if(!next||sT<next.total)next={hour:s.hour,minute:s.minute,label:s.label,total:sT,tomorrow:false};}else if(!next){next={hour:s.hour,minute:s.minute,label:s.label,total:sT+1440,tomorrow:true};}}if(!next){var f=SCHEDULES_CK[0];next={hour:f.hour,minute:f.minute,label:f.label,total:f.hour*60+f.minute+1440,tomorrow:true};}var diff=next.total-nowT,h=Math.floor(diff/60),m=diff%60;document.getElementById('nrLabel').textContent=(next.tomorrow?'Besok ':'')+String(next.hour).padStart(2,'0')+':'+String(next.minute).padStart(2,'0')+' '+next.label.split('+')[0].trim();document.getElementById('nrCountdown').textContent=String(h).padStart(2,'0')+':'+String(m).padStart(2,'0');SCHEDULES_CK.forEach(function(s){var sT=s.hour*60+s.minute;if(!done[s.slot]&&Math.abs(nowT-sT)<=15){var el=document.querySelector('.p-slot[data-slot="'+s.slot+'"]');if(el&&!el.classList.contains('active-slot'))el.classList.add('active-slot');}});}
+let lastLength = 0;
+
 setInterval(async ()=>{
     const newData = await fetchData();
 
-    if(JSON.stringify(newData) !== JSON.stringify(state.data)){
+    // 🔥 cek perubahan simpel & cepat
+    if(newData.length !== lastLength){
+        lastLength = newData.length;
         state.data = newData;
+
         renderAll();
     }
 }, 5000);
