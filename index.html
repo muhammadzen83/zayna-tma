@@ -205,7 +205,7 @@ const state = {
     
 var SLOTS=[{slot:'dini-hari',label:'Dini Hari',icon:'fa-moon',type:'gds-only'},{slot:'sarapan',label:'Sarapan',icon:'fa-sun',type:'gds-insulin'},{slot:'siang',label:'Siang',icon:'fa-cloud-sun',type:'gds-insulin'},{slot:'malam',label:'Malam',icon:'fa-cloud-moon',type:'gds-insulin'}];
 var DEFAULT_DOSES={sarapan:4,siang:5,malam:5},LEVEMIR_DOSE=8;
-var selectedSlot='',gdsChart=null,doseChart=null,allData=[];
+var selectedSlot='',gdsChart=null,doseChart=null,state.data=[];
 var gdsPeriod='today',dosePeriod='7',doseType='all',historyPeriod='today';
 
 try{Telegram.WebApp.ready();Telegram.WebApp.expand();Telegram.WebApp.setHeaderColor('#0C1222');}catch(e){}
@@ -222,7 +222,7 @@ function showToast(msg,type){type=type||'success';var c=document.getElementById(
 async function fetchData(){try{var r=await fetch(API_URL+'?action=data',{redirect:'follow'});if(!r.ok)return[];var d=await r.json();return Array.isArray(d)?d:[];}catch(e){return[];}}
 async function submitData(entry){try{var r=await fetch(API_URL+'?action=submit',{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(entry),redirect:'follow'});var d=await r.json();return d.status==='ok';}catch(e){return false;}}
 
-function filterByPeriod(entries,period){if(period==='today'){var t=getTodayKey();return entries.filter(function(e){return normalizeDate(e.date)===t;});}var days=period==='7'?7:30;if(period==='all')return entries;var cutoff=new Date();cutoff.setDate(cutoff.getDate()-days);var cutStr=cutoff.toISOString().slice(0,10);return entries.filter(function(e){return normalizeDate(e.date)>=cutStr;});}
+function filterByPeriod(entries,period){if(period==='today'){const t=getTodayKey();return entries.filter(function(e){return normalizeDate(e.date)===t;});}var days=period==='7'?7:30;if(period==='all')return entries;var cutoff=new Date();cutoff.setDate(cutoff.getDate()-days);var cutStr=cutoff.toISOString().slice(0,10);return entries.filter(function(e){return normalizeDate(e.date)>=cutStr;});}
 
 function updateProgress(){
     const today = getTodayKey();
@@ -240,9 +240,16 @@ function updateProgress(){
         }
     });
 
-    const el = document.getElementById('statDone');
-    if(el){
-        el.textContent = Object.values(done).filter(v=>v).length;
+    var statDoneEl = document.getElementById('statDone');
+    if(statDoneEl){
+        document.querySelectorAll('.p-slot').forEach(el=>{
+            const slot = el.dataset.slot;
+            if(done[slot]){
+                el.classList.add('done');
+            }else{
+                el.classList.remove('done');
+            }
+        });
     }
 }
 
@@ -255,53 +262,70 @@ submitBtn.addEventListener('click',handleSubmit);levemirBtn.addEventListener('cl
 document.querySelectorAll('.slot-btn').forEach(function(b){b.addEventListener('click',function(){selectSlot(b.dataset.slot);});});
 document.querySelectorAll('.p-slot').forEach(function(el){el.addEventListener('click',function(){selectSlot(el.dataset.slot);});});
 
-async function handleSubmit(){var slot=selectedSlot,gdsVal=parseInt(gdsInput.value.trim());if(!slot||slot==='levemir'||isNaN(gdsVal)||gdsVal<0)return;var s=SLOTS.find(function(s){return s.slot===slot;}),cat=getCat(gdsVal);var entry={date:getTodayKey(),time:getTimeStr(),slot:slot,gds:gdsVal,dose:null,doseType:null,category:cat.cls};if(s.type==='gds-insulin'){var dose=calcDose(gdsVal,slot);entry.dose=dose;entry.doseType='rapid';var adj=gdsVal>300?'+ 2':gdsVal>200?'+ 1':gdsVal<100?'- 1':'(sesuai)';var dcCls=gdsVal>300?'danger-card':'';var nh='';if(gdsVal>300)nh='<div class="result-note danger-note"><i class="fa-solid fa-circle-exclamation" style="margin-right:4px"></i>GDS sangat tinggi!</div>';else if(gdsVal<70)nh='<div class="result-note danger-note"><i class="fa-solid fa-circle-exclamation" style="margin-right:4px"></i>Hipoglikemia!</div>';resultCard.innerHTML='<div class="result-gds">GDS '+s.label+': <span class="'+cat.cls+'">'+gdsVal+' mg/dL</span> <span style="font-size:11px;color:var(--muted)">('+cat.label+')</span></div><div class="result-dose '+dcCls+'"><div class="label"><strong>Dosis Insulin</strong>Default '+DEFAULT_DOSES[slot]+' '+adj+'</div><div class="val">'+dose+' <small>unit</small></div></div>'+nh;}else{resultCard.innerHTML='<div class="result-gds">GDS Dini Hari: <span class="'+cat.cls+'">'+gdsVal+' mg/dL</span> <span style="font-size:11px;color:var(--muted)">('+cat.label+')</span></div>';}resultCard.classList.add('show');var ok=await submitData(entry);if(ok){showToast('Tersimpan');allData.unshift(entry);updateProgress();renderAll();gdsInput.value='';selectedSlot='';document.querySelectorAll('.slot-btn').forEach(function(b){b.classList.remove('active');});document.querySelectorAll('.p-slot').forEach(function(el){el.classList.remove('active-slot');});inputRow.style.display='flex';levemirBtn.style.display='none';updateSubmitBtn();try{Telegram.WebApp.HapticFeedback.notificationOccurred('success');}catch(e){}}else showToast('Gagal menyimpan','error');}
-async function handleLevemir(){var entry={date:getTodayKey(),time:getTimeStr(),slot:'levemir',gds:null,dose:LEVEMIR_DOSE,doseType:'levemir',category:'good'};var ok=await submitData(entry);if(ok){showToast('Levemir 8 unit tercatat');allData.unshift(entry);updateProgress();renderAll();try{Telegram.WebApp.HapticFeedback.notificationOccurred('success');Telegram.WebApp.close();}catch(e){}}else showToast('Gagal menyimpan','error');}
+async function handleSubmit(){var slot=selectedSlot,gdsVal=parseInt(gdsInput.value.trim());if(!slot||slot==='levemir'||isNaN(gdsVal)||gdsVal<0)return;var s=SLOTS.find(function(s){return s.slot===slot;}),cat=getCat(gdsVal);var entry={date:getTodayKey(),time:getTimeStr(),slot:slot,gds:gdsVal,dose:null,doseType:null,category:cat.cls};if(s.type==='gds-insulin'){var dose=calcDose(gdsVal,slot);entry.dose=dose;entry.doseType='rapid';var adj=gdsVal>300?'+ 2':gdsVal>200?'+ 1':gdsVal<100?'- 1':'(sesuai)';var dcCls=gdsVal>300?'danger-card':'';var nh='';if(gdsVal>300)nh='<div class="result-note danger-note"><i class="fa-solid fa-circle-exclamation" style="margin-right:4px"></i>GDS sangat tinggi!</div>';else if(gdsVal<70)nh='<div class="result-note danger-note"><i class="fa-solid fa-circle-exclamation" style="margin-right:4px"></i>Hipoglikemia!</div>';resultCard.innerHTML='<div class="result-gds">GDS '+s.label+': <span class="'+cat.cls+'">'+gdsVal+' mg/dL</span> <span style="font-size:11px;color:var(--muted)">('+cat.label+')</span></div><div class="result-dose '+dcCls+'"><div class="label"><strong>Dosis Insulin</strong>Default '+DEFAULT_DOSES[slot]+' '+adj+'</div><div class="val">'+dose+' <small>unit</small></div></div>'+nh;}else{resultCard.innerHTML='<div class="result-gds">GDS Dini Hari: <span class="'+cat.cls+'">'+gdsVal+' mg/dL</span> <span style="font-size:11px;color:var(--muted)">('+cat.label+')</span></div>';}resultCard.classList.add('show');var ok=await submitData(entry);if(ok){showToast('Tersimpan');state.data.unshift(entry);updateProgress();renderAll();gdsInput.value='';selectedSlot='';document.querySelectorAll('.slot-btn').forEach(function(b){b.classList.remove('active');});document.querySelectorAll('.p-slot').forEach(function(el){el.classList.remove('active-slot');});inputRow.style.display='flex';levemirBtn.style.display='none';updateSubmitBtn();try{Telegram.WebApp.HapticFeedback.notificationOccurred('success');}catch(e){}}else showToast('Gagal menyimpan','error');}
+async function handleLevemir(){var entry={date:getTodayKey(),time:getTimeStr(),slot:'levemir',gds:null,dose:LEVEMIR_DOSE,doseType:'levemir',category:'good'};var ok=await submitData(entry);if(ok){showToast('Levemir 8 unit tercatat');state.data.unshift(entry);updateProgress();renderAll();try{Telegram.WebApp.HapticFeedback.notificationOccurred('success');Telegram.WebApp.close();}catch(e){}}else showToast('Gagal menyimpan','error');}
 
 /* ====== CHART GDS ====== */
 function renderGdsChart(){
-    const chart = state.gdsChart;
-    if(!chart) return;
-
-    const entries = filterByPeriod(
-        state.data.filter(e=>e.gds!==null),
+    var entries = filterByPeriod(
+        state.data.filter(e => e.gds != null),
         gdsPeriod
     );
 
-    entries.sort((a,b)=>
-        (normalizeDate(a.date)+' '+a.time)
-        .localeCompare(normalizeDate(b.date)+' '+b.time)
-    );
+    if(!state.gdsChart) return;
 
-    chart.data.labels = entries.map(e=>fmtLabel(e.date,e.time));
-    chart.data.datasets[0].data = entries.map(e=>e.gds);
+    const labels = entries.map(e => fmtLabel(e.date, e.time));
+    const vals   = entries.map(e => e.gds);
+    const colors = entries.map(e => ptColor(e.gds)); // 🔥 DI SINI
 
-    chart.update();
+    state.gdsChart.data.labels = labels;
+    state.gdsChart.data.datasets[0].data = vals;
+
+    // 🔥 warna per titik
+    state.gdsChart.data.datasets[0].pointBackgroundColor = colors;
+    state.gdsChart.data.datasets[0].pointBorderColor = colors;
+    pointRadius: 5,
+    pointHoverRadius: 6
+
+    state.gdsChart.update();
 }
 
 /* ====== CHART DOSIS ====== */
 function renderDoseChart(){
-    const chart = state.doseChart;
-    if(!chart) return;
+    var entries = filterByPeriod(state.data, dosePeriod);
 
-    let entries = state.data.filter(e=>e.dose!==null);
+    if(doseType !== 'all'){
+        entries = entries.filter(e=>e.doseType === doseType);
+    }
 
-    let ins=0, lev=0;
+    var grouped = {};
 
     entries.forEach(e=>{
-        if(e.doseType==='rapid') ins+=e.dose;
-        if(e.doseType==='levemir') lev+=e.dose;
+        let d = normalizeDate(e.date);
+        if(!grouped[d]) grouped[d] = {ins:0, lev:0};
+
+        if(e.doseType==='rapid') grouped[d].ins += e.dose;
+        if(e.doseType==='levemir') grouped[d].lev += e.dose;
     });
 
-    chart.data.labels = ['Total'];
-    chart.data.datasets[0].data = [ins];
-    chart.data.datasets[1].data = [lev];
+    var dates = Object.keys(grouped).sort();
 
-    chart.update();
+    state.doseChart.data.labels = dates;
+    state.doseChart.data.datasets[0].data = dates.map(d=>grouped[d].ins);
+    state.doseChart.data.datasets[1].data = dates.map(d=>grouped[d].lev);
+
+    state.doseChart.update();
 
     // stats aman
     const statsEl = document.getElementById('doseStats');
+    
     if(statsEl){
+        let ins = 0, lev = 0;
+
+        entries.forEach(e=>{
+            if(e.doseType==='rapid') ins += e.dose || 0;
+            if(e.doseType==='levemir') lev += e.dose || 0;
+        });
         statsEl.innerHTML = `
             <div class="dose-stat insulin-stat"><div class="dv">${ins}</div></div>
             <div class="dose-stat levemir-stat"><div class="dv">${lev}</div></div>
@@ -317,13 +341,19 @@ function initCharts(){
     if(gdsCanvas && !state.gdsChart){
         state.gdsChart = new Chart(gdsCanvas.getContext('2d'), {
             type:'line',
-            data:{labels:[],datasets:[{
-                data:[],
-                borderColor:'rgba(0,217,166,0.8)',
-                tension:0.3,
-                fill:true
-            }]},
-            options:{responsive:true,plugins:{legend:{display:false}}}
+            data:{
+                labels:[],
+                datasets:[{
+                    data:[],
+                    borderColor:'rgba(0,217,166,0.8)',
+                    tension:0.3,
+                    fill:true
+                }]
+            },
+            options:{
+                responsive:true,
+                plugins:{legend:{display:false}}
+            }
         });
     }
 
@@ -344,63 +374,30 @@ function initCharts(){
     
 /* ====== HISTORY ====== */
 function renderHistory(){
-    const list = document.getElementById('historyList');
+    var entries = filterByPeriod(state.data, historyPeriod);
+    var list = document.getElementById('historyList');
+
     if(!list) return;
 
-    if(!state.data.length){
-        list.innerHTML = '<div class="empty-box">Tidak ada data</div>';
-        return;
-    }
+    var grouped = {};
 
-    // 🔥 GROUP BY TANGGAL
-    const grouped = {};
-
-    state.data.forEach(e=>{
-        const d = normalizeDate(e.date);
+    entries.forEach(e=>{
+        let d = normalizeDate(e.date);
         if(!grouped[d]) grouped[d] = [];
         grouped[d].push(e);
     });
 
-    // 🔥 SORT TANGGAL (TERBARU DI ATAS)
-    const dates = Object.keys(grouped).sort().reverse();
-
     let html = '';
 
-    dates.forEach(date=>{
-        const dt = new Date(date+'T00:00:00');
-
-        const label = isNaN(dt.getTime())
-            ? date
-            : dt.toLocaleDateString('id-ID',{
-                weekday:'long',
-                day:'numeric',
-                month:'long',
-                year:'numeric'
-            });
-
-        // HEADER TANGGAL
-        html += `<div class="hp-date-label">${label}</div>`;
-
-        // SORT JAM DALAM HARI
-        grouped[date].sort((a,b)=>
-            (a.time || '').localeCompare(b.time || '')
-        );
+    Object.keys(grouped).sort().reverse().forEach(date=>{
+        html += `<div class="hp-date-label">${date}</div>`;
 
         grouped[date].forEach(e=>{
-            let value = e.gds !== null ? e.gds : e.dose;
-            let unit  = e.gds !== null ? 'mg/dL' : 'unit';
-
-            html += `
-                <div class="hp-item">
-                    <div class="hp-item-info">
-                        <div class="hp-item-title">${e.slot}</div>
-                        <div class="hp-item-sub">${e.time || '-'}</div>
-                    </div>
-                    <div class="hp-item-val">
-                        ${value ?? '-'} <small>${unit}</small>
-                    </div>
-                </div>
-            `;
+            html += `<div class="hp-item">
+                <div>${e.slot}</div>
+                <div>${e.gds || '-'}</div>
+                ${e.dose ? e.dose + 'u' : ''}
+            </div>`;
         });
     });
 
@@ -430,7 +427,7 @@ document.getElementById('historyFilters').addEventListener('click',function(e){v
 
 /* ====== COUNTDOWN ====== */
 var SCHEDULES_CK=[{hour:2,minute:0,slot:'dini-hari',label:'Cek GDS Dini Hari'},{hour:6,minute:0,slot:'sarapan',label:'GDS + Insulin Sarapan'},{hour:12,minute:0,slot:'siang',label:'GDS + Insulin Siang'},{hour:18,minute:0,slot:'malam',label:'GDS + Insulin Malam'},{hour:20,minute:30,slot:'levemir',label:'Suntik Levemir'}];
-function updateCountdown(){var now=new Date(),nowT=now.getHours()*60+now.getMinutes(),today=getTodayKey();var todayData=allData.filter(function(e){return normalizeDate(e.date)===today;});var done={};SCHEDULES_CK.forEach(function(s){done[s.slot]=todayData.some(function(e){return e.slot===s.slot;});});var next=null;for(var i=0;i<SCHEDULES_CK.length;i++){var s=SCHEDULES_CK[i];if(done[s.slot])continue;var sT=s.hour*60+s.minute;if(sT>nowT){if(!next||sT<next.total)next={hour:s.hour,minute:s.minute,label:s.label,total:sT,tomorrow:false};}else if(!next){next={hour:s.hour,minute:s.minute,label:s.label,total:sT+1440,tomorrow:true};}}if(!next){var f=SCHEDULES_CK[0];next={hour:f.hour,minute:f.minute,label:f.label,total:f.hour*60+f.minute+1440,tomorrow:true};}var diff=next.total-nowT,h=Math.floor(diff/60),m=diff%60;document.getElementById('nrLabel').textContent=(next.tomorrow?'Besok ':'')+String(next.hour).padStart(2,'0')+':'+String(next.minute).padStart(2,'0')+' '+next.label.split('+')[0].trim();document.getElementById('nrCountdown').textContent=String(h).padStart(2,'0')+':'+String(m).padStart(2,'0');SCHEDULES_CK.forEach(function(s){var sT=s.hour*60+s.minute;if(!done[s.slot]&&Math.abs(nowT-sT)<=15){var el=document.querySelector('.p-slot[data-slot="'+s.slot+'"]');if(el&&!el.classList.contains('active-slot'))el.classList.add('active-slot');}});}
+function updateCountdown(){var now=new Date(),nowT=now.getHours()*60+now.getMinutes(),today=getTodayKey();var todayData=state.data.filter(function(e){return normalizeDate(e.date)===today;});var done={};SCHEDULES_CK.forEach(function(s){done[s.slot]=todayData.some(function(e){return e.slot===s.slot;});});var next=null;for(var i=0;i<SCHEDULES_CK.length;i++){var s=SCHEDULES_CK[i];if(done[s.slot])continue;var sT=s.hour*60+s.minute;if(sT>nowT){if(!next||sT<next.total)next={hour:s.hour,minute:s.minute,label:s.label,total:sT,tomorrow:false};}else if(!next){next={hour:s.hour,minute:s.minute,label:s.label,total:sT+1440,tomorrow:true};}}if(!next){var f=SCHEDULES_CK[0];next={hour:f.hour,minute:f.minute,label:f.label,total:f.hour*60+f.minute+1440,tomorrow:true};}var diff=next.total-nowT,h=Math.floor(diff/60),m=diff%60;document.getElementById('nrLabel').textContent=(next.tomorrow?'Besok ':'')+String(next.hour).padStart(2,'0')+':'+String(next.minute).padStart(2,'0')+' '+next.label.split('+')[0].trim();document.getElementById('nrCountdown').textContent=String(h).padStart(2,'0')+':'+String(m).padStart(2,'0');SCHEDULES_CK.forEach(function(s){var sT=s.hour*60+s.minute;if(!done[s.slot]&&Math.abs(nowT-sT)<=15){var el=document.querySelector('.p-slot[data-slot="'+s.slot+'"]');if(el&&!el.classList.contains('active-slot'))el.classList.add('active-slot');}});}
 let lastLength = 0;
 
 setInterval(async ()=>{
@@ -442,6 +439,7 @@ setInterval(async ()=>{
         state.data = newData;
 
         renderAll();
+        updateCountdown();
     }
 }, 5000);
 
@@ -452,11 +450,15 @@ var params=new URLSearchParams(window.location.search);var autoSlot=params.get('
 async function init(){
     state.data = await fetchData();
 
-    initCharts();   // WAJIB
+    initCharts(); // 🔥 WAJIB
+    updateProgress();
     renderAll();
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
 }
 
 init();
+
 </script>
 </body>
 </html>
