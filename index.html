@@ -221,50 +221,26 @@ function filterByPeriod(entries,period){if(period==='today'){var t=getTodayKey()
 function updateProgress(){
     var today = getTodayKey();
 
-    var td = allData.filter(function(e){
-        return normalizeDate(e.date) === today;
-    });
+    var td = allData.filter(e =>
+        normalizeDate(e.date) === today
+    );
 
     var done = {};
-    SLOTS.forEach(function(s){
-        done[s.slot] = false;
-    });
+    SLOTS.forEach(s => done[s.slot] = false);
 
-    td.forEach(function(e){
+    td.forEach(e=>{
         if(done.hasOwnProperty(e.slot)){
             done[e.slot] = true;
         }
     });
 
-    done['levemir'] = td.some(function(e){
-        return e.slot === 'levemir';
-    });
+    done['levemir'] = td.some(e => e.slot === 'levemir');
 
-    // update progress bar
-    document.querySelectorAll('.p-slot').forEach(function(el){
-        var s = el.dataset.slot;
-        el.classList.remove('done','active-slot');
-        if(done[s]) el.classList.add('done');
-        if(s === selectedSlot) el.classList.add('active-slot');
-    });
-
-    // disable button yg sudah done
-    document.querySelectorAll('.slot-btn').forEach(function(b){
-        b.classList.toggle('done-slot', done[b.dataset.slot]);
-    });
-
-    // ✅ FIX DI SINI (ANTI ERROR)
     var statDoneEl = document.getElementById('statDone');
-    if(statDoneEl){
-        statDoneEl.textContent = Object.values(done).filter(function(v){
-            return v;
-        }).length;
-    }
 
-    // levemir button
-    var levBtn = document.getElementById('levemirBtn');
-    if(levBtn){
-        levBtn.classList.toggle('done', done['levemir']);
+    if(statDoneEl){
+        statDoneEl.textContent =
+            Object.values(done).filter(v=>v).length;
     }
 }
 
@@ -282,6 +258,11 @@ async function handleLevemir(){var entry={date:getTodayKey(),time:getTimeStr(),s
 
 /* ====== CHART GDS ====== */
 function renderGdsChart(){
+    var sec = document.getElementById('gdsSection');
+    var canvas = document.getElementById('gdsCanvas');
+
+    if(!sec || !canvas) return;
+
     var entries = filterByPeriod(
         allData.filter(e => e.gds !== null && typeof e.gds === 'number'),
         gdsPeriod
@@ -292,27 +273,25 @@ function renderGdsChart(){
         .localeCompare(normalizeDate(b.date)+' '+b.time)
     );
 
-    var sec = document.getElementById('gdsSection');
-
+    // ❌ kalau kosong
     if(!entries.length){
-        sec.innerHTML = '<div class="empty-box"><i class="fa-solid fa-chart-line"></i><p>Tidak ada data GDS</p></div>';
+        canvas.style.display = 'none';
+
+        if(!sec.querySelector('.empty-box')){
+            sec.insertAdjacentHTML('beforeend',
+                '<div class="empty-box"><i class="fa-solid fa-chart-line"></i><p>Tidak ada data GDS</p></div>'
+            );
+        }
         return;
     }
 
-    // ✅ Render DOM dulu
-    sec.innerHTML = `
-    <div class="chart-section">
-        <div class="chart-wrap">
-            <canvas id="gdsCanvas"></canvas>
-            <div class="chart-legend">
-                <div class="chart-legend-item"><div class="chart-legend-dot" style="background:var(--accent)"></div>Normal</div>
-                <div class="chart-legend-item"><div class="chart-legend-dot" style="background:var(--warning)"></div>Rendah/Tinggi</div>
-                <div class="chart-legend-item"><div class="chart-legend-dot" style="background:var(--danger)"></div>Kritis</div>
-            </div>
-        </div>
-    </div>`;
+    // ✅ kalau ada data
+    canvas.style.display = 'block';
 
-    var ctx = document.getElementById('gdsCanvas').getContext('2d');
+    var empty = sec.querySelector('.empty-box');
+    if(empty) empty.remove();
+
+    var ctx = canvas.getContext('2d');
 
     var labels = entries.map(e => fmtLabel(e.date,e.time));
     var vals   = entries.map(e => e.gds);
@@ -320,221 +299,108 @@ function renderGdsChart(){
 
     var grad = ctx.createLinearGradient(0,0,0,260);
     grad.addColorStop(0,'rgba(0,217,166,0.15)');
-    grad.addColorStop(1,'rgba(0,217,166,0.0)');
+    grad.addColorStop(1,'rgba(0,217,166,0)');
 
-    var refP = {
-        id:'ref',
-        afterDraw:function(ch){
-            var c=ch.ctx,yA=ch.scales.y,xA=ch.scales.x;
-            [
-                {v:100,c:'rgba(255,181,71,0.4)',l:'<100'},
-                {v:200,c:'rgba(255,92,92,0.4)',l:'>200'},
-                {v:300,c:'rgba(255,92,92,0.6)',l:'>300'}
-            ].forEach(function(r){
-                var y=yA.getPixelForValue(r.v);
-                if(y<yA.top||y>yA.bottom)return;
-                c.save();
-                c.strokeStyle=r.c;
-                c.setLineDash([4,4]);
-                c.beginPath();
-                c.moveTo(xA.left,y);
-                c.lineTo(xA.right,y);
-                c.stroke();
-                c.fillStyle=r.c;
-                c.font='9px Space Grotesk';
-                c.fillText(r.l,xA.left+4,y-4);
-                c.restore();
-            });
-        }
-    };
-
-    if(gdsChart) gdsChart.destroy();
+    if(gdsChart){
+        gdsChart.destroy();
+    }
 
     gdsChart = new Chart(ctx,{
         type:'line',
         data:{
-            labels:labels,
+            labels,
             datasets:[{
                 data:vals,
-                borderColor:'rgba(0,217,166,0.9)',
+                borderColor:'rgba(0,217,166,0.8)',
                 backgroundColor:grad,
                 pointBackgroundColor:colors,
                 pointBorderColor:colors,
-                pointRadius:4,
-                pointHoverRadius:6,
                 fill:true,
-                tension:0.35
+                tension:0.3
             }]
         },
         options:{
             responsive:true,
-            maintainAspectRatio:false,
-            plugins:{
-                legend:{display:false},
-                tooltip:{
-                    callbacks:{
-                        label:(i)=>`GDS: ${i.raw} mg/dL (${getCat(i.raw).label})`
-                    }
-                }
-            },
-            scales:{
-                x:{
-                    ticks:{color:'#7A8BA4',font:{size:10}},
-                    grid:{color:'rgba(30,45,72,0.5)'}
-                },
-                y:{
-                    suggestedMin:50,
-                    suggestedMax:350,
-                    ticks:{color:'#7A8BA4'},
-                    grid:{color:'rgba(30,45,72,0.5)'}
-                }
-            }
-        },
-        plugins:[refP]
+            plugins:{legend:{display:false}}
+        }
     });
 }
 
 /* ====== CHART DOSIS ====== */
 function renderDoseChart(){
-    var container = document.getElementById('doseContent');
-    if(!container) return; // ✅ aman
+    var statsEl = document.getElementById('doseStats');
+    var canvas  = document.getElementById('doseCanvas');
 
-    var entries = allData.filter(e => e.dose !== null && typeof e.dose === 'number');
-    var filtered = filterByPeriod(entries, dosePeriod);
+    if(!statsEl || !canvas) return;
 
-    if(doseType !== 'all'){
-        filtered = filtered.filter(e => e.doseType === doseType);
-    }
+    var entries = allData.filter(e => e.dose !== null);
 
-    if(!filtered.length){
-        container.innerHTML = `
-        <div class="empty-box">
-            <i class="fa-solid fa-prescription-bottle-medical"></i>
-            <p>Tidak ada data dosis</p>
-        </div>`;
-        return;
-    }
+    var insTotal=0, levTotal=0;
 
-    // grouping
-    var grouped = {};
-    filtered.forEach(function(e){
-        var d = normalizeDate(e.date);
-        if(!grouped[d]) grouped[d] = {ins:0, lev:0};
-
-        if(e.doseType === 'rapid') grouped[d].ins += e.dose;
-        if(e.doseType === 'levemir') grouped[d].lev += e.dose;
+    entries.forEach(e=>{
+        if(e.doseType==='rapid') insTotal+=e.dose;
+        if(e.doseType==='levemir') levTotal+=e.dose;
     });
 
-    var dates = Object.keys(grouped).sort();
-
-    // render isi saja (AMAN)
-    container.innerHTML = `
-    <div class="chart-section">
-        <div class="chart-wrap">
-            <canvas id="doseCanvas"></canvas>
-            <div class="chart-legend">
-                <div class="chart-legend-item">
-                    <div class="chart-legend-dot" style="background:var(--insulin)"></div>Insulin
-                </div>
-                <div class="chart-legend-item">
-                    <div class="chart-legend-dot" style="background:var(--levemir)"></div>Levemir
-                </div>
-            </div>
+    statsEl.innerHTML = `
+        <div class="dose-stat insulin-stat">
+            <div class="dv">${insTotal}</div>
+            <div class="dl">Total Insulin</div>
         </div>
-    </div>`;
-
-    var canvas = document.getElementById('doseCanvas');
-    if(!canvas) return;
+        <div class="dose-stat levemir-stat">
+            <div class="dv">${levTotal}</div>
+            <div class="dl">Total Levemir</div>
+        </div>
+        <div class="dose-stat total-stat">
+            <div class="dv">${insTotal+levTotal}</div>
+            <div class="dl">Total Semua</div>
+        </div>
+    `;
 
     var ctx = canvas.getContext('2d');
 
-    if(doseChart) doseChart.destroy();
+    if(doseChart){
+        doseChart.destroy();
+    }
 
     doseChart = new Chart(ctx,{
         type:'bar',
         data:{
-            labels:dates,
+            labels:['Total'],
             datasets:[
-                {
-                    label:'Insulin',
-                    data:dates.map(d=>grouped[d].ins),
-                    backgroundColor:'rgba(68,136,255,0.7)'
-                },
-                {
-                    label:'Levemir',
-                    data:dates.map(d=>grouped[d].lev),
-                    backgroundColor:'rgba(255,181,71,0.7)'
-                }
+                {label:'Insulin',data:[insTotal]},
+                {label:'Levemir',data:[levTotal]}
             ]
         },
         options:{
             responsive:true,
-            maintainAspectRatio:false,
-            plugins:{legend:{display:false}},
-            scales:{
-                x:{stacked:true},
-                y:{stacked:true, beginAtZero:true}
-            }
+            plugins:{legend:{display:false}}
         }
     });
 }
     
 /* ====== HISTORY ====== */
 function renderHistory(){
-    var container = document.getElementById('historyContent');
-    if(!container) return; // ✅ anti crash
+    var list = document.getElementById('historyList');
+    if(!list) return;
 
-    var entries = filterByPeriod(allData, historyPeriod);
-
-    entries.sort(function(a,b){
-        return (normalizeDate(a.date)+' '+a.time)
-        .localeCompare(normalizeDate(b.date)+' '+b.time);
-    });
-
-    if(!entries.length){
-        container.innerHTML = `
-        <div class="empty-box">
-            <i class="fa-solid fa-clipboard-list"></i>
-            <p>Tidak ada riwayat</p>
-        </div>`;
+    if(!allData.length){
+        list.innerHTML = '<div class="empty-box">Tidak ada data</div>';
         return;
     }
 
-    var grouped = {};
-    entries.forEach(function(e){
-        var d = normalizeDate(e.date);
-        if(!grouped[d]) grouped[d] = [];
-        grouped[d].push(e);
-    });
-
     var html = '';
 
-    Object.keys(grouped).sort().reverse().forEach(function(date){
-        var d = new Date(date+'T00:00:00');
-
+    allData.forEach(e=>{
         html += `
-        <div class="hp-date-label">
-            ${d.toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'})}
-        </div>`;
-
-        grouped[date].forEach(function(e){
-            var val = e.gds !== null ? e.gds : (e.dose || '-');
-
-            html += `
             <div class="hp-item">
-                <div class="hp-item-icon">
-                    <i class="fa-solid fa-clock"></i>
-                </div>
-                <div class="hp-item-info">
-                    <div class="hp-item-title">${e.slot}</div>
-                    <div class="hp-item-sub">${e.time || ''}</div>
-                </div>
-                <div class="hp-item-val">${val}</div>
-            </div>`;
-        });
+                <div>${e.slot}</div>
+                <div>${e.gds || e.dose || '-'}</div>
+            </div>
+        `;
     });
 
-    container.innerHTML = html;
+    list.innerHTML = html;
 }
 
 function renderAll(){renderGdsChart();renderDoseChart();renderHistory();}
@@ -563,33 +429,13 @@ var params=new URLSearchParams(window.location.search);var autoSlot=params.get('
 
 /* ====== INIT ====== */
 async function init(){
-    var statsGrid = document.getElementById('statsGrid');
-
-    // loading dulu
-    statsGrid.innerHTML = `
-    <div class="loading-box" style="grid-column:span 2">
-        <i class="fa-solid fa-spinner"></i>
-        <p>Memuat data...</p>
-    </div>`;
-
-    // ambil data
     allData = await fetchData();
 
-    // render ulang stats (baru ada statDone)
-    statsGrid.innerHTML = `
-    <div class="stat-card neutral">
-        <div class="stat-val" id="statDone">0</div>
-        <div class="stat-label">Selesai Hari Ini</div>
-    </div>
-    <div class="stat-card neutral">
-        <div class="stat-val" id="statTotal">5</div>
-        <div class="stat-label">Total Jadwal</div>
-    </div>`;
-
-    // baru aman dipanggil
-    updateProgress();
-    renderAll();
-    updateCountdown();
+    // kasih delay biar DOM ready
+    setTimeout(()=>{
+        updateProgress();
+        renderAll();
+    },100);
 }
 init();
 </script>
