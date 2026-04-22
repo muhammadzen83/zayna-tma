@@ -218,7 +218,55 @@ async function submitData(entry){try{var r=await fetch(API_URL+'?action=submit',
 
 function filterByPeriod(entries,period){if(period==='today'){var t=getTodayKey();return entries.filter(function(e){return normalizeDate(e.date)===t;});}var days=period==='7'?7:30;if(period==='all')return entries;var cutoff=new Date();cutoff.setDate(cutoff.getDate()-days);var cutStr=cutoff.toISOString().slice(0,10);return entries.filter(function(e){return normalizeDate(e.date)>=cutStr;});}
 
-function updateProgress(){var today=getTodayKey();var td=allData.filter(function(e){return normalizeDate(e.date)===today;});var done={};SLOTS.forEach(function(s){done[s.slot]=false;});td.forEach(function(e){if(done.hasOwnProperty(e.slot))done[e.slot]=true;});done['levemir']=td.some(function(e){return e.slot==='levemir';});document.querySelectorAll('.p-slot').forEach(function(el){var s=el.dataset.slot;el.classList.remove('done','active-slot');if(done[s])el.classList.add('done');if(s===selectedSlot)el.classList.add('active-slot');});document.querySelectorAll('.slot-btn').forEach(function(b){b.classList.toggle('done-slot',done[b.dataset.slot]);});document.getElementById('statDone').textContent=Object.values(done).filter(function(v){return v;}).length;document.getElementById('levemirBtn').classList.toggle('done',done['levemir']);}
+function updateProgress(){
+    var today = getTodayKey();
+
+    var td = allData.filter(function(e){
+        return normalizeDate(e.date) === today;
+    });
+
+    var done = {};
+    SLOTS.forEach(function(s){
+        done[s.slot] = false;
+    });
+
+    td.forEach(function(e){
+        if(done.hasOwnProperty(e.slot)){
+            done[e.slot] = true;
+        }
+    });
+
+    done['levemir'] = td.some(function(e){
+        return e.slot === 'levemir';
+    });
+
+    // update progress bar
+    document.querySelectorAll('.p-slot').forEach(function(el){
+        var s = el.dataset.slot;
+        el.classList.remove('done','active-slot');
+        if(done[s]) el.classList.add('done');
+        if(s === selectedSlot) el.classList.add('active-slot');
+    });
+
+    // disable button yg sudah done
+    document.querySelectorAll('.slot-btn').forEach(function(b){
+        b.classList.toggle('done-slot', done[b.dataset.slot]);
+    });
+
+    // ✅ FIX DI SINI (ANTI ERROR)
+    var statDoneEl = document.getElementById('statDone');
+    if(statDoneEl){
+        statDoneEl.textContent = Object.values(done).filter(function(v){
+            return v;
+        }).length;
+    }
+
+    // levemir button
+    var levBtn = document.getElementById('levemirBtn');
+    if(levBtn){
+        levBtn.classList.toggle('done', done['levemir']);
+    }
+}
 
 /* ====== INPUT ====== */
 var gdsInput=document.getElementById('gdsInput'),submitBtn=document.getElementById('submitBtn'),levemirBtn=document.getElementById('levemirBtn'),resultCard=document.getElementById('resultCard'),inputRow=document.getElementById('inputRow');
@@ -471,7 +519,35 @@ setInterval(updateCountdown,1000);
 var params=new URLSearchParams(window.location.search);var autoSlot=params.get('slot');if(autoSlot)selectSlot(autoSlot);
 
 /* ====== INIT ====== */
-async function init(){document.getElementById('statsGrid').innerHTML='<div class="loading-box" style="grid-column:span 2"><i class="fa-solid fa-spinner"></i><p>Memuat data...</p></div>';allData=await fetchData();updateProgress();renderAll();document.getElementById('statsGrid').innerHTML='<div class="stat-card neutral"><div class="stat-val" id="statDone">—</div><div class="stat-label">Selesai Hari Ini</div></div><div class="stat-card neutral"><div class="stat-val" id="statTotal">5</div><div class="stat-label">Total Jadwal</div></div>';updateProgress();updateCountdown();}
+async function init(){
+    var statsGrid = document.getElementById('statsGrid');
+
+    // loading dulu
+    statsGrid.innerHTML = `
+    <div class="loading-box" style="grid-column:span 2">
+        <i class="fa-solid fa-spinner"></i>
+        <p>Memuat data...</p>
+    </div>`;
+
+    // ambil data
+    allData = await fetchData();
+
+    // render ulang stats (baru ada statDone)
+    statsGrid.innerHTML = `
+    <div class="stat-card neutral">
+        <div class="stat-val" id="statDone">0</div>
+        <div class="stat-label">Selesai Hari Ini</div>
+    </div>
+    <div class="stat-card neutral">
+        <div class="stat-val" id="statTotal">5</div>
+        <div class="stat-label">Total Jadwal</div>
+    </div>`;
+
+    // baru aman dipanggil
+    updateProgress();
+    renderAll();
+    updateCountdown();
+}
 init();
 </script>
 </body>
