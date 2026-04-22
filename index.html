@@ -182,7 +182,7 @@
         <!-- Grafik Dosis -->
         <div class="section-head"><div class="section-title"><i class="fa-solid fa-prescription-bottle-medical"></i>Grafik Dosis Harian</div><button class="section-toggle open" id="doseToggle"><i class="fa-solid fa-chevron-down"></i></button></div>
         <div id="doseSection">
-            <div class="filter-bar" id="dosePeriodFilters"><button class="fb active" data-dp="7">7 Hari</button><button class="fb" data-dp="30">30 Hari</button><button class="fb" data-dp="all">Semua</button></div>
+            <div class="filter-bar" id="dosePeriodFilters"><button class="fb" data-dp="today">Hari Ini</button><button class="fb active" data-dp="7">7 Hari</button><button class="fb" data-dp="30">30 Hari</button><button class="fb" data-dp="all">Semua</button></div>
             <div class="filter-bar" id="doseTypeFilters"><button class="fb type-btn active-insulin" data-dt="all">Semua</button><button class="fb type-btn" data-dt="insulin"><i class="fa-solid fa-syringe" style="margin-right:3px"></i>Insulin</button><button class="fb type-btn" data-dt="levemir"><i class="fa-solid fa-moon" style="margin-right:3px"></i>Levemir</button></div>
             <div class="dose-stats" id="doseStats"></div>
             <div class="chart-section"><div class="chart-wrap"><canvas id="doseCanvas"></canvas><div class="chart-legend"><div class="chart-legend-item"><div class="chart-legend-dot" style="background:var(--insulin)"></div>Insulin</div><div class="chart-legend-item"><div class="chart-legend-dot" style="background:var(--levemir)"></div>Levemir</div></div></div>
@@ -316,9 +316,8 @@ function renderGdsChart(){
 function renderDoseChart(){
     var entries = filterByPeriod(state.data, dosePeriod);
 
-    if(doseType !== 'all'){
-        entries = entries.filter(e=>e.doseType === doseType);
-    }else if(doseType === 'insulin'){
+    // 🔥 FILTER TYPE YANG BENAR
+    if(doseType === 'insulin'){
         entries = entries.filter(e => e.doseType === 'rapid');
     }else if(doseType === 'levemir'){
         entries = entries.filter(e => e.doseType === 'levemir');
