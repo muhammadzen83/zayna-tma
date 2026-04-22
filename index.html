@@ -240,17 +240,24 @@ function updateProgress(){
         }
     });
 
-    var statDoneEl = document.getElementById('statDone');
+    // 🔥 HITUNG JUMLAH YANG SELESAI
+    const doneCount = Object.values(done).filter(v => v).length;
+
+    // 🔥 UPDATE UI
+    const statDoneEl = document.getElementById('statDone');
     if(statDoneEl){
-        document.querySelectorAll('.p-slot').forEach(el=>{
-            const slot = el.dataset.slot;
-            if(done[slot]){
-                el.classList.add('done');
-            }else{
-                el.classList.remove('done');
-            }
-        });
+        statDoneEl.textContent = doneCount;
     }
+
+    // tetap update slot UI
+    document.querySelectorAll('.p-slot').forEach(el=>{
+        const slot = el.dataset.slot;
+        if(done[slot]){
+            el.classList.add('done');
+        }else{
+            el.classList.remove('done');
+        }
+    });
 }
 
 /* ====== INPUT ====== */
@@ -311,6 +318,10 @@ function renderDoseChart(){
 
     if(doseType !== 'all'){
         entries = entries.filter(e=>e.doseType === doseType);
+    }else if(doseType === 'insulin'){
+        entries = entries.filter(e => e.doseType === 'rapid');
+    }else if(doseType === 'levemir'){
+        entries = entries.filter(e => e.doseType === 'levemir');
     }
 
     var grouped = {};
