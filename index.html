@@ -94,7 +94,7 @@
         .chart-legend{display:flex;gap:14px;justify-content:center;margin-top:10px;flex-wrap:wrap}
         .chart-legend-item{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--muted)}
         .chart-legend-dot{width:8px;height:8px;border-radius:50%}
-        .dose-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:12px}
+        .dose-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:12px}
         .dose-stat{padding:10px 8px;border-radius:10px;text-align:center}
         .dose-stat .dv{font-size:20px;font-weight:700}
         .dose-stat .dl{font-size:10px;color:var(--muted)}
@@ -383,9 +383,14 @@ function renderDoseChart(){
     });
     var dates = Object.keys(grouped).sort();
 
+    const insulinData = dates.map(d => grouped[d].ins);
+    const levemirData = dates.map(d => grouped[d].lev);
+    const totalData   = dates.map(d => grouped[d].ins + grouped[d].lev);
+
     state.doseChart.data.labels = dates;
-    state.doseChart.data.datasets[0].data = dates.map(d=>grouped[d].ins);
-    state.doseChart.data.datasets[1].data = dates.map(d=>grouped[d].lev);
+    state.doseChart.data.datasets[0].data = insulinData;
+    state.doseChart.data.datasets[1].data = levemirData;
+    state.doseChart.data.datasets[2].data = totalData; // 🔥 TOTAL
 
     state.doseChart.update();
 
@@ -420,22 +425,25 @@ if(statsEl){
         return;
     }
 
-    const insStats = calcStats(insulinArr);
-    const levStats = calcStats(levemirArr);
     const totStats = calcStats(totalArr);
-
+    const totalSum = totalArr.reduce((a,b)=>a+b,0);
+    
     statsEl.innerHTML = `
-        <div class="dose-stat insulin-stat">
-            <div class="dv">${insStats.avg}</div>
-            <div class="dl">Ins Avg</div>
-        </div>
-        <div class="dose-stat levemir-stat">
-            <div class="dv">${levStats.avg}</div>
-            <div class="dl">Lev Avg</div>
+        <div class="dose-stat total-stat">
+            <div class="dv">${totStats.min}</div>
+            <div class="dl">Min</div>
         </div>
         <div class="dose-stat total-stat">
             <div class="dv">${totStats.max}</div>
             <div class="dl">Max</div>
+        </div>
+        <div class="dose-stat total-stat">
+            <div class="dv">${totStats.avg}</div>
+            <div class="dl">Avg</div>
+        </div>
+        <div class="dose-stat total-stat">
+            <div class="dv">${totalSum}</div>
+            <div class="dl">Total</div>
         </div>
     `;
 }
@@ -556,12 +564,23 @@ function initCharts(){
                 {
                     label: 'Insulin',
                     data: [],
-                    borderWidth: 1
+                    borderWidth: 1,
+                    backgroundColor: '#4488FF'
                 },
                 {
                     label: 'Levemir',
                     data: [],
-                    borderWidth: 1
+                    borderWidth: 1,
+                    backgroundColor: '#FFB547'
+                },
+                {
+                    label: 'Total',
+                    data: [],
+                    type: 'line', // 🔥 biar beda visual
+                    borderWidth: 2,
+                    borderColor: '#00D9A6',
+                    tension: 0.3,
+                    fill: false
                 }
             ]
         },
