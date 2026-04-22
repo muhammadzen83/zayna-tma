@@ -1,1 +1,322 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diabetes Monitor — Zayna Kamila</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script>var API_URL='https://script.google.com/macros/s/AKfycbyPv4u2z9X_TtI8Yum_ZFIBLzm5cePi0y4_8AwpMmsv_ZL_rxGKtwg8iZmTfOqbI3UAbw/exec';</script>
+    <style>
+        :root{--bg:#0C1222;--bg2:#111B2E;--card:#152035;--card2:#1A2740;--accent:#00D9A6;--accent2:#00B88C;--danger:#FF5C5C;--warning:#FFB547;--good:#00D9A6;--fg:#F0F2F5;--muted:#7A8BA4;--border:#1E2D48;--insulin:#4488FF;--levemir:#FFB547}
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:'Space Grotesk',sans-serif;background:var(--bg);color:var(--fg);min-height:100vh;overflow-x:hidden}
+        .bg-orb{position:fixed;border-radius:50%;filter:blur(120px);opacity:.12;pointer-events:none;z-index:0}
+        .bg-orb-1{width:400px;height:400px;background:var(--accent);top:-100px;left:-80px;animation:of1 18s ease-in-out infinite}
+        .bg-orb-2{width:300px;height:300px;background:#0066FF;bottom:-80px;right:-60px;animation:of2 22s ease-in-out infinite}
+        @keyframes of1{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(40px,30px) scale(1.1)}}
+        @keyframes of2{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-30px,-20px) scale(1.1)}}
+        .app-shell{position:relative;z-index:1;display:flex;flex-direction:column;min-height:100vh;max-width:520px;margin:0 auto;padding-bottom:24px}
+        .app-header{padding:16px 20px 12px;display:flex;align-items:center;justify-content:space-between}
+        .brand{display:flex;align-items:center;gap:10px}
+        .brand-icon{width:38px;height:38px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--bg);box-shadow:0 4px 20px rgba(0,217,166,.25)}
+        .brand-text h1{font-size:15px;font-weight:700;line-height:1.2}
+        .brand-text p{font-size:11px;color:var(--muted)}
+        .header-actions{display:flex;gap:6px}
+        .header-btn{width:36px;height:36px;border-radius:10px;border:1px solid var(--border);background:var(--card);color:var(--muted);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;font-size:14px}
+        .header-btn:hover{border-color:var(--accent);color:var(--accent)}
+        .header-btn.active-tab{border-color:var(--accent);color:var(--accent);background:rgba(0,217,166,.1)}
+        .bot-bar{margin:0 20px 8px;padding:10px 14px;border-radius:10px;background:rgba(0,217,166,.06);border:1px solid rgba(0,217,166,.15);font-size:11px;color:var(--accent);display:flex;align-items:center;gap:8px}
+        .bot-bar i{font-size:14px}
+        .next-reminder-bar{margin:0 20px 8px;padding:10px 14px;border-radius:10px;background:var(--card);border:1px solid var(--border);display:flex;align-items:center;gap:10px;font-size:12px}
+        .next-reminder-bar i{color:var(--accent);font-size:14px}
+        .next-reminder-bar .nr-label{color:var(--muted)}.next-reminder-bar .nr-value{color:var(--fg);font-weight:600}
+        .next-reminder-bar .nr-countdown{color:var(--accent);font-weight:700;margin-left:auto;font-variant-numeric:tabular-nums}
+        .progress-strip{padding:0 20px 8px}
+        .progress-slots{display:flex;gap:6px}
+        .p-slot{flex:1;text-align:center;padding:8px 4px 6px;border-radius:10px;border:1px solid var(--border);background:var(--card);cursor:pointer;transition:all .25s;position:relative}
+        .p-slot:hover{border-color:rgba(0,217,166,.4)}
+        .p-slot .p-time{font-size:11px;font-weight:600;color:var(--muted);margin-bottom:3px}
+        .p-slot .p-label{font-size:9px;color:var(--muted);opacity:.7}
+        .p-slot.done{border-color:rgba(0,217,166,.3);background:rgba(0,217,166,.08)}
+        .p-slot.done .p-time{color:var(--accent)}
+        .p-slot.done::after{content:'\f00c';font-family:'Font Awesome 6 Free';font-weight:900;position:absolute;top:3px;right:5px;font-size:8px;color:var(--accent)}
+        .p-slot.active-slot{border-color:var(--accent);background:rgba(0,217,166,.12);box-shadow:0 0 20px rgba(0,217,166,.1)}
+        .p-slot.active-slot .p-time{color:var(--accent)}
+        .stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;padding:0 20px 12px}
+        .stat-card{padding:14px;border-radius:12px;background:var(--card);border:1px solid var(--border);text-align:center}
+        .stat-val{font-size:24px;font-weight:700;margin-bottom:2px}
+        .stat-label{font-size:11px;color:var(--muted)}
+        .stat-card.good .stat-val{color:var(--accent)}.stat-card.warn .stat-val{color:var(--warning)}.stat-card.bad .stat-val{color:var(--danger)}.stat-card.neutral .stat-val{color:var(--fg)}
+        .section-head{padding:14px 20px 8px;display:flex;align-items:center;justify-content:space-between}
+        .section-title{font-size:13px;font-weight:700;color:var(--fg);display:flex;align-items:center;gap:8px}
+        .section-title i{color:var(--accent);font-size:12px}
+        .section-toggle{width:32px;height:32px;border-radius:8px;border:1px solid var(--border);background:var(--card);color:var(--muted);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;font-size:12px}
+        .section-toggle.open{color:var(--accent);border-color:rgba(0,217,166,.3);background:rgba(0,217,166,.08)}
+        .section-toggle i{transition:transform .2s}.section-toggle.open i{transform:rotate(180deg)}
+        .filter-bar{display:flex;gap:6px;flex-wrap:wrap;padding:0 20px 10px}
+        .fb{padding:5px 10px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--muted);font-family:inherit;font-size:11px;font-weight:500;cursor:pointer;transition:all .2s}
+        .fb.active{background:rgba(0,217,166,.1);border-color:rgba(0,217,166,.3);color:var(--accent)}
+        .fb.type-btn.active-insulin{background:rgba(68,136,255,.1);border-color:rgba(68,136,255,.3);color:var(--insulin)}
+        .fb.type-btn.active-levemir{background:rgba(255,181,71,.1);border-color:rgba(255,181,71,.3);color:var(--levemir)}
+        .input-section{padding:0 20px 14px}
+        .slot-btns{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+        .slot-btn{padding:8px 12px;border-radius:10px;border:1px solid var(--border);background:var(--card);color:var(--muted);font-size:12px;font-family:inherit;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:6px}
+        .slot-btn:hover,.slot-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(0,217,166,.08)}
+        .slot-btn.done-slot{opacity:.35;pointer-events:none}
+        .input-row{display:flex;gap:8px}
+        .gds-input{flex:1;padding:12px 14px;border-radius:12px;border:1px solid var(--border);background:var(--card);color:var(--fg);font-family:inherit;font-size:14px;font-weight:600;outline:none;transition:border-color .2s}
+        .gds-input::placeholder{color:var(--muted);font-weight:400}.gds-input:focus{border-color:var(--accent)}.gds-input:disabled{opacity:.3}
+        .submit-btn{width:50px;border-radius:12px;border:none;background:linear-gradient(135deg,var(--accent),var(--accent2));color:var(--bg);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s;box-shadow:0 4px 16px rgba(0,217,166,.2)}
+        .submit-btn:hover{transform:translateY(-1px)}.submit-btn:disabled{opacity:.3;cursor:not-allowed;transform:none}
+        .levemir-btn{width:100%;padding:14px;border-radius:12px;border:1px solid rgba(0,217,166,.3);background:rgba(0,217,166,.08);color:var(--accent);font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s;display:none}
+        .levemir-btn:hover{background:rgba(0,217,166,.15)}.levemir-btn.done{opacity:.4;pointer-events:none}
+        .result-card{margin:0 20px 14px;padding:14px 16px;border-radius:14px;background:var(--card);border:1px solid var(--border);display:none}
+        .result-card.show{display:block;animation:mi .35s ease-out}
+        @keyframes mi{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+        .result-gds{font-size:13px;color:var(--muted);margin-bottom:8px}
+        .result-gds span{font-size:18px;font-weight:700}
+        .result-gds .good{color:var(--accent)}.result-gds .warn{color:var(--warning)}.result-gds .danger{color:var(--danger)}
+        .result-dose{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-radius:10px;background:rgba(0,217,166,.08);border:1px solid rgba(0,217,166,.15);margin-top:8px}
+        .result-dose .label{font-size:12px;color:var(--muted)}.result-dose .label strong{color:var(--fg);display:block;font-size:13px}
+        .result-dose .val{font-size:28px;font-weight:700;color:var(--accent)}
+        .result-dose .val small{font-size:12px;font-weight:400}
+        .result-dose.danger-card{background:rgba(255,92,92,.08);border-color:rgba(255,92,92,.2)}.result-dose.danger-card .val{color:var(--danger)}
+        .result-note{margin-top:8px;font-size:11px;padding:8px 10px;border-radius:8px;display:none}
+        .result-note.warn-note{display:block;background:rgba(255,181,71,.08);color:var(--warning);border:1px solid rgba(255,181,71,.15)}
+        .result-note.danger-note{display:block;background:rgba(255,92,92,.08);color:var(--danger);border:1px solid rgba(255,92,92,.15)}
+        .chart-section{padding:0 20px 14px}
+        .chart-wrap{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px 12px 8px;position:relative}
+        .chart-wrap canvas{width:100%!important;max-height:260px}
+        .chart-legend{display:flex;gap:14px;justify-content:center;margin-top:10px;flex-wrap:wrap}
+        .chart-legend-item{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--muted)}
+        .chart-legend-dot{width:8px;height:8px;border-radius:50%}
+        .dose-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:12px}
+        .dose-stat{padding:10px 8px;border-radius:10px;text-align:center}
+        .dose-stat .dv{font-size:20px;font-weight:700}
+        .dose-stat .dl{font-size:10px;color:var(--muted)}
+        .dose-stat.insulin-stat{background:rgba(68,136,255,.08);border:1px solid rgba(68,136,255,.15)}
+        .dose-stat.insulin-stat .dv{color:var(--insulin)}
+        .dose-stat.levemir-stat{background:rgba(255,181,71,.08);border:1px solid rgba(255,181,71,.15)}
+        .dose-stat.levemir-stat .dv{color:var(--levemir)}
+        .dose-stat.total-stat{background:var(--card);border:1px solid var(--border)}
+        .dose-stat.total-stat .dv{color:var(--fg)}
+        .history-section{padding:0 20px 14px}
+        .hp-date-label{font-size:11px;font-weight:600;color:var(--muted);margin:12px 0 8px;text-transform:uppercase;letter-spacing:.5px}
+        .hp-date-label:first-child{margin-top:0}
+        .hp-item{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:10px;background:var(--card);border:1px solid var(--border);margin-bottom:6px;animation:mi .3s ease-out}
+        .hp-item-icon{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+        .hp-item-icon.gds{background:rgba(0,217,166,.1);color:var(--accent)}.hp-item-icon.insulin{background:rgba(68,136,255,.1);color:var(--insulin)}
+        .hp-item-icon.levemir{background:rgba(255,181,71,.1);color:var(--levemir)}.hp-item-icon.high{background:rgba(255,92,92,.1);color:var(--danger)}
+        .hp-item-info{flex:1;min-width:0}.hp-item-title{font-size:12px;font-weight:600}.hp-item-sub{font-size:11px;color:var(--muted)}
+        .hp-item-val{font-size:16px;font-weight:700;flex-shrink:0}
+        .hp-item-val.good{color:var(--accent)}.hp-item-val.warn{color:var(--warning)}.hp-item-val.bad{color:var(--danger)}
+        .hp-item-val.insulin-v{color:var(--insulin)}.hp-item-val.levemir-v{color:var(--levemir)}
+        .empty-box{text-align:center;padding:32px 20px;color:var(--muted)}
+        .empty-box i{font-size:32px;opacity:.2;display:block;margin-bottom:10px}
+        .empty-box p{font-size:13px}
+        .loading-box{text-align:center;padding:32px 20px;color:var(--muted)}
+        .loading-box i{font-size:28px;color:var(--accent);animation:spin 1.2s linear infinite;display:block;margin-bottom:10px}
+        @keyframes spin{to{transform:rotate(360deg)}}
+        .toast-container{position:fixed;top:12px;left:50%;transform:translateX(-50%);z-index:300;display:flex;flex-direction:column;gap:8px;pointer-events:none}
+        .toast{padding:10px 16px;border-radius:10px;background:var(--card2);border:1px solid var(--border);color:var(--fg);font-size:12px;font-family:inherit;box-shadow:0 8px 24px rgba(0,0,0,.4);animation:ti .3s ease-out,to .3s ease-in 2.5s forwards;display:flex;align-items:center;gap:8px;pointer-events:auto;max-width:90vw}
+        .toast i{font-size:14px;flex-shrink:0}.toast.success i{color:var(--accent)}.toast.error i{color:var(--danger)}
+        @keyframes ti{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:translateY(0)}}
+        @keyframes to{to{opacity:0;transform:translateY(-12px)}}
+        @media(max-width:540px){.app-shell{max-width:100%}.p-slot .p-label{display:none}.slot-btn{padding:6px 10px;font-size:11px}.dose-stats{grid-template-columns:repeat(3,1fr);gap:4px}}
+        @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+    </style>
+</head>
+<body>
+    <div class="bg-orb bg-orb-1"></div><div class="bg-orb bg-orb-2"></div>
+    <div class="toast-container" id="toastContainer"></div>
 
+    <div class="app-shell">
+        <header class="app-header">
+            <div class="brand"><div class="brand-icon"><i class="fa-solid fa-droplet"></i></div><div class="brand-text"><h1>Diabetes Monitor</h1><p>Zayna Kamila</p></div></div>
+            <div class="header-actions">
+                <button class="header-btn" id="historyToggle" title="Riwayat"><i class="fa-solid fa-clock-rotate-left"></i></button>
+            </div>
+        </header>
+
+        <div class="bot-bar"><i class="fa-brands fa-telegram"></i><span>Reminder via Telegram Bot — selalu tepat waktu</span></div>
+        <div class="next-reminder-bar" id="nextReminder"><i class="fa-solid fa-bell"></i><span class="nr-label">Berikutnya:</span><span class="nr-value" id="nrLabel">—</span><span class="nr-countdown" id="nrCountdown">—:—</span></div>
+
+        <div class="progress-strip"><div class="progress-slots" id="progressSlots">
+            <div class="p-slot" data-slot="dini-hari"><div class="p-time">02:00</div><div class="p-label">GDS</div></div>
+            <div class="p-slot" data-slot="sarapan"><div class="p-time">06:00</div><div class="p-label">Sarapan</div></div>
+            <div class="p-slot" data-slot="siang"><div class="p-time">12:00</div><div class="p-label">Siang</div></div>
+            <div class="p-slot" data-slot="malam"><div class="p-time">18:00</div><div class="p-label">Malam</div></div>
+            <div class="p-slot" data-slot="levemir"><div class="p-time">20:30</div><div class="p-label">Levemir</div></div>
+        </div></div>
+
+        <div class="stats-grid" id="statsGrid"><div class="stat-card neutral"><div class="stat-val" id="statDone">—</div><div class="stat-label">Selesai Hari Ini</div></div><div class="stat-card neutral"><div class="stat-val" id="statTotal">5</div><div class="stat-label">Total Jadwal</div></div></div>
+
+        <!-- Input -->
+        <div class="section-head"><div class="section-title"><i class="fa-solid fa-syringe"></i>Input Pengukuran</div></div>
+        <div class="input-section">
+            <div class="slot-btns" id="slotBtns">
+                <button class="slot-btn" data-slot="dini-hari"><i class="fa-solid fa-moon"></i>02:00</button>
+                <button class="slot-btn" data-slot="sarapan"><i class="fa-solid fa-sun"></i>06:00</button>
+                <button class="slot-btn" data-slot="siang"><i class="fa-solid fa-cloud-sun"></i>12:00</button>
+                <button class="slot-btn" data-slot="malam"><i class="fa-solid fa-cloud-moon"></i>18:00</button>
+            </div>
+            <div class="input-row" id="inputRow">
+                <input type="number" class="gds-input" id="gdsInput" placeholder="Hasil GDS (mg/dL)" min="0" max="999">
+                <button class="submit-btn" id="submitBtn" disabled><i class="fa-solid fa-paper-plane"></i></button>
+            </div>
+            <button class="levemir-btn" id="levemirBtn"><i class="fa-solid fa-check" style="margin-right:8px"></i>Konfirmasi Levemir 8 unit</button>
+        </div>
+        <div class="result-card" id="resultCard"></div>
+
+        <!-- Grafik GDS -->
+        <div class="section-head"><div class="section-title"><i class="fa-solid fa-chart-line"></i>Grafik GDS</div><button class="section-toggle open" id="gdsToggle"><i class="fa-solid fa-chevron-down"></i></button></div>
+        <div id="gdsSection">
+            <div class="filter-bar" id="gdsFilters"><button class="fb active" data-period="today">Hari Ini</button><button class="fb" data-period="7">7 Hari</button><button class="fb" data-period="30">30 Hari</button><button class="fb" data-period="all">Semua</button></div>
+            <div class="chart-section"><div class="chart-wrap"><canvas id="gdsCanvas"></canvas><div class="chart-legend"><div class="chart-legend-item"><div class="chart-legend-dot" style="background:var(--accent)"></div>Normal</div><div class="chart-legend-item"><div class="chart-legend-dot" style="background:var(--warning)"></div>Rendah/Tinggi</div><div class="chart-legend-item"><div class="chart-legend-dot" style="background:var(--danger)"></div>Kritis</div></div></div>
+        </div>
+
+        <!-- Grafik Dosis -->
+        <div class="section-head"><div class="section-title"><i class="fa-solid fa-prescription-bottle-medical"></i>Grafik Dosis Harian</div><button class="section-toggle open" id="doseToggle"><i class="fa-solid fa-chevron-down"></i></button></div>
+        <div id="doseSection">
+            <div class="filter-bar" id="dosePeriodFilters"><button class="fb active" data-dp="7">7 Hari</button><button class="fb" data-dp="30">30 Hari</button><button class="fb" data-dp="all">Semua</button></div>
+            <div class="filter-bar" id="doseTypeFilters"><button class="fb type-btn active-insulin" data-dt="all">Semua</button><button class="fb type-btn" data-dt="insulin"><i class="fa-solid fa-syringe" style="margin-right:3px"></i>Insulin</button><button class="fb type-btn" data-dt="levemir"><i class="fa-solid fa-moon" style="margin-right:3px"></i>Levemir</button></div>
+            <div class="dose-stats" id="doseStats"></div>
+            <div class="chart-section"><div class="chart-wrap"><canvas id="doseCanvas"></canvas><div class="chart-legend"><div class="chart-legend-item"><div class="chart-legend-dot" style="background:var(--insulin)"></div>Insulin</div><div class="chart-legend-item"><div class="chart-legend-dot" style="background:var(--levemir)"></div>Levemir</div></div></div>
+        </div>
+
+        <!-- Riwayat -->
+        <div class="section-head"><div class="section-title"><i class="fa-solid fa-clock-rotate-left"></i>Riwayat</div><button class="section-toggle open" id="historyToggleBtn"><i class="fa-solid fa-chevron-down"></i></button></div>
+        <div id="historySection">
+            <div class="filter-bar" id="historyFilters"><button class="fb active" data-hp="today">Hari Ini</button><button class="fb" data-hp="7">7 Hari</button><button class="fb" data-hp="30">30 Hari</button><button class="fb" data-hp="all">Semua</button></div>
+            <div class="history-section" id="historyList"></div>
+        </div>
+    </div>
+
+<script>
+var SLOTS=[{slot:'dini-hari',label:'Dini Hari',icon:'fa-moon',type:'gds-only'},{slot:'sarapan',label:'Sarapan',icon:'fa-sun',type:'gds-insulin'},{slot:'siang',label:'Siang',icon:'fa-cloud-sun',type:'gds-insulin'},{slot:'malam',label:'Malam',icon:'fa-cloud-moon',type:'gds-insulin'}];
+var DEFAULT_DOSES={sarapan:4,siang:5,malam:5},LEVEMIR_DOSE=8;
+var selectedSlot='',gdsChart=null,doseChart=null,allData=[];
+var gdsPeriod='today',dosePeriod='7',doseType='all',historyPeriod='today';
+
+try{Telegram.WebApp.ready();Telegram.WebApp.expand();Telegram.WebApp.setHeaderColor('#0C1222');}catch(e){}
+
+function normalizeDate(r){if(!r||r==='')return '';if(/^\d{4}-\d{2}-\d{2}$/.test(String(r)))return String(r);var d=new Date(r);if(!isNaN(d.getTime()))return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');var p=String(r).split(/[\/\-\.]/);if(p.length===3){var a=parseInt(p[0]),b=parseInt(p[1]),c=parseInt(p[2]);if(c>100)return c+'-'+String(b).padStart(2,'0')+'-'+String(a).padStart(2,'0');else if(a>100)return a+'-'+String(b).padStart(2,'0')+'-'+String(c).padStart(2,'0');}return String(r);}
+function getTodayKey(){var d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function getTimeStr(){return String(new Date().getHours()).padStart(2,'0')+':'+String(new Date().getMinutes()).padStart(2,'0');}
+function calcDose(gds,slot){var d=DEFAULT_DOSES[slot];if(gds>300)d+=2;else if(gds>200)d+=1;else if(gds<100)d-=1;return Math.max(0,d);}
+function getCat(gds){if(gds>300)return{label:'Sangat Tinggi',cls:'danger'};if(gds>200)return{label:'Tinggi',cls:'warn'};if(gds<70)return{label:'Hipo',cls:'danger'};if(gds<100)return{label:'Rendah',cls:'warn'};return{label:'Normal',cls:'good'};}
+function ptColor(gds){if(gds>300||gds<70)return'#FF5C5C';if(gds>200||gds<100)return'#FFB547';return'#00D9A6';}
+function fmtLabel(dateStr,timeStr){var nd=normalizeDate(dateStr);if(!nd)return timeStr||'?';var d=new Date(nd+'T00:00:00');return isNaN(d.getTime())?dateStr+' '+(timeStr||''):d.toLocaleDateString('id-ID',{day:'numeric',month:'short'})+' '+(timeStr||'');}
+function showToast(msg,type){type=type||'success';var c=document.getElementById('toastContainer'),t=document.createElement('div');t.className='toast '+type;t.innerHTML='<i class="fa-solid '+(type==='success'?'fa-circle-check':'fa-circle-xmark')+'"></i><span>'+msg+'</span>';c.appendChild(t);setTimeout(function(){t.remove();},3000);}
+
+async function fetchData(){try{var r=await fetch(API_URL+'?action=data',{redirect:'follow'});if(!r.ok)return[];var d=await r.json();return Array.isArray(d)?d:[];}catch(e){return[];}}
+async function submitData(entry){try{var r=await fetch(API_URL+'?action=submit',{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(entry),redirect:'follow'});var d=await r.json();return d.status==='ok';}catch(e){return false;}}
+
+function filterByPeriod(entries,period){if(period==='today'){var t=getTodayKey();return entries.filter(function(e){return normalizeDate(e.date)===t;});}var days=period==='7'?7:30;if(period==='all')return entries;var cutoff=new Date();cutoff.setDate(cutoff.getDate()-days);var cutStr=cutoff.toISOString().slice(0,10);return entries.filter(function(e){return normalizeDate(e.date)>=cutStr;});}
+
+function updateProgress(){var today=getTodayKey();var td=allData.filter(function(e){return normalizeDate(e.date)===today;});var done={};SLOTS.forEach(function(s){done[s.slot]=false;});td.forEach(function(e){if(done.hasOwnProperty(e.slot))done[e.slot]=true;});done['levemir']=td.some(function(e){return e.slot==='levemir';});document.querySelectorAll('.p-slot').forEach(function(el){var s=el.dataset.slot;el.classList.remove('done','active-slot');if(done[s])el.classList.add('done');if(s===selectedSlot)el.classList.add('active-slot');});document.querySelectorAll('.slot-btn').forEach(function(b){b.classList.toggle('done-slot',done[b.dataset.slot]);});document.getElementById('statDone').textContent=Object.values(done).filter(function(v){return v;}).length;document.getElementById('levemirBtn').classList.toggle('done',done['levemir']);}
+
+/* ====== INPUT ====== */
+var gdsInput=document.getElementById('gdsInput'),submitBtn=document.getElementById('submitBtn'),levemirBtn=document.getElementById('levemirBtn'),resultCard=document.getElementById('resultCard'),inputRow=document.getElementById('inputRow');
+function selectSlot(slot){selectedSlot=slot;document.querySelectorAll('.slot-btn').forEach(function(b){b.classList.toggle('active',b.dataset.slot===slot);});document.querySelectorAll('.p-slot').forEach(function(el){el.classList.toggle('active-slot',el.dataset.slot===slot);});if(slot==='levemir'){inputRow.style.display='none';levemirBtn.style.display='block';}else{inputRow.style.display='flex';levemirBtn.style.display='none';gdsInput.focus();}updateSubmitBtn();resultCard.classList.remove('show');}
+function updateSubmitBtn(){submitBtn.disabled=!(selectedSlot&&selectedSlot!=='levemir'&&gdsInput.value.trim()!==''&&Number(gdsInput.value)>=0);}
+gdsInput.addEventListener('input',updateSubmitBtn);gdsInput.addEventListener('keydown',function(e){if(e.key==='Enter'&&!submitBtn.disabled)handleSubmit();});
+submitBtn.addEventListener('click',handleSubmit);levemirBtn.addEventListener('click',handleLevemir);
+document.querySelectorAll('.slot-btn').forEach(function(b){b.addEventListener('click',function(){selectSlot(b.dataset.slot);});});
+document.querySelectorAll('.p-slot').forEach(function(el){el.addEventListener('click',function(){selectSlot(el.dataset.slot);});});
+
+async function handleSubmit(){var slot=selectedSlot,gdsVal=parseInt(gdsInput.value.trim());if(!slot||slot==='levemir'||isNaN(gdsVal)||gdsVal<0)return;var s=SLOTS.find(function(s){return s.slot===slot;}),cat=getCat(gdsVal);var entry={date:getTodayKey(),time:getTimeStr(),slot:slot,gds:gdsVal,dose:null,doseType:null,category:cat.cls};if(s.type==='gds-insulin'){var dose=calcDose(gdsVal,slot);entry.dose=dose;entry.doseType='rapid';var adj=gdsVal>300?'+ 2':gdsVal>200?'+ 1':gdsVal<100?'- 1':'(sesuai)';var dcCls=gdsVal>300?'danger-card':'';var nh='';if(gdsVal>300)nh='<div class="result-note danger-note"><i class="fa-solid fa-circle-exclamation" style="margin-right:4px"></i>GDS sangat tinggi!</div>';else if(gdsVal<70)nh='<div class="result-note danger-note"><i class="fa-solid fa-circle-exclamation" style="margin-right:4px"></i>Hipoglikemia!</div>';resultCard.innerHTML='<div class="result-gds">GDS '+s.label+': <span class="'+cat.cls+'">'+gdsVal+' mg/dL</span> <span style="font-size:11px;color:var(--muted)">('+cat.label+')</span></div><div class="result-dose '+dcCls+'"><div class="label"><strong>Dosis Insulin</strong>Default '+DEFAULT_DOSES[slot]+' '+adj+'</div><div class="val">'+dose+' <small>unit</small></div></div>'+nh;}else{resultCard.innerHTML='<div class="result-gds">GDS Dini Hari: <span class="'+cat.cls+'">'+gdsVal+' mg/dL</span> <span style="font-size:11px;color:var(--muted)">('+cat.label+')</span></div>';}resultCard.classList.add('show');var ok=await submitData(entry);if(ok){showToast('Tersimpan');allData.unshift(entry);updateProgress();renderAll();gdsInput.value='';selectedSlot='';document.querySelectorAll('.slot-btn').forEach(function(b){b.classList.remove('active');});document.querySelectorAll('.p-slot').forEach(function(el){el.classList.remove('active-slot');});inputRow.style.display='flex';levemirBtn.style.display='none';updateSubmitBtn();try{Telegram.WebApp.HapticFeedback.notificationOccurred('success');}catch(e){}}else showToast('Gagal menyimpan','error');}
+async function handleLevemir(){var entry={date:getTodayKey(),time:getTimeStr(),slot:'levemir',gds:null,dose:LEVEMIR_DOSE,doseType:'levemir',category:'good'};var ok=await submitData(entry);if(ok){showToast('Levemir 8 unit tercatat');allData.unshift(entry);updateProgress();renderAll();try{Telegram.WebApp.HapticFeedback.notificationOccurred('success');Telegram.WebApp.close();}catch(e){}}else showToast('Gagal menyimpan','error');}
+
+/* ====== CHART GDS ====== */
+function renderGdsChart(){var entries=filterByPeriod(allData.filter(function(e){return e.gds!==null&&typeof e.gds==='number';}),gdsPeriod);entries.sort(function(a,b){return(normalizeDate(a.date)+' '+a.time).localeCompare(normalizeDate(b.date)+' '+b.time);});var sec=document.getElementById('gdsSection');if(!entries.length){sec.innerHTML='<div class="empty-box"><i class="fa-solid fa-chart-line"></i><p>Tidak ada data GDS</p></div>';return;}var canvas=document.getElementById('gdsCanvas'),ctx=canvas.getContext('2d');var labels=entries.map(function(e){return fmtLabel(e.date,e.time);});var vals=entries.map(function(e){return e.gds;});var colors=entries.map(function(e){return ptColor(e.gds);});var grad=ctx.createLinearGradient(0,0,0,260);grad.addColorStop(0,'rgba(0,217,166,0.15)');grad.addColorStop(1,'rgba(0,217,166,0.0)');var refP={id:'ref',afterDraw:function(ch){var c=ch.ctx,yA=ch.scales.y,xA=ch.scales.x;[{v:100,c:'rgba(255,181,71,0.4)',l:'<100'},{v:200,c:'rgba(255,92,92,0.4)',l:'>200'},{v:300,c:'rgba(255,92,92,0.6)',l:'>300'}].forEach(function(r){var y=yA.getPixelForValue(r.v);if(y<yA.top||y>yA.bottom)return;c.save();c.strokeStyle=r.c;c.lineWidth=1;c.setLineDash([4,4]);c.beginPath();c.moveTo(xA.left,y);c.lineTo(xA.right,y);c.stroke();c.fillStyle=r.c;c.font='9px Space Grotesk';c.textAlign='left';c.fillText(r.l,xA.left+4,y-4);c.restore();});};if(gdsChart){gdsChart.destroy();gdsChart=null;}gdsChart=new Chart(ctx,{type:'line',data:{labels:labels,datasets:[{data:vals,borderColor:'rgba(0,217,166,0.8)',backgroundColor:grad,borderWidth:2,pointBackgroundColor:colors,pointBorderColor:colors,pointRadius:4,pointHoverRadius:7,fill:true,tension:.3}]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'nearest',intersect:false},plugins:{legend:{display:false},tooltip:{backgroundColor:'#1A2740',titleColor:'#F0F2F5',bodyColor:'#F0F2F5',borderColor:'#1E2D48',borderWidth:1,cornerRadius:8,padding:10,titleFont:{family:'Space Grotesk',size:11},bodyFont:{family:'Space Grotesk',size:12},callbacks:{label:function(i){return 'GDS: '+i.raw+' mg/dL ('+getCat(i.raw).label+')';}}}},scales:{x:{grid:{color:'rgba(30,45,72,0.5)'},ticks:{color:'#7A8BA4',font:{size:9},maxRotation:45,autoSkip:true,maxTicksLimit:6},border:{display:false}},y:{grid:{color:'rgba(30,45,72,0.5)'},ticks:{color:'#7A8BA4',font:{size:10}},border:{display:false},suggestedMin:50,suggestedMax:350}}},plugins:[refP]});sec.innerHTML='<div class="chart-section"><div class="chart-wrap"><canvas id="gdsCanvas"></canvas><div class="chart-legend"><div class="chart-legend-item"><div class="chart-legend-dot" style="background:var(--accent)"></div>Normal</div><div class="chart-legend-item"><div class="chart-legend-dot" style="background:var(--warning)"></div>Rendah/Tinggi</div><div class="chart-legend-item"><div class="chart-legend-dot" style="background:var(--danger)"></div>Kritis</div></div></div>';}
+
+/* ====== CHART DOSIS ====== */
+function renderDoseChart(){
+    var entries=allData.filter(function(e){return e.dose!==null&&typeof e.dose==='number';});
+    var filtered=filterByPeriod(entries,dosePeriod);
+    if(doseType!=='all'){filtered=filtered.filter(function(e){return e.doseType===doseType;});}
+    filtered.sort(function(a,b){return(normalizeDate(a.date)+' '+a.time).localeCompare(normalizeDate(b.date)+' '+b.time);});
+    var statsEl=document.getElementById('doseStats');
+
+    // Hitung total per jenis
+    var allFiltered=filterByPeriod(entries,dosePeriod);
+    var insTotal=0,levTotal=0;
+    allFiltered.forEach(function(e){if(e.doseType==='rapid')insTotal+=e.dose;else if(e.doseType==='levemir')levTotal+=e.dose;});
+    statsEl.innerHTML='<div class="dose-stat insulin-stat"><div class="dv">'+insTotal+'</div><div class="dl">Total Insulin</div></div><div class="dose-stat levemir-stat"><div class="dv">'+levTotal+'</div><div class="dl">Total Levemir</div></div><div class="dose-stat total-stat"><div class="dv">'+(insTotal+levTotal)+'</div><div class="dl">Total Semua</div></div>';
+
+    var sec=document.getElementById('doseSection');if(!filtered.length){sec.innerHTML=statsEl.innerHTML+'<div class="empty-box"><i class="fa-solid fa-prescription-bottle-medical"></i><p>Tidak ada data dosis</p></div>';return;}
+
+    // Group per tanggal
+    var grouped={};filtered.forEach(function(e){var nd=normalizeDate(e.date);if(!grouped[nd])grouped[nd]={insulin:0,levemir:0};if(e.doseType==='rapid')grouped[nd].insulin+=e.dose;else if(e.doseType==='levemir')grouped[nd].levemir+=e.dose;});
+    var dates=Object.keys(grouped).sort();
+    var labels=dates.map(function(d){var dt=new Date(d+'T00:00:00');return isNaN(dt.getTime())?d:dt.toLocaleDateString('id-ID',{day:'numeric',month:'short'});});
+    var insData=dates.map(function(d){return grouped[d].insulin;});
+    var levData=dates.map(function(d){return grouped[d].levemir;});
+
+    var canvas=document.getElementById('doseCanvas'),ctx=canvas.getContext('2d');
+    if(doseChart){doseChart.destroy();doseChart=null;}
+    doseChart=new Chart(ctx,{type:'bar',data:{labels:labels,datasets:[
+        {label:'Insulin',data:insData,backgroundColor:'rgba(68,136,255,0.7)',borderColor:'rgba(68,136,255,1)',borderWidth:1,borderRadius:6,barPercentage:0.7},
+        {label:'Levemir',data:levData,backgroundColor:'rgba(255,181,71,0.7)',borderColor:'rgba(255,181,71,1)',borderWidth:1,borderRadius:6,barPercentage:0.7}
+    ]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{display:false},tooltip:{backgroundColor:'#1A2740',titleColor:'#F0F2F5',bodyColor:'#F0F2F5',borderColor:'#1E2D48',borderWidth:1,cornerRadius:8,padding:10,titleFont:{family:'Space Grotesk',size:11},bodyFont:{family:'Space Grotesk',size:12},callbacks:{label:function(i){return i.dataset.label+': '+i.raw+' unit';}}}},scales:{x:{stacked:true,grid:{color:'rgba(30,45,72,0.5)'},ticks:{color:'#7A8BA4',font:{size:9},maxRotation:45,autoSkip:true,maxTicksLimit:8},border:{display:false}},y:{stacked:true,grid:{color:'rgba(30,45,72,0.5)'},ticks:{color:'#7A8BA4',font:{size:10}},border:{display:false},beginAtZero:true}}}});
+    sec.innerHTML=statsEl.innerHTML+'<div class="chart-section"><div class="chart-wrap"><canvas id="doseCanvas"></canvas><div class="chart-legend"><div class="chart-legend-item"><div class="chart-legend-dot" style="background:var(--insulin)"></div>Insulin</div><div class="chart-legend-item"><div class="chart-legend-dot" style="background:var(--levemir)"></div>Levemir</div></div></div>';
+}
+
+/* ====== HISTORY ====== */
+function renderHistory(){
+    var entries=filterByPeriod(allData,historyPeriod);
+    entries.sort(function(a,b){return(normalizeDate(a.date)+' '+a.time).localeCompare(normalizeDate(b.date)+' '+b.time);});
+    var list=document.getElementById('historyList');
+    if(!entries.length){list.innerHTML='<div class="empty-box"><i class="fa-solid fa-clipboard-list"></i><p>Tidak ada riwayat</p></div>';return;}
+    var grouped={};entries.forEach(function(e){var nd=normalizeDate(e.date);if(!grouped[nd])grouped[nd]=[];grouped[nd].push(e);});
+    var html='';
+    Object.keys(grouped).sort().reverse().forEach(function(date){
+        var d=new Date(date+'T00:00:00');html+='<div class="hp-date-label">'+d.toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'})+'</div>';
+        grouped[date].forEach(function(e){
+            var s=SLOTS.find(function(s){return s.slot===e.slot;});var icon=s?s.icon:'fa-circle',label=s?s.label:e.slot;
+            var iconCls='gds';if(e.slot==='levemir')iconCls='levemir';else if(e.doseType==='rapid')iconCls='insulin';if(e.category==='danger')iconCls='high';
+            var valHtml='',sub='';
+            if(e.slot==='levemir'){valHtml='<span class="hp-item-val levemir-v">'+e.dose+' <small>u</small></span>';sub='Dosis tetap';}
+            else if(e.gds!==null){var cat=getCat(e.gds),vc=cat.cls==='danger'?'bad':cat.cls;valHtml='<span class="hp-item-val '+vc+'">'+e.gds+'</span>';sub=e.dose!==null?'Insulin '+e.dose+' unit':'GDS only';}
+            else{valHtml='—';sub='';}
+            html+='<div class="hp-item"><div class="hp-item-icon '+iconCls+'"><i class="fa-solid '+icon+'"></i></div><div class="hp-item-info"><div class="hp-item-title">'+label+'</div><div class="hp-item-sub">'+(e.time||'')+' — '+sub+'</div></div>'+valHtml+'</div>';
+        });
+    });
+    list.innerHTML=html;
+}
+
+function renderAll(){renderGdsChart();renderDoseChart();renderHistory();}
+
+/* ====== TOGGLES ====== */
+function setupToggle(btnId,secId){var btn=document.getElementById(btnId),sec=document.getElementById(secId);btn.addEventListener('click',function(){var open=btn.classList.toggle('open');sec.style.display=open?'block':'none';});}
+setupToggle('gdsToggle','gdsSection');
+setupToggle('doseToggle','doseSection');
+setupToggle('historyToggleBtn','historySection');
+
+document.getElementById('historyToggle').addEventListener('click',function(){var sec=document.getElementById('historySection');sec.style.display=sec.style.display==='none'?'block':'none';if(sec.style.display==='block')renderHistory();});
+
+/* ====== FILTERS ====== */
+document.getElementById('gdsFilters').addEventListener('click',function(e){var btn=e.target.closest('.fb');if(!btn)return;document.querySelectorAll('#gdsFilters .fb').forEach(function(b){b.classList.remove('active');});btn.classList.add('active');gdsPeriod=btn.dataset.period;renderGdsChart();});
+document.getElementById('dosePeriodFilters').addEventListener('click',function(e){var btn=e.target.closest('.fb');if(!btn)return;document.querySelectorAll('#dosePeriodFilters .fb').forEach(function(b){b.classList.remove('active');});btn.classList.add('active');dosePeriod=btn.dataset.dp;renderDoseChart();});
+document.getElementById('doseTypeFilters').addEventListener('click',function(e){var btn=e.target.closest('.fb');if(!btn)return;document.querySelectorAll('#doseTypeFilters .fb').forEach(function(b){b.classList.remove('active','active-insulin','active-levemir');});if(btn.dataset.dt==='insulin')btn.classList.add('active-insulin');else if(btn.dataset.dt==='levemir')btn.classList.add('active-levemir');else btn.classList.add('active');doseType=btn.dataset.dt;renderDoseChart();});
+document.getElementById('historyFilters').addEventListener('click',function(e){var btn=e.target.closest('.fb');if(!btn)return;document.querySelectorAll('#historyFilters .fb').forEach(function(b){b.classList.remove('active');});btn.classList.add('active');historyPeriod=btn.dataset.hp;renderHistory();});
+
+/* ====== COUNTDOWN ====== */
+var SCHEDULES_CK=[{hour:2,minute:0,slot:'dini-hari',label:'Cek GDS Dini Hari'},{hour:6,minute:0,slot:'sarapan',label:'GDS + Insulin Sarapan'},{hour:12,minute:0,slot:'siang',label:'GDS + Insulin Siang'},{hour:18,minute:0,slot:'malam',label:'GDS + Insulin Malam'},{hour:20,minute:30,slot:'levemir',label:'Suntik Levemir'}];
+function updateCountdown(){var now=new Date(),nowT=now.getHours()*60+now.getMinutes(),today=getTodayKey();var todayData=allData.filter(function(e){return normalizeDate(e.date)===today;});var done={};SCHEDULES_CK.forEach(function(s){done[s.slot]=todayData.some(function(e){return e.slot===s.slot;});});var next=null;for(var i=0;i<SCHEDULES_CK.length;i++){var s=SCHEDULES_CK[i];if(done[s.slot])continue;var sT=s.hour*60+s.minute;if(sT>nowT){if(!next||sT<next.total)next={hour:s.hour,minute:s.minute,label:s.label,total:sT,tomorrow:false};}else if(!next){next={hour:s.hour,minute:s.minute,label:s.label,total:sT+1440,tomorrow:true};}}if(!next){var f=SCHEDULES_CK[0];next={hour:f.hour,minute:f.minute,label:f.label,total:f.hour*60+f.minute+1440,tomorrow:true};}var diff=next.total-nowT,h=Math.floor(diff/60),m=diff%60;document.getElementById('nrLabel').textContent=(next.tomorrow?'Besok ':'')+String(next.hour).padStart(2,'0')+':'+String(next.minute).padStart(2,'0')+' '+next.label.split('+')[0].trim();document.getElementById('nrCountdown').textContent=String(h).padStart(2,'0')+':'+String(m).padStart(2,'0');SCHEDULES_CK.forEach(function(s){var sT=s.hour*60+s.minute;if(!done[s.slot]&&Math.abs(nowT-sT)<=15){var el=document.querySelector('.p-slot[data-slot="'+s.slot+'"]');if(el&&!el.classList.contains('active-slot'))el.classList.add('active-slot');}});}
+setInterval(updateCountdown,1000);
+
+/* ====== AUTO SLOT FROM URL ====== */
+var params=new URLSearchParams(window.location.search);var autoSlot=params.get('slot');if(autoSlot)selectSlot(autoSlot);
+
+/* ====== INIT ====== */
+async function init(){document.getElementById('statsGrid').innerHTML='<div class="loading-box" style="grid-column:span 2"><i class="fa-solid fa-spinner"></i><p>Memuat data...</p></div>';allData=await fetchData();updateProgress();renderAll();document.getElementById('statsGrid').innerHTML='<div class="stat-card neutral"><div class="stat-val" id="statDone">—</div><div class="stat-label">Selesai Hari Ini</div></div><div class="stat-card neutral"><div class="stat-val" id="statTotal">5</div><div class="stat-label">Total Jadwal</div></div>';updateProgress();updateCountdown();}
+init();
+</script>
+</body>
+</html>
