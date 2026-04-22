@@ -197,6 +197,12 @@
     </div>
 
 <script>
+const state = {
+    data: [],
+    gdsChart: null,
+    doseChart: null
+};
+    
 var SLOTS=[{slot:'dini-hari',label:'Dini Hari',icon:'fa-moon',type:'gds-only'},{slot:'sarapan',label:'Sarapan',icon:'fa-sun',type:'gds-insulin'},{slot:'siang',label:'Siang',icon:'fa-cloud-sun',type:'gds-insulin'},{slot:'malam',label:'Malam',icon:'fa-cloud-moon',type:'gds-insulin'}];
 var DEFAULT_DOSES={sarapan:4,siang:5,malam:5},LEVEMIR_DOSE=8;
 var selectedSlot='',gdsChart=null,doseChart=null,allData=[];
@@ -219,13 +225,13 @@ async function submitData(entry){try{var r=await fetch(API_URL+'?action=submit',
 function filterByPeriod(entries,period){if(period==='today'){var t=getTodayKey();return entries.filter(function(e){return normalizeDate(e.date)===t;});}var days=period==='7'?7:30;if(period==='all')return entries;var cutoff=new Date();cutoff.setDate(cutoff.getDate()-days);var cutStr=cutoff.toISOString().slice(0,10);return entries.filter(function(e){return normalizeDate(e.date)>=cutStr;});}
 
 function updateProgress(){
-    var today = getTodayKey();
+    const today = getTodayKey();
 
-    var td = allData.filter(e =>
+    const td = state.data.filter(e =>
         normalizeDate(e.date) === today
     );
 
-    var done = {};
+    const done = {};
     SLOTS.forEach(s => done[s.slot] = false);
 
     td.forEach(e=>{
@@ -234,13 +240,9 @@ function updateProgress(){
         }
     });
 
-    done['levemir'] = td.some(e => e.slot === 'levemir');
-
-    var statDoneEl = document.getElementById('statDone');
-
-    if(statDoneEl){
-        statDoneEl.textContent =
-            Object.values(done).filter(v=>v).length;
+    const el = document.getElementById('statDone');
+    if(el){
+        el.textContent = Object.values(done).filter(v=>v).length;
     }
 }
 
@@ -258,13 +260,11 @@ async function handleLevemir(){var entry={date:getTodayKey(),time:getTimeStr(),s
 
 /* ====== CHART GDS ====== */
 function renderGdsChart(){
-    var sec = document.getElementById('gdsSection');
-    var canvas = document.getElementById('gdsCanvas');
+    const chart = state.gdsChart;
+    if(!chart) return;
 
-    if(!sec || !canvas) return;
-
-    var entries = filterByPeriod(
-        allData.filter(e => e.gds !== null && typeof e.gds === 'number'),
+    const entries = filterByPeriod(
+        state.data.filter(e=>e.gds!==null),
         gdsPeriod
     );
 
@@ -273,137 +273,99 @@ function renderGdsChart(){
         .localeCompare(normalizeDate(b.date)+' '+b.time)
     );
 
-    // ❌ kalau kosong
-    if(!entries.length){
-        canvas.style.display = 'none';
+    chart.data.labels = entries.map(e=>fmtLabel(e.date,e.time));
+    chart.data.datasets[0].data = entries.map(e=>e.gds);
 
-        if(!sec.querySelector('.empty-box')){
-            sec.insertAdjacentHTML('beforeend',
-                '<div class="empty-box"><i class="fa-solid fa-chart-line"></i><p>Tidak ada data GDS</p></div>'
-            );
-        }
-        return;
-    }
-
-    // ✅ kalau ada data
-    canvas.style.display = 'block';
-
-    var empty = sec.querySelector('.empty-box');
-    if(empty) empty.remove();
-
-    var ctx = canvas.getContext('2d');
-
-    var labels = entries.map(e => fmtLabel(e.date,e.time));
-    var vals   = entries.map(e => e.gds);
-    var colors = entries.map(e => ptColor(e.gds));
-
-    var grad = ctx.createLinearGradient(0,0,0,260);
-    grad.addColorStop(0,'rgba(0,217,166,0.15)');
-    grad.addColorStop(1,'rgba(0,217,166,0)');
-
-    if(gdsChart){
-        gdsChart.destroy();
-    }
-
-    gdsChart = new Chart(ctx,{
-        type:'line',
-        data:{
-            labels,
-            datasets:[{
-                data:vals,
-                borderColor:'rgba(0,217,166,0.8)',
-                backgroundColor:grad,
-                pointBackgroundColor:colors,
-                pointBorderColor:colors,
-                fill:true,
-                tension:0.3
-            }]
-        },
-        options:{
-            responsive:true,
-            plugins:{legend:{display:false}}
-        }
-    });
+    chart.update();
 }
 
 /* ====== CHART DOSIS ====== */
 function renderDoseChart(){
-    var statsEl = document.getElementById('doseStats');
-    var canvas  = document.getElementById('doseCanvas');
+    const chart = state.doseChart;
+    if(!chart) return;
 
-    if(!statsEl || !canvas) return;
+    let entries = state.data.filter(e=>e.dose!==null);
 
-    var entries = allData.filter(e => e.dose !== null);
-
-    var insTotal=0, levTotal=0;
+    let ins=0, lev=0;
 
     entries.forEach(e=>{
-        if(e.doseType==='rapid') insTotal+=e.dose;
-        if(e.doseType==='levemir') levTotal+=e.dose;
+        if(e.doseType==='rapid') ins+=e.dose;
+        if(e.doseType==='levemir') lev+=e.dose;
     });
 
-    statsEl.innerHTML = `
-        <div class="dose-stat insulin-stat">
-            <div class="dv">${insTotal}</div>
-            <div class="dl">Total Insulin</div>
-        </div>
-        <div class="dose-stat levemir-stat">
-            <div class="dv">${levTotal}</div>
-            <div class="dl">Total Levemir</div>
-        </div>
-        <div class="dose-stat total-stat">
-            <div class="dv">${insTotal+levTotal}</div>
-            <div class="dl">Total Semua</div>
-        </div>
-    `;
+    chart.data.labels = ['Total'];
+    chart.data.datasets[0].data = [ins];
+    chart.data.datasets[1].data = [lev];
 
-    var ctx = canvas.getContext('2d');
+    chart.update();
 
-    if(doseChart){
-        doseChart.destroy();
+    // stats aman
+    const statsEl = document.getElementById('doseStats');
+    if(statsEl){
+        statsEl.innerHTML = `
+            <div class="dose-stat insulin-stat"><div class="dv">${ins}</div></div>
+            <div class="dose-stat levemir-stat"><div class="dv">${lev}</div></div>
+            <div class="dose-stat total-stat"><div class="dv">${ins+lev}</div></div>
+        `;
+    }
+}
+
+function initCharts(){
+    const gdsCanvas = document.getElementById('gdsCanvas');
+    const doseCanvas = document.getElementById('doseCanvas');
+
+    if(gdsCanvas && !state.gdsChart){
+        state.gdsChart = new Chart(gdsCanvas.getContext('2d'), {
+            type:'line',
+            data:{labels:[],datasets:[{
+                data:[],
+                borderColor:'rgba(0,217,166,0.8)',
+                tension:0.3,
+                fill:true
+            }]},
+            options:{responsive:true,plugins:{legend:{display:false}}}
+        });
     }
 
-    doseChart = new Chart(ctx,{
-        type:'bar',
-        data:{
-            labels:['Total'],
-            datasets:[
-                {label:'Insulin',data:[insTotal]},
-                {label:'Levemir',data:[levTotal]}
-            ]
-        },
-        options:{
-            responsive:true,
-            plugins:{legend:{display:false}}
-        }
-    });
+    if(doseCanvas && !state.doseChart){
+        state.doseChart = new Chart(doseCanvas.getContext('2d'), {
+            type:'bar',
+            data:{
+                labels:[],
+                datasets:[
+                    {label:'Insulin',data:[]},
+                    {label:'Levemir',data:[]}
+                ]
+            },
+            options:{responsive:true,plugins:{legend:{display:false}}}
+        });
+    }
 }
     
 /* ====== HISTORY ====== */
 function renderHistory(){
-    var list = document.getElementById('historyList');
+    const list = document.getElementById('historyList');
     if(!list) return;
 
-    if(!allData.length){
+    if(!state.data.length){
         list.innerHTML = '<div class="empty-box">Tidak ada data</div>';
         return;
     }
 
-    var html = '';
-
-    allData.forEach(e=>{
-        html += `
-            <div class="hp-item">
-                <div>${e.slot}</div>
-                <div>${e.gds || e.dose || '-'}</div>
-            </div>
-        `;
-    });
-
-    list.innerHTML = html;
+    list.innerHTML = state.data.map(e=>`
+        <div class="hp-item">
+            <div>${e.slot}</div>
+            <div>${e.gds || e.dose || '-'}</div>
+        </div>
+    `).join('');
 }
 
-function renderAll(){renderGdsChart();renderDoseChart();renderHistory();}
+function renderAll(){
+    renderGdsChart();
+    renderDoseChart();
+    renderHistory();
+    updateProgress();
+}
 
 /* ====== TOGGLES ====== */
 function setupToggle(btnId,secId){var btn=document.getElementById(btnId),sec=document.getElementById(secId);btn.addEventListener('click',function(){var open=btn.classList.toggle('open');sec.style.display=open?'block':'none';});}
@@ -422,21 +384,26 @@ document.getElementById('historyFilters').addEventListener('click',function(e){v
 /* ====== COUNTDOWN ====== */
 var SCHEDULES_CK=[{hour:2,minute:0,slot:'dini-hari',label:'Cek GDS Dini Hari'},{hour:6,minute:0,slot:'sarapan',label:'GDS + Insulin Sarapan'},{hour:12,minute:0,slot:'siang',label:'GDS + Insulin Siang'},{hour:18,minute:0,slot:'malam',label:'GDS + Insulin Malam'},{hour:20,minute:30,slot:'levemir',label:'Suntik Levemir'}];
 function updateCountdown(){var now=new Date(),nowT=now.getHours()*60+now.getMinutes(),today=getTodayKey();var todayData=allData.filter(function(e){return normalizeDate(e.date)===today;});var done={};SCHEDULES_CK.forEach(function(s){done[s.slot]=todayData.some(function(e){return e.slot===s.slot;});});var next=null;for(var i=0;i<SCHEDULES_CK.length;i++){var s=SCHEDULES_CK[i];if(done[s.slot])continue;var sT=s.hour*60+s.minute;if(sT>nowT){if(!next||sT<next.total)next={hour:s.hour,minute:s.minute,label:s.label,total:sT,tomorrow:false};}else if(!next){next={hour:s.hour,minute:s.minute,label:s.label,total:sT+1440,tomorrow:true};}}if(!next){var f=SCHEDULES_CK[0];next={hour:f.hour,minute:f.minute,label:f.label,total:f.hour*60+f.minute+1440,tomorrow:true};}var diff=next.total-nowT,h=Math.floor(diff/60),m=diff%60;document.getElementById('nrLabel').textContent=(next.tomorrow?'Besok ':'')+String(next.hour).padStart(2,'0')+':'+String(next.minute).padStart(2,'0')+' '+next.label.split('+')[0].trim();document.getElementById('nrCountdown').textContent=String(h).padStart(2,'0')+':'+String(m).padStart(2,'0');SCHEDULES_CK.forEach(function(s){var sT=s.hour*60+s.minute;if(!done[s.slot]&&Math.abs(nowT-sT)<=15){var el=document.querySelector('.p-slot[data-slot="'+s.slot+'"]');if(el&&!el.classList.contains('active-slot'))el.classList.add('active-slot');}});}
-setInterval(updateCountdown,1000);
+setInterval(async ()=>{
+    const newData = await fetchData();
+
+    if(JSON.stringify(newData) !== JSON.stringify(state.data)){
+        state.data = newData;
+        renderAll();
+    }
+}, 5000);
 
 /* ====== AUTO SLOT FROM URL ====== */
 var params=new URLSearchParams(window.location.search);var autoSlot=params.get('slot');if(autoSlot)selectSlot(autoSlot);
 
 /* ====== INIT ====== */
 async function init(){
-    allData = await fetchData();
+    state.data = await fetchData();
 
-    // kasih delay biar DOM ready
-    setTimeout(()=>{
-        updateProgress();
-        renderAll();
-    },100);
+    initCharts();   // WAJIB
+    renderAll();
 }
+
 init();
 </script>
 </body>
