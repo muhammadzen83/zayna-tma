@@ -481,25 +481,60 @@ function renderDoseChart(){
     
 /* ====== HISTORY ====== */
 function renderHistory(){
-    var entries=filterByPeriod(allData,historyPeriod);
-    entries.sort(function(a,b){return(normalizeDate(a.date)+' '+a.time).localeCompare(normalizeDate(b.date)+' '+b.time);});
-    var list=document.getElementById('historyList');
-    if(!entries.length){list.innerHTML='<div class="empty-box"><i class="fa-solid fa-clipboard-list"></i><p>Tidak ada riwayat</p></div>';return;}
-    var grouped={};entries.forEach(function(e){var nd=normalizeDate(e.date);if(!grouped[nd])grouped[nd]=[];grouped[nd].push(e);});
-    var html='';
+    var container = document.getElementById('historyContent');
+    if(!container) return; // ✅ anti crash
+
+    var entries = filterByPeriod(allData, historyPeriod);
+
+    entries.sort(function(a,b){
+        return (normalizeDate(a.date)+' '+a.time)
+        .localeCompare(normalizeDate(b.date)+' '+b.time);
+    });
+
+    if(!entries.length){
+        container.innerHTML = `
+        <div class="empty-box">
+            <i class="fa-solid fa-clipboard-list"></i>
+            <p>Tidak ada riwayat</p>
+        </div>`;
+        return;
+    }
+
+    var grouped = {};
+    entries.forEach(function(e){
+        var d = normalizeDate(e.date);
+        if(!grouped[d]) grouped[d] = [];
+        grouped[d].push(e);
+    });
+
+    var html = '';
+
     Object.keys(grouped).sort().reverse().forEach(function(date){
-        var d=new Date(date+'T00:00:00');html+='<div class="hp-date-label">'+d.toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'})+'</div>';
+        var d = new Date(date+'T00:00:00');
+
+        html += `
+        <div class="hp-date-label">
+            ${d.toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'})}
+        </div>`;
+
         grouped[date].forEach(function(e){
-            var s=SLOTS.find(function(s){return s.slot===e.slot;});var icon=s?s.icon:'fa-circle',label=s?s.label:e.slot;
-            var iconCls='gds';if(e.slot==='levemir')iconCls='levemir';else if(e.doseType==='rapid')iconCls='insulin';if(e.category==='danger')iconCls='high';
-            var valHtml='',sub='';
-            if(e.slot==='levemir'){valHtml='<span class="hp-item-val levemir-v">'+e.dose+' <small>u</small></span>';sub='Dosis tetap';}
-            else if(e.gds!==null){var cat=getCat(e.gds),vc=cat.cls==='danger'?'bad':cat.cls;valHtml='<span class="hp-item-val '+vc+'">'+e.gds+'</span>';sub=e.dose!==null?'Insulin '+e.dose+' unit':'GDS only';}
-            else{valHtml='—';sub='';}
-            html+='<div class="hp-item"><div class="hp-item-icon '+iconCls+'"><i class="fa-solid '+icon+'"></i></div><div class="hp-item-info"><div class="hp-item-title">'+label+'</div><div class="hp-item-sub">'+(e.time||'')+' — '+sub+'</div></div>'+valHtml+'</div>';
+            var val = e.gds !== null ? e.gds : (e.dose || '-');
+
+            html += `
+            <div class="hp-item">
+                <div class="hp-item-icon">
+                    <i class="fa-solid fa-clock"></i>
+                </div>
+                <div class="hp-item-info">
+                    <div class="hp-item-title">${e.slot}</div>
+                    <div class="hp-item-sub">${e.time || ''}</div>
+                </div>
+                <div class="hp-item-val">${val}</div>
+            </div>`;
         });
     });
-    list.innerHTML=html;
+
+    container.innerHTML = html;
 }
 
 function renderAll(){renderGdsChart();renderDoseChart();renderHistory();}
