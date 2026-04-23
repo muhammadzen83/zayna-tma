@@ -11,262 +11,410 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>var API_URL='https://script.google.com/macros/s/AKfycbx8FDpQGap9PDGHCCd13y8YZcvpN2egamF4DIDpz1_JfSuYFpK_kNaRxfxhZ3jdZB4TmQ/exec';</script>
     <style>
-        :root{--bg:#0C1222;--bg2:#111B2E;--card:#152035;--card2:#1A2740;--accent:#00D9A6;--accent2:#00B88C;--danger:#FF5C5C;--warning:#FFB547;--good:#00D9A6;--fg:#F0F2F5;--muted:#7A8BA4;--border:#1E2D48;--insulin:#4488FF;--levemir:#FFB547}
+        :root {
+            --bg: #060D1B;
+            --bg2: #0B1527;
+            --card: #0F1D32;
+            --card2: #142540;
+            --card-hover: #182E4E;
+            --accent: #00E5A0;
+            --accent2: #00C488;
+            --accent-dim: rgba(0,229,160,.07);
+            --accent-border: rgba(0,229,160,.18);
+            --danger: #FF5C5C;
+            --danger-dim: rgba(255,92,92,.07);
+            --danger-border: rgba(255,92,92,.18);
+            --warning: #FFB547;
+            --warning-dim: rgba(255,181,71,.07);
+            --warning-border: rgba(255,181,71,.18);
+            --good: #00E5A0;
+            --fg: #EDF0F5;
+            --fg2: #C8D0DC;
+            --muted: #5E7490;
+            --border: #162744;
+            --border2: #1C3258;
+            --insulin: #4D94FF;
+            --insulin-dim: rgba(77,148,255,.07);
+            --insulin-border: rgba(77,148,255,.18);
+            --levemir: #FFB547;
+            --levemir-dim: rgba(255,181,71,.07);
+            --levemir-border: rgba(255,181,71,.18);
+            --radius: 14px;
+            --radius-sm: 10px;
+            --radius-xs: 8px;
+        }
         *{margin:0;padding:0;box-sizing:border-box}
-        body{font-family:'Space Grotesk',sans-serif;background:var(--bg);color:var(--fg);min-height:100vh;overflow-x:hidden}
-        .bg-orb{position:fixed;border-radius:50%;filter:blur(120px);opacity:.12;pointer-events:none;z-index:0}
-        .bg-orb-1{width:400px;height:400px;background:var(--accent);top:-100px;left:-80px;animation:of1 18s ease-in-out infinite}
-        .bg-orb-2{width:300px;height:300px;background:#0066FF;bottom:-80px;right:-60px;animation:of2 22s ease-in-out infinite}
-        @keyframes of1{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(40px,30px) scale(1.1)}}
-        @keyframes of2{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-30px,-20px) scale(1.1)}}
-        .app-shell{position:relative;z-index:1;display:flex;flex-direction:column;min-height:100vh;max-width:520px;margin:0 auto;padding-bottom:24px}
-        .app-header{padding:16px 20px 12px;display:flex;align-items:center;justify-content:space-between}
-        .brand{display:flex;align-items:center;gap:10px}
-        .brand-icon{width:38px;height:38px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--bg);box-shadow:0 4px 20px rgba(0,217,166,.25)}
-        .brand-text h1{font-size:15px;font-weight:700;line-height:1.2}
-        .brand-text p{font-size:11px;color:var(--muted)}
-        .header-actions{display:flex;gap:6px}
-        .header-btn{width:36px;height:36px;border-radius:10px;border:1px solid var(--border);background:var(--card);color:var(--muted);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;font-size:14px}
-        .header-btn:hover{border-color:var(--accent);color:var(--accent)}
-        .header-btn.active-tab{border-color:var(--accent);color:var(--accent);background:rgba(0,217,166,.1)}
-        .bot-bar{margin:0 20px 8px;padding:10px 14px;border-radius:10px;background:rgba(0,217,166,.06);border:1px solid rgba(0,217,166,.15);font-size:11px;color:var(--accent);display:flex;align-items:center;gap:8px}
-        .bot-bar i{font-size:14px}
-        .next-reminder-bar{margin:0 20px 8px;padding:10px 14px;border-radius:10px;background:var(--card);border:1px solid var(--border);display:flex;align-items:center;gap:10px;font-size:12px}
-        .next-reminder-bar i{color:var(--accent);font-size:14px}
-        .next-reminder-bar .nr-label{color:var(--muted)}.next-reminder-bar .nr-value{color:var(--fg);font-weight:600}
-        .next-reminder-bar .nr-countdown{color:var(--accent);font-weight:700;margin-left:auto;font-variant-numeric:tabular-nums}
-        .progress-strip{padding:0 20px 8px}
-        .progress-slots{display:flex;gap:6px}
-        .p-slot{flex:1;text-align:center;padding:8px 4px 6px;border-radius:10px;border:1px solid var(--border);background:var(--card);cursor:pointer;transition:all .25s;position:relative}
-        .p-slot:hover{border-color:rgba(0,217,166,.4)}
-        .p-slot .p-time{font-size:11px;font-weight:600;color:var(--muted);margin-bottom:3px}
-        .p-slot .p-label{font-size:9px;color:var(--muted);opacity:.7}
-        .p-slot.done{border-color:rgba(0,217,166,.3);background:rgba(0,217,166,.08)}
-        .p-slot.done .p-time{color:var(--accent)}
-        .p-slot.done::after{content:'\f00c';font-family:'Font Awesome 6 Free';font-weight:900;position:absolute;top:3px;right:5px;font-size:8px;color:var(--accent)}
-        .p-slot.active-slot{border-color:var(--accent);background:rgba(0,217,166,.12);box-shadow:0 0 20px rgba(0,217,166,.1)}
-        .p-slot.active-slot .p-time{color:var(--accent)}
-        .stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;padding:0 20px 12px}
-        .stat-card{padding:14px;border-radius:12px;background:var(--card);border:1px solid var(--border);text-align:center}
-        .stat-val{font-size:24px;font-weight:700;margin-bottom:2px}
-        .stat-label{font-size:11px;color:var(--muted)}
-        .stat-card.good .stat-val{color:var(--accent)}.stat-card.warn .stat-val{color:var(--warning)}.stat-card.bad .stat-val{color:var(--danger)}.stat-card.neutral .stat-val{color:var(--fg)}
-        .section-head{padding:14px 20px 8px;display:flex;align-items:center;justify-content:space-between}
-        .section-title{font-size:13px;font-weight:700;color:var(--fg);display:flex;align-items:center;gap:8px}
-        .section-title i{color:var(--accent);font-size:12px}
-        .section-toggle{width:32px;height:32px;border-radius:8px;border:1px solid var(--border);background:var(--card);color:var(--muted);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;font-size:12px}
-        .section-toggle.open{color:var(--accent);border-color:rgba(0,217,166,.3);background:rgba(0,217,166,.08)}
-        .section-toggle i{transition:transform .2s}.section-toggle.open i{transform:rotate(180deg)}
-        .filter-bar{display:flex;gap:6px;flex-wrap:wrap;padding:0 20px 10px}
-        .fb{padding:5px 10px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--muted);font-family:inherit;font-size:11px;font-weight:500;cursor:pointer;transition:all .2s}
-        .fb.active{background:rgba(0,217,166,.1);border-color:rgba(0,217,166,.3);color:var(--accent)}
-        .fb.type-btn.active-insulin{background:rgba(68,136,255,.1);border-color:rgba(68,136,255,.3);color:var(--insulin)}
-        .fb.type-btn.active-levemir{background:rgba(255,181,71,.1);border-color:rgba(255,181,71,.3);color:var(--levemir)}
+        body{font-family:'Space Grotesk',sans-serif;background:var(--bg);color:var(--fg);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+
+        /* Ambient */
+        .ambient{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+        .ambient-orb{position:absolute;border-radius:50%;filter:blur(140px);opacity:.10}
+        .ambient-orb.a{width:420px;height:420px;background:var(--accent);top:-160px;left:-120px;animation:orbA 20s ease-in-out infinite}
+        .ambient-orb.b{width:340px;height:340px;background:#0055FF;bottom:-100px;right:-80px;animation:orbB 24s ease-in-out infinite}
+        .ambient-orb.c{width:200px;height:200px;background:#8B5CF6;top:40%;left:50%;animation:orbC 18s ease-in-out infinite;opacity:.05}
+        @keyframes orbA{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(50px,40px) scale(1.15)}}
+        @keyframes orbB{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-40px,-30px) scale(1.1)}}
+        @keyframes orbC{0%,100%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(-30%,-60%) scale(1.2)}}
+
+        /* Noise overlay */
+        .ambient::after{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.03'/%3E%3C/svg%3E");opacity:.4}
+
+        .shell{position:relative;z-index:1;display:flex;flex-direction:column;min-height:100vh;max-width:520px;margin:0 auto;padding:0 0 32px}
+
+        /* Header */
+        .hdr{padding:18px 20px 14px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+        .brand{display:flex;align-items:center;gap:12px}
+        .brand-icon{width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,var(--accent),#00B88C);display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--bg);box-shadow:0 6px 24px rgba(0,229,160,.25);position:relative}
+        .brand-icon::after{content:'';position:absolute;inset:-3px;border-radius:15px;background:linear-gradient(135deg,var(--accent),transparent);opacity:.2;z-index:-1}
+        .brand h1{font-size:16px;font-weight:700;line-height:1.15;letter-spacing:-.3px}
+        .brand p{font-size:11px;color:var(--muted);font-weight:500;margin-top:1px}
+        .hdr-actions{display:flex;gap:6px}
+        .hdr-btn{width:38px;height:38px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--card);color:var(--muted);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;font-size:14px}
+        .hdr-btn:hover{border-color:var(--accent-border);color:var(--accent);background:var(--accent-dim)}
+
+        /* Info bar */
+        .info-bar{margin:0 20px 6px;padding:10px 14px;border-radius:var(--radius-sm);display:flex;align-items:center;gap:10px;font-size:11px;font-weight:500;transition:all .25s}
+        .info-bar.bot{background:var(--accent-dim);border:1px solid var(--accent-border);color:var(--accent)}
+        .info-bar.bot i{font-size:15px}
+        .info-bar.reminder{background:var(--card);border:1px solid var(--border)}
+        .info-bar.reminder i{color:var(--accent);font-size:14px}
+        .info-bar .nr-label{color:var(--muted)}
+        .info-bar .nr-value{color:var(--fg2);font-weight:600}
+        .info-bar .nr-countdown{margin-left:auto;color:var(--accent);font-weight:700;font-size:13px;font-variant-numeric:tabular-nums;letter-spacing:.5px}
+
+        /* Progress strip */
+        .progress-strip{padding:10px 20px 8px}
+        .progress-slots{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+        .p-slot{text-align:center;padding:10px 2px 8px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--card);cursor:pointer;transition:all .25s;position:relative;overflow:hidden}
+        .p-slot::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:transparent;transition:background .25s}
+        .p-slot:hover{border-color:var(--border2);background:var(--card-hover)}
+        .p-slot .p-icon{font-size:14px;color:var(--muted);margin-bottom:4px;transition:color .25s}
+        .p-slot .p-time{font-size:12px;font-weight:700;color:var(--muted);margin-bottom:2px;transition:color .25s}
+        .p-slot .p-label{font-size:9px;color:var(--muted);opacity:.6;font-weight:500;text-transform:uppercase;letter-spacing:.5px}
+        .p-slot.done{border-color:var(--accent-border);background:var(--accent-dim)}
+        .p-slot.done::before{background:var(--accent)}
+        .p-slot.done .p-icon,.p-slot.done .p-time{color:var(--accent)}
+        .p-slot.done::after{content:'\f00c';font-family:'Font Awesome 6 Free';font-weight:900;position:absolute;top:4px;right:4px;font-size:7px;color:var(--accent);background:var(--bg);width:14px;height:14px;border-radius:50%;display:flex;align-items:center;justify-content:center;line-height:1}
+        .p-slot.active-slot{border-color:var(--accent);background:var(--accent-dim);box-shadow:0 0 24px rgba(0,229,160,.08)}
+        .p-slot.active-slot::before{background:var(--accent)}
+        .p-slot.active-slot .p-icon,.p-slot.active-slot .p-time{color:var(--accent)}
+
+        /* Stats grid */
+        .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:6px 20px 12px}
+        .stat-card{padding:14px 12px;border-radius:var(--radius);background:var(--card);border:1px solid var(--border);display:flex;align-items:center;gap:12px;transition:all .25s}
+        .stat-card:hover{border-color:var(--border2);transform:translateY(-1px)}
+        .stat-icon{width:40px;height:40px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+        .stat-info .stat-val{font-size:22px;font-weight:700;line-height:1.1}
+        .stat-info .stat-label{font-size:10px;color:var(--muted);font-weight:500;margin-top:2px}
+        .stat-card.neutral .stat-icon{background:var(--accent-dim);color:var(--accent)}
+        .stat-card.neutral .stat-val{color:var(--fg)}
+
+        /* Section */
+        .sec-head{padding:16px 20px 8px;display:flex;align-items:center;justify-content:space-between}
+        .sec-title{font-size:13px;font-weight:700;display:flex;align-items:center;gap:8px;color:var(--fg)}
+        .sec-title i{width:26px;height:26px;border-radius:var(--radius-xs);display:flex;align-items:center;justify-content:center;font-size:11px}
+        .sec-title .ic-gds{background:var(--accent-dim);color:var(--accent)}
+        .sec-title .ic-dose{background:var(--insulin-dim);color:var(--insulin)}
+        .sec-title .ic-input{background:rgba(168,85,247,.08);color:#A855F7}
+        .sec-title .ic-history{background:var(--warning-dim);color:var(--warning)}
+        .sec-toggle{width:30px;height:30px;border-radius:var(--radius-xs);border:1px solid var(--border);background:var(--card);color:var(--muted);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;font-size:11px}
+        .sec-toggle.open{color:var(--accent);border-color:var(--accent-border);background:var(--accent-dim)}
+        .sec-toggle i{transition:transform .25s}.sec-toggle.open i{transform:rotate(180deg)}
+
+        /* Filters */
+        .filter-bar{display:flex;gap:5px;flex-wrap:wrap;padding:0 20px 10px}
+        .fb{padding:6px 12px;border-radius:var(--radius-xs);border:1px solid var(--border);background:transparent;color:var(--muted);font-family:inherit;font-size:11px;font-weight:500;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:5px}
+        .fb:hover{border-color:var(--border2);color:var(--fg2)}
+        .fb.active{background:var(--accent-dim);border-color:var(--accent-border);color:var(--accent)}
+        .fb.type-btn.active-insulin{background:var(--insulin-dim);border-color:var(--insulin-border);color:var(--insulin)}
+        .fb.type-btn.active-levemir{background:var(--levemir-dim);border-color:var(--levemir-border);color:var(--levemir)}
+
+        /* Input */
         .input-section{padding:0 20px 14px}
-        .slot-btns{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
-        .slot-btn{padding:8px 12px;border-radius:10px;border:1px solid var(--border);background:var(--card);color:var(--muted);font-size:12px;font-family:inherit;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:6px}
-        .slot-btn:hover,.slot-btn.active{border-color:var(--accent);color:var(--accent);background:rgba(0,217,166,.08)}
-        .slot-btn.done-slot{opacity:.35;pointer-events:none}
+        .slot-btns{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:12px}
+        .slot-btn{padding:10px 8px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--card);color:var(--muted);font-size:11px;font-family:inherit;cursor:pointer;transition:all .2s;display:flex;flex-direction:column;align-items:center;gap:5px;font-weight:500}
+        .slot-btn i{font-size:15px;transition:color .2s}
+        .slot-btn:hover,.slot-btn.active{border-color:var(--accent-border);color:var(--accent);background:var(--accent-dim)}
+        .slot-btn.active i{color:var(--accent)}
+        .slot-btn.done-slot{opacity:.3;pointer-events:none}
         .input-row{display:flex;gap:8px}
-        .gds-input{flex:1;padding:12px 14px;border-radius:12px;border:1px solid var(--border);background:var(--card);color:var(--fg);font-family:inherit;font-size:14px;font-weight:600;outline:none;transition:border-color .2s}
-        .gds-input::placeholder{color:var(--muted);font-weight:400}.gds-input:focus{border-color:var(--accent)}.gds-input:disabled{opacity:.3}
-        .submit-btn{width:50px;border-radius:12px;border:none;background:linear-gradient(135deg,var(--accent),var(--accent2));color:var(--bg);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s;box-shadow:0 4px 16px rgba(0,217,166,.2)}
-        .submit-btn:hover{transform:translateY(-1px)}.submit-btn:disabled{opacity:.3;cursor:not-allowed;transform:none}
-        .levemir-btn{width:100%;padding:14px;border-radius:12px;border:1px solid rgba(0,217,166,.3);background:rgba(0,217,166,.08);color:var(--accent);font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s;display:none}
-        .levemir-btn:hover{background:rgba(0,217,166,.15)}.levemir-btn.done{opacity:.4;pointer-events:none}
-        .result-card{margin:0 20px 14px;padding:14px 16px;border-radius:14px;background:var(--card);border:1px solid var(--border);display:none}
-        .result-card.show{display:block;animation:mi .35s ease-out}
-        @keyframes mi{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
-        .result-gds{font-size:13px;color:var(--muted);margin-bottom:8px}
-        .result-gds span{font-size:18px;font-weight:700}
-        .result-gds .good{color:var(--accent)}.result-gds .warn{color:var(--warning)}.result-gds .danger{color:var(--danger)}
-        .result-dose{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-radius:10px;background:rgba(0,217,166,.08);border:1px solid rgba(0,217,166,.15);margin-top:8px}
-        .result-dose .label{font-size:12px;color:var(--muted)}.result-dose .label strong{color:var(--fg);display:block;font-size:13px}
-        .result-dose .val{font-size:28px;font-weight:700;color:var(--accent)}
-        .result-dose .val small{font-size:12px;font-weight:400}
-        .result-dose.danger-card{background:rgba(255,92,92,.08);border-color:rgba(255,92,92,.2)}.result-dose.danger-card .val{color:var(--danger)}
-        .result-note{margin-top:8px;font-size:11px;padding:8px 10px;border-radius:8px;display:none}
-        .result-note.warn-note{display:block;background:rgba(255,181,71,.08);color:var(--warning);border:1px solid rgba(255,181,71,.15)}
-        .result-note.danger-note{display:block;background:rgba(255,92,92,.08);color:var(--danger);border:1px solid rgba(255,92,92,.15)}
+        .gds-input{flex:1;padding:14px 16px;border-radius:var(--radius);border:1px solid var(--border);background:var(--card);color:var(--fg);font-family:inherit;font-size:16px;font-weight:600;outline:none;transition:all .2s}
+        .gds-input::placeholder{color:var(--muted);font-weight:400;font-size:13px}
+        .gds-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-dim)}
+        .gds-input:disabled{opacity:.25}
+        .submit-btn{width:52px;border-radius:var(--radius);border:none;background:linear-gradient(135deg,var(--accent),var(--accent2));color:var(--bg);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s;box-shadow:0 4px 20px rgba(0,229,160,.2)}
+        .submit-btn:hover{transform:translateY(-1px);box-shadow:0 6px 28px rgba(0,229,160,.3)}
+        .submit-btn:active{transform:scale(.96)}
+        .submit-btn:disabled{opacity:.25;cursor:not-allowed;transform:none;box-shadow:none}
+        .levemir-btn{width:100%;padding:16px;border-radius:var(--radius);border:1px solid var(--accent-border);background:var(--accent-dim);color:var(--accent);font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;transition:all .25s;display:none;align-items:center;justify-content:center;gap:10px}
+        .levemir-btn:hover{background:rgba(0,229,160,.12);border-color:rgba(0,229,160,.3);transform:translateY(-1px)}
+        .levemir-btn:active{transform:scale(.98)}
+        .levemir-btn.done{opacity:.3;pointer-events:none}
+
+        /* Result card */
+        .result-card{margin:0 20px 14px;padding:0;border-radius:var(--radius);background:var(--card);border:1px solid var(--border);display:none;overflow:hidden}
+        .result-card.show{display:block;animation:slideUp .35s ease-out}
+        @keyframes slideUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+        .result-top{padding:16px 16px 12px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border)}
+        .result-top-icon{width:36px;height:36px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+        .result-top-icon.good{background:var(--accent-dim);color:var(--accent)}
+        .result-top-icon.warn{background:var(--warning-dim);color:var(--warning)}
+        .result-top-icon.danger{background:var(--danger-dim);color:var(--danger)}
+        .result-top-text{flex:1}
+        .result-top-text .rt-label{font-size:11px;color:var(--muted);font-weight:500}
+        .result-top-text .rt-value{font-size:20px;font-weight:700}
+        .result-top-text .rt-value.good{color:var(--accent)}.result-top-text .rt-value.warn{color:var(--warning)}.result-top-text .rt-value.danger{color:var(--danger)}
+        .result-top-text .rt-tag{display:inline-block;font-size:9px;font-weight:600;padding:2px 7px;border-radius:20px;margin-left:8px;text-transform:uppercase;letter-spacing:.5px}
+        .rt-tag.good{background:var(--accent-dim);color:var(--accent)}.rt-tag.warn{background:var(--warning-dim);color:var(--warning)}.rt-tag.danger{background:var(--danger-dim);color:var(--danger)}
+        .result-body{padding:14px 16px}
+        .result-dose{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-radius:var(--radius-sm);background:var(--accent-dim);border:1px solid var(--accent-border)}
+        .result-dose .label{font-size:12px;color:var(--muted)}
+        .result-dose .label strong{color:var(--fg);display:block;font-size:14px;margin-bottom:2px}
+        .result-dose .val{font-size:32px;font-weight:700;color:var(--accent);line-height:1}
+        .result-dose .val small{font-size:12px;font-weight:400;color:var(--muted);margin-left:2px}
+        .result-dose.danger-card{background:var(--danger-dim);border-color:var(--danger-border)}
+        .result-dose.danger-card .val{color:var(--danger)}
+        .result-note{margin-top:10px;font-size:11px;padding:10px 12px;border-radius:var(--radius-sm);display:none;align-items:center;gap:8px;font-weight:500}
+        .result-note.warn-note{display:flex;background:var(--warning-dim);color:var(--warning);border:1px solid var(--warning-border)}
+        .result-note.danger-note{display:flex;background:var(--danger-dim);color:var(--danger);border:1px solid var(--danger-border)}
+
+        /* Chart */
         .chart-section{padding:0 20px 14px}
-        .chart-wrap{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px 12px 8px;position:relative}
+        .chart-wrap{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px 14px 12px;position:relative}
         .chart-wrap canvas{width:100%!important;max-height:260px}
-        .chart-legend{display:flex;gap:14px;justify-content:center;margin-top:10px;flex-wrap:wrap}
-        .chart-legend-item{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--muted)}
+        .chart-legend{display:flex;gap:16px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+        .chart-legend-item{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--muted);font-weight:500}
         .chart-legend-dot{width:8px;height:8px;border-radius:50%}
-        .dose-stats{
-            display:grid;
-            grid-template-columns:repeat(2, minmax(0,1fr));
-            grid-template-rows: repeat(2, auto);
-            gap:10px;
-            margin-bottom:14px;
-        }
-        
-        .dose-stat{
-            padding:14px 10px;
-            border-radius:14px;
-            text-align:center;
-            background:var(--card);
-            border:1px solid var(--border);
-            transition:all .25s ease;
-        }
-        
-        .dose-stat:hover{
-            transform:translateY(-2px);
-            border-color:rgba(0,217,166,.3);
-        }
-        
-        /* isi angka */
-        .dose-stat .dv{
-            font-size:22px;
-            font-weight:700;
-            margin-bottom:4px;
-        }
-        
-        /* label */
-        .dose-stat .dl{
-            font-size:11px;
-            color:var(--muted);
-            letter-spacing:.3px;
-        }
-        
-        /* total highlight */
-        .dose-stat.total-stat{
-            background:linear-gradient(135deg,#152035,#1A2740);
-            border:1px solid rgba(0,217,166,.2);
-        }
-        
-        /* warna opsional (kalau nanti dipakai lagi) */
-        .dose-stat.insulin-stat{
-            background:rgba(68,136,255,.08);
-            border:1px solid rgba(68,136,255,.15);
-        }
-        .dose-stat.insulin-stat .dv{
-            color:var(--insulin);
-        }
-        
-        .dose-stat.levemir-stat{
-            background:rgba(255,181,71,.08);
-            border:1px solid rgba(255,181,71,.15);
-        }
-        .dose-stat.levemir-stat .dv{
-            color:var(--levemir);
-        }
-        .dose-stat.total-stat .dv{
-            color:var(--accent);
-        }                    
+
+        /* Dose stats */
+        .dose-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:14px;padding:0 20px}
+        .dose-stat{padding:12px 6px;border-radius:var(--radius-sm);text-align:center;background:var(--card);border:1px solid var(--border);transition:all .25s}
+        .dose-stat:hover{transform:translateY(-2px);border-color:var(--border2)}
+        .dose-stat .dv{font-size:20px;font-weight:700;margin-bottom:2px;line-height:1.1}
+        .dose-stat .dl{font-size:10px;color:var(--muted);font-weight:500;letter-spacing:.3px}
+        .dose-stat.total-stat{background:var(--accent-dim);border-color:var(--accent-border)}
+        .dose-stat.total-stat .dv{color:var(--accent)}
+        .dose-stat.insulin-stat{background:var(--insulin-dim);border-color:var(--insulin-border)}
+        .dose-stat.insulin-stat .dv{color:var(--insulin)}
+        .dose-stat.levemir-stat{background:var(--levemir-dim);border-color:var(--levemir-border)}
+        .dose-stat.levemir-stat .dv{color:var(--levemir)}
+
+        /* History */
         .history-section{padding:0 20px 14px}
-        .hp-date-label{font-size:11px;font-weight:600;color:var(--muted);margin:12px 0 8px;text-transform:uppercase;letter-spacing:.5px}
+        .hp-date-label{font-size:10px;font-weight:700;color:var(--muted);margin:14px 0 8px;text-transform:uppercase;letter-spacing:.8px;display:flex;align-items:center;gap:8px}
+        .hp-date-label::after{content:'';flex:1;height:1px;background:var(--border)}
         .hp-date-label:first-child{margin-top:0}
-        .hp-item{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:10px;background:var(--card);border:1px solid var(--border);margin-bottom:6px;animation:mi .3s ease-out}
-        .hp-item-icon{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
-        .hp-item-icon.gds{background:rgba(0,217,166,.1);color:var(--accent)}.hp-item-icon.insulin{background:rgba(68,136,255,.1);color:var(--insulin)}
-        .hp-item-icon.levemir{background:rgba(255,181,71,.1);color:var(--levemir)}.hp-item-icon.high{background:rgba(255,92,92,.1);color:var(--danger)}
-        .hp-item-info{flex:1;min-width:0}.hp-item-title{font-size:12px;font-weight:600}.hp-item-sub{font-size:11px;color:var(--muted)}
-        .hp-item-val{font-size:16px;font-weight:700;flex-shrink:0}
+        .hp-item{display:flex;align-items:center;gap:12px;padding:12px;border-radius:var(--radius-sm);background:var(--card);border:1px solid var(--border);margin-bottom:6px;transition:all .25s}
+        .hp-item:hover{transform:translateX(3px);border-color:var(--border2);background:var(--card-hover)}
+        .hp-item-icon{width:38px;height:38px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+        .hp-item-icon.gds{background:var(--accent-dim);color:var(--accent)}
+        .hp-item-icon.insulin{background:var(--insulin-dim);color:var(--insulin)}
+        .hp-item-icon.levemir{background:var(--levemir-dim);color:var(--levemir)}
+        .hp-item-icon.high{background:var(--danger-dim);color:var(--danger)}
+        .hp-item-info{flex:1;min-width:0}
+        .hp-item-title{font-size:13px;font-weight:600;text-transform:capitalize;line-height:1.2}
+        .hp-item-sub{font-size:11px;color:var(--muted);margin-top:2px;display:flex;align-items:center;gap:6px}
+        .hp-item-sub i{font-size:9px}
+        .hp-item-right{text-align:right;flex-shrink:0}
+        .hp-item-val{font-size:16px;font-weight:700;line-height:1.2}
         .hp-item-val.good{color:var(--accent)}.hp-item-val.warn{color:var(--warning)}.hp-item-val.bad{color:var(--danger)}
         .hp-item-val.insulin-v{color:var(--insulin)}.hp-item-val.levemir-v{color:var(--levemir)}
-        .hp-item{
-            display:flex;
-            align-items:center;
-            gap:12px;
-            padding:12px;
-            border-radius:12px;
-            background:var(--card);
-            border:1px solid var(--border);
-            margin-bottom:8px;
-            transition:all .25s ease;
-        }
-        
-        .hp-item:hover{
-            transform:translateX(4px);
-            border-color:rgba(0,217,166,.25);
-        }
-        
-        .hp-item-title{
-            font-size:13px;
-            font-weight:600;
-            text-transform:capitalize;
-        }
-        .empty-box{text-align:center;padding:32px 20px;color:var(--muted)}
-        .empty-box i{font-size:32px;opacity:.2;display:block;margin-bottom:10px}
-        .empty-box p{font-size:13px}
-        .loading-box{text-align:center;padding:32px 20px;color:var(--muted)}
-        .loading-box i{font-size:28px;color:var(--accent);animation:spin 1.2s linear infinite;display:block;margin-bottom:10px}
-        @keyframes spin{to{transform:rotate(360deg)}}
+        .hp-item-badge{font-size:9px;font-weight:600;padding:2px 7px;border-radius:20px;margin-top:3px;display:inline-block;text-transform:uppercase;letter-spacing:.3px}
+        .hp-item-badge.gds-b{background:var(--accent-dim);color:var(--accent)}
+        .hp-item-badge.ins-b{background:var(--insulin-dim);color:var(--insulin)}
+        .hp-item-badge.lev-b{background:var(--levemir-dim);color:var(--levemir)}
+
+        .empty-box{text-align:center;padding:40px 20px;color:var(--muted)}
+        .empty-box i{font-size:36px;opacity:.15;display:block;margin-bottom:12px}
+        .empty-box p{font-size:13px;font-weight:500}
+
+        /* Toast */
         .toast-container{position:fixed;top:12px;left:50%;transform:translateX(-50%);z-index:300;display:flex;flex-direction:column;gap:8px;pointer-events:none}
-        .toast{padding:10px 16px;border-radius:10px;background:var(--card2);border:1px solid var(--border);color:var(--fg);font-size:12px;font-family:inherit;box-shadow:0 8px 24px rgba(0,0,0,.4);animation:ti .3s ease-out,to .3s ease-in 2.5s forwards;display:flex;align-items:center;gap:8px;pointer-events:auto;max-width:90vw}
-        .toast i{font-size:14px;flex-shrink:0}.toast.success i{color:var(--accent)}.toast.error i{color:var(--danger)}
-        @keyframes ti{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:translateY(0)}}
-        @keyframes to{to{opacity:0;transform:translateY(-12px)}}
-        @media(max-width:540px){.app-shell{max-width:100%}.p-slot .p-label{display:none}.slot-btn{padding:6px 10px;font-size:11px}.dose-stats{grid-template-columns:repeat(3,1fr);gap:4px}}
+        .toast{padding:12px 18px;border-radius:var(--radius-sm);background:var(--card2);border:1px solid var(--border2);color:var(--fg);font-size:12px;font-family:inherit;font-weight:500;box-shadow:0 10px 32px rgba(0,0,0,.5);animation:toastIn .3s ease-out,toastOut .3s ease-in 2.5s forwards;display:flex;align-items:center;gap:10px;pointer-events:auto;max-width:90vw;backdrop-filter:blur(12px)}
+        .toast i{font-size:15px;flex-shrink:0}.toast.success i{color:var(--accent)}.toast.error i{color:var(--danger)}
+        @keyframes toastIn{from{opacity:0;transform:translateY(-14px)}to{opacity:1;transform:translateY(0)}}
+        @keyframes toastOut{to{opacity:0;transform:translateY(-14px)}}
+
+        /* Divider */
+        .divider{height:1px;background:var(--border);margin:0 20px}
+
+        @media(max-width:540px){
+            .shell{max-width:100%}
+            .p-slot .p-label{display:none}
+            .slot-btns{grid-template-columns:repeat(2,1fr)}
+            .dose-stats{grid-template-columns:repeat(2,1fr)}
+        }
         @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
     </style>
 </head>
 <body>
-    <div class="bg-orb bg-orb-1"></div><div class="bg-orb bg-orb-2"></div>
+    <div class="ambient">
+        <div class="ambient-orb a"></div>
+        <div class="ambient-orb b"></div>
+        <div class="ambient-orb c"></div>
+    </div>
     <div class="toast-container" id="toastContainer"></div>
 
-    <div class="app-shell">
-        <header class="app-header">
-            <div class="brand"><div class="brand-icon"><i class="fa-solid fa-droplet"></i></div><div class="brand-text"><h1>Diabetes Monitor</h1><p>Zayna Kamila</p></div></div>
-            <div class="header-actions">
-                <button class="header-btn" id="historyToggle" title="Riwayat"><i class="fa-solid fa-clock-rotate-left"></i></button>
+    <div class="shell">
+        <!-- Header -->
+        <header class="hdr">
+            <div class="brand">
+                <div class="brand-icon"><i class="fa-solid fa-droplet"></i></div>
+                <div>
+                    <h1>Diabetes Monitor</h1>
+                    <p><i class="fa-solid fa-heart-pulse" style="margin-right:3px;font-size:10px;color:var(--danger)"></i>Zayna Kamila</p>
+                </div>
+            </div>
+            <div class="hdr-actions">
+                <button class="hdr-btn" id="historyToggle" title="Riwayat"><i class="fa-solid fa-clock-rotate-left"></i></button>
             </div>
         </header>
 
-        <div class="bot-bar"><i class="fa-brands fa-telegram"></i><span>Reminder via Telegram Bot — selalu tepat waktu</span></div>
-        <div class="next-reminder-bar" id="nextReminder"><i class="fa-solid fa-bell"></i><span class="nr-label">Berikutnya:</span><span class="nr-value" id="nrLabel">—</span><span class="nr-countdown" id="nrCountdown">—:—</span></div>
+        <!-- Info bars -->
+        <div class="info-bar bot"><i class="fa-brands fa-telegram"></i><span>Reminder via Telegram Bot — selalu tepat waktu</span></div>
+        <div class="info-bar reminder" id="nextReminder">
+            <i class="fa-solid fa-bell"></i>
+            <span class="nr-label">Berikutnya:</span>
+            <span class="nr-value" id="nrLabel">—</span>
+            <span class="nr-countdown" id="nrCountdown">—:—</span>
+        </div>
 
-        <div class="progress-strip"><div class="progress-slots" id="progressSlots">
-            <div class="p-slot" data-slot="dini-hari"><div class="p-time">02:00</div><div class="p-label">GDS</div></div>
-            <div class="p-slot" data-slot="sarapan"><div class="p-time">06:00</div><div class="p-label">Sarapan</div></div>
-            <div class="p-slot" data-slot="siang"><div class="p-time">12:00</div><div class="p-label">Siang</div></div>
-            <div class="p-slot" data-slot="malam"><div class="p-time">18:00</div><div class="p-label">Malam</div></div>
-            <div class="p-slot" data-slot="levemir"><div class="p-time">20:30</div><div class="p-label">Levemir</div></div>
-        </div></div>
+        <!-- Progress -->
+        <div class="progress-strip">
+            <div class="progress-slots" id="progressSlots">
+                <div class="p-slot" data-slot="dini-hari">
+                    <div class="p-icon"><i class="fa-solid fa-moon"></i></div>
+                    <div class="p-time">02:00</div>
+                    <div class="p-label">GDS</div>
+                </div>
+                <div class="p-slot" data-slot="sarapan">
+                    <div class="p-icon"><i class="fa-solid fa-mug-hot"></i></div>
+                    <div class="p-time">06:00</div>
+                    <div class="p-label">Sarapan</div>
+                </div>
+                <div class="p-slot" data-slot="siang">
+                    <div class="p-icon"><i class="fa-solid fa-sun"></i></div>
+                    <div class="p-time">12:00</div>
+                    <div class="p-label">Siang</div>
+                </div>
+                <div class="p-slot" data-slot="malam">
+                    <div class="p-icon"><i class="fa-solid fa-cloud-moon"></i></div>
+                    <div class="p-time">18:00</div>
+                    <div class="p-label">Malam</div>
+                </div>
+                <div class="p-slot" data-slot="levemir">
+                    <div class="p-icon"><i class="fa-solid fa-syringe"></i></div>
+                    <div class="p-time">20:30</div>
+                    <div class="p-label">Levemir</div>
+                </div>
+            </div>
+        </div>
 
-        <div class="stats-grid" id="statsGrid"><div class="stat-card neutral"><div class="stat-val" id="statDone">—</div><div class="stat-label">Selesai Hari Ini</div></div><div class="stat-card neutral"><div class="stat-val" id="statTotal">5</div><div class="stat-label">Total Jadwal</div></div></div>
+        <!-- Stats -->
+        <div class="stats-grid" id="statsGrid">
+            <div class="stat-card neutral">
+                <div class="stat-icon"><i class="fa-solid fa-circle-check"></i></div>
+                <div class="stat-info">
+                    <div class="stat-val" id="statDone">—</div>
+                    <div class="stat-label">Selesai Hari Ini</div>
+                </div>
+            </div>
+            <div class="stat-card neutral">
+                <div class="stat-icon"><i class="fa-solid fa-list-check"></i></div>
+                <div class="stat-info">
+                    <div class="stat-val" id="statTotal">5</div>
+                    <div class="stat-label">Total Jadwal</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="divider"></div>
 
         <!-- Input -->
-        <div class="section-head"><div class="section-title"><i class="fa-solid fa-syringe"></i>Input Pengukuran</div></div>
+        <div class="sec-head"><div class="sec-title"><i class="fa-solid fa-syringe ic-input"></i>Input Pengukuran</div></div>
         <div class="input-section">
             <div class="slot-btns" id="slotBtns">
-                <button class="slot-btn" data-slot="dini-hari"><i class="fa-solid fa-moon"></i>02:00</button>
-                <button class="slot-btn" data-slot="sarapan"><i class="fa-solid fa-sun"></i>06:00</button>
-                <button class="slot-btn" data-slot="siang"><i class="fa-solid fa-cloud-sun"></i>12:00</button>
-                <button class="slot-btn" data-slot="malam"><i class="fa-solid fa-cloud-moon"></i>18:00</button>
+                <button class="slot-btn" data-slot="dini-hari"><i class="fa-solid fa-moon"></i><span>02:00 GDS</span></button>
+                <button class="slot-btn" data-slot="sarapan"><i class="fa-solid fa-mug-hot"></i><span>06:00</span></button>
+                <button class="slot-btn" data-slot="siang"><i class="fa-solid fa-sun"></i><span>12:00</span></button>
+                <button class="slot-btn" data-slot="malam"><i class="fa-solid fa-cloud-moon"></i><span>18:00</span></button>
             </div>
             <div class="input-row" id="inputRow">
                 <input type="number" class="gds-input" id="gdsInput" placeholder="Hasil GDS (mg/dL)" min="0" max="999">
                 <button class="submit-btn" id="submitBtn" disabled><i class="fa-solid fa-paper-plane"></i></button>
             </div>
-            <button class="levemir-btn" id="levemirBtn"><i class="fa-solid fa-check" style="margin-right:8px"></i>Konfirmasi Levemir 8 unit</button>
+            <button class="levemir-btn" id="levemirBtn"><i class="fa-solid fa-syringe"></i>Konfirmasi Levemir 8 unit</button>
         </div>
         <div class="result-card" id="resultCard"></div>
 
-        <!-- Grafik GDS -->
-        <div class="section-head"><div class="section-title"><i class="fa-solid fa-chart-line"></i>Grafik GDS</div><button class="section-toggle open" id="gdsToggle"><i class="fa-solid fa-chevron-down"></i></button></div>
+        <div class="divider"></div>
+
+        <!-- GDS Chart -->
+        <div class="sec-head"><div class="sec-title"><i class="fa-solid fa-chart-line ic-gds"></i>Grafik GDS</div><button class="sec-toggle open" id="gdsToggle"><i class="fa-solid fa-chevron-down"></i></button></div>
         <div id="gdsSection">
-            <div class="filter-bar" id="gdsFilters"><button class="fb active" data-period="today">Hari Ini</button><button class="fb" data-period="7">7 Hari</button><button class="fb" data-period="30">30 Hari</button><button class="fb" data-period="all">Semua</button></div>
-            <div class="chart-section"><div class="chart-wrap"><div class="dose-stats" id="gdsStats"></div><canvas id="gdsCanvas"></canvas><div class="chart-legend"><div class="chart-legend-item"><div class="chart-legend-dot" style="background:var(--accent)"></div>Normal</div><div class="chart-legend-item"><div class="chart-legend-dot" style="background:var(--warning)"></div>Rendah/Tinggi</div><div class="chart-legend-item"><div class="chart-legend-dot" style="background:var(--danger)"></div>Kritis</div></div></div>
+            <div class="filter-bar" id="gdsFilters">
+                <button class="fb active" data-period="today"><i class="fa-solid fa-calendar-day" style="font-size:10px"></i>Hari Ini</button>
+                <button class="fb" data-period="7">7 Hari</button>
+                <button class="fb" data-period="30">30 Hari</button>
+                <button class="fb" data-period="all"><i class="fa-solid fa-infinity" style="font-size:10px"></i>Semua</button>
+            </div>
+            <div class="dose-stats" id="gdsStats"></div>
+            <div class="chart-section">
+                <div class="chart-wrap">
+                    <canvas id="gdsCanvas"></canvas>
+                    <div class="chart-legend">
+                        <div class="chart-legend-item"><div class="chart-legend-dot" style="background:var(--accent)"></div>Normal</div>
+                        <div class="chart-legend-item"><div class="chart-legend-dot" style="background:var(--warning)"></div>Rendah/Tinggi</div>
+                        <div class="chart-legend-item"><div class="chart-legend-dot" style="background:var(--danger)"></div>Kritis</div>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <!-- Grafik Dosis -->
-        <div class="section-head"><div class="section-title"><i class="fa-solid fa-prescription-bottle-medical"></i>Grafik Dosis Harian</div><button class="section-toggle open" id="doseToggle"><i class="fa-solid fa-chevron-down"></i></button></div>
+        <div class="divider"></div>
+
+        <!-- Dose Chart -->
+        <div class="sec-head"><div class="sec-title"><i class="fa-solid fa-prescription-bottle-medical ic-dose"></i>Grafik Dosis Harian</div><button class="sec-toggle open" id="doseToggle"><i class="fa-solid fa-chevron-down"></i></button></div>
         <div id="doseSection">
-            <div class="filter-bar" id="dosePeriodFilters"><button class="fb" data-dp="today">Hari Ini</button><button class="fb active" data-dp="7">7 Hari</button><button class="fb" data-dp="30">30 Hari</button><button class="fb" data-dp="all">Semua</button></div>
-            <div class="filter-bar" id="doseTypeFilters"><button class="fb type-btn active-insulin" data-dt="all">Semua</button><button class="fb type-btn" data-dt="insulin"><i class="fa-solid fa-syringe" style="margin-right:3px"></i>Insulin</button><button class="fb type-btn" data-dt="levemir"><i class="fa-solid fa-moon" style="margin-right:3px"></i>Levemir</button></div>
+            <div class="filter-bar" id="dosePeriodFilters">
+                <button class="fb" data-dp="today"><i class="fa-solid fa-calendar-day" style="font-size:10px"></i>Hari Ini</button>
+                <button class="fb active" data-dp="7">7 Hari</button>
+                <button class="fb" data-dp="30">30 Hari</button>
+                <button class="fb" data-dp="all"><i class="fa-solid fa-infinity" style="font-size:10px"></i>Semua</button>
+            </div>
+            <div class="filter-bar" id="doseTypeFilters">
+                <button class="fb type-btn active-insulin" data-dt="all"><i class="fa-solid fa-layer-group" style="font-size:10px"></i>Semua</button>
+                <button class="fb type-btn" data-dt="insulin"><i class="fa-solid fa-syringe" style="font-size:10px"></i>Insulin</button>
+                <button class="fb type-btn" data-dt="levemir"><i class="fa-solid fa-moon" style="font-size:10px"></i>Levemir</button>
+            </div>
             <div class="dose-stats" id="doseStats"></div>
-            <div class="chart-section"><div class="chart-wrap"><canvas id="doseCanvas"></canvas><div class="chart-legend"><div class="chart-legend-item"><div class="chart-legend-dot" style="background:var(--insulin)"></div>Insulin</div><div class="chart-legend-item"><div class="chart-legend-dot" style="background:var(--levemir)"></div>Levemir</div></div></div>
+            <div class="chart-section">
+                <div class="chart-wrap">
+                    <canvas id="doseCanvas"></canvas>
+                    <div class="chart-legend">
+                        <div class="chart-legend-item"><div class="chart-legend-dot" style="background:var(--insulin)"></div>Insulin</div>
+                        <div class="chart-legend-item"><div class="chart-legend-dot" style="background:var(--levemir)"></div>Levemir</div>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <!-- Riwayat -->
-        <div class="section-head"><div class="section-title"><i class="fa-solid fa-clock-rotate-left"></i>Riwayat</div><button class="section-toggle open" id="historyToggleBtn"><i class="fa-solid fa-chevron-down"></i></button></div>
+        <div class="divider"></div>
+
+        <!-- History -->
+        <div class="sec-head"><div class="sec-title"><i class="fa-solid fa-clock-rotate-left ic-history"></i>Riwayat</div><button class="sec-toggle open" id="historyToggleBtn"><i class="fa-solid fa-chevron-down"></i></button></div>
         <div id="historySection">
-            <div class="filter-bar" id="historyFilters"><button class="fb active" data-hp="today">Hari Ini</button><button class="fb" data-hp="7">7 Hari</button><button class="fb" data-hp="30">30 Hari</button><button class="fb" data-hp="all">Semua</button></div>
+            <div class="filter-bar" id="historyFilters">
+                <button class="fb active" data-hp="today"><i class="fa-solid fa-calendar-day" style="font-size:10px"></i>Hari Ini</button>
+                <button class="fb" data-hp="7">7 Hari</button>
+                <button class="fb" data-hp="30">30 Hari</button>
+                <button class="fb" data-hp="all"><i class="fa-solid fa-infinity" style="font-size:10px"></i>Semua</button>
+            </div>
             <div class="history-section" id="historyList"></div>
         </div>
+
+        <!-- Footer spacer -->
+        <div style="height:16px"></div>
     </div>
 
 <script>
@@ -276,19 +424,19 @@ const state = {
     doseChart: null,
     selectedSlot: ''
 };
-    
+
 var SLOTS=[{slot:'dini-hari',label:'Dini Hari',icon:'fa-moon',type:'gds-only'},{slot:'sarapan',label:'Sarapan',icon:'fa-sun',type:'gds-insulin'},{slot:'siang',label:'Siang',icon:'fa-cloud-sun',type:'gds-insulin'},{slot:'malam',label:'Malam',icon:'fa-cloud-moon',type:'gds-insulin'},{slot:'levemir',label:'levemir',icon:'fa-cloud-moon',type:'levemir'}];
 var DEFAULT_DOSES={sarapan:4,siang:5,malam:5},LEVEMIR_DOSE=8;
 var gdsPeriod='today',dosePeriod='7',doseType='all',historyPeriod='today';
 
-try{Telegram.WebApp.ready();Telegram.WebApp.expand();Telegram.WebApp.setHeaderColor('#0C1222');}catch(e){}
+try{Telegram.WebApp.ready();Telegram.WebApp.expand();Telegram.WebApp.setHeaderColor('#060D1B');}catch(e){}
 
 function normalizeDate(r){if(!r||r==='')return '';if(/^\d{4}-\d{2}-\d{2}$/.test(String(r)))return String(r);var d=new Date(r);if(!isNaN(d.getTime()))return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');var p=String(r).split(/[\/\-\.]/);if(p.length===3){var a=parseInt(p[0]),b=parseInt(p[1]),c=parseInt(p[2]);if(c>100)return c+'-'+String(b).padStart(2,'0')+'-'+String(a).padStart(2,'0');else if(a>100)return a+'-'+String(b).padStart(2,'0')+'-'+String(c).padStart(2,'0');}return String(r);}
 function getTodayKey(){var d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
 function getTimeStr(){return String(new Date().getHours()).padStart(2,'0')+':'+String(new Date().getMinutes()).padStart(2,'0');}
 function calcDose(gds,slot){var d=DEFAULT_DOSES[slot];if(gds>300)d+=2;else if(gds>200)d+=1;else if(gds<100)d-=1;return Math.max(0,d);}
 function getCat(gds){if(gds>300)return{label:'Sangat Tinggi',cls:'danger'};if(gds>200)return{label:'Tinggi',cls:'warn'};if(gds<70)return{label:'Hipo',cls:'danger'};if(gds<100)return{label:'Rendah',cls:'warn'};return{label:'Normal',cls:'good'};}
-function ptColor(gds){if(gds>300||gds<70)return'#FF5C5C';if(gds>200||gds<100)return'#FFB547';return'#00D9A6';}
+function ptColor(gds){if(gds>300||gds<70)return'#FF5C5C';if(gds>200||gds<100)return'#FFB547';return'#00E5A0';}
 function fmtLabel(dateStr,timeStr){var nd=normalizeDate(dateStr);if(!nd)return timeStr||'?';var d=new Date(nd+'T00:00:00');return isNaN(d.getTime())?dateStr+' '+(timeStr||''):d.toLocaleDateString('id-ID',{day:'numeric',month:'short'})+' '+(timeStr||'');}
 function showToast(msg,type){type=type||'success';var c=document.getElementById('toastContainer'),t=document.createElement('div');t.className='toast '+type;t.innerHTML='<i class="fa-solid '+(type==='success'?'fa-circle-check':'fa-circle-xmark')+'"></i><span>'+msg+'</span>';c.appendChild(t);setTimeout(function(){t.remove();},3000);}
 
@@ -297,317 +445,156 @@ async function submitData(entry){try{var r=await fetch(API_URL+'?action=submit',
 
 function filterByPeriod(entries,period){if(period==='today'){const t=getTodayKey();return entries.filter(function(e){return normalizeDate(e.date)===t;});}var days=period==='7'?7:30;if(period==='all')return entries;var cutoff=new Date();cutoff.setDate(cutoff.getDate()-days);var cutStr=cutoff.toISOString().slice(0,10);return entries.filter(function(e){return normalizeDate(e.date)>=cutStr;});}
 
-    function calcStats(arr){
-    if(!arr.length){
-        return {min:0, max:0, avg:0};
-    }
-
-    const min = Math.min(...arr);
-    const max = Math.max(...arr);
-    const avg = Math.round(arr.reduce((a,b)=>a+b,0) / arr.length);
-
-    return {min, max, avg};
+function calcStats(arr){
+    if(!arr.length) return {min:0,max:0,avg:0};
+    const min=Math.min(...arr),max=Math.max(...arr),avg=Math.round(arr.reduce((a,b)=>a+b,0)/arr.length);
+    return {min,max,avg};
 }
-    
+
 function updateProgress(){
-    const today = getTodayKey();
-
-    const td = state.data.filter(e =>
-        normalizeDate(e.date) === today
-    );
-
-    const done = {};
-    SLOTS.forEach(s => done[s.slot] = false);
-
-    td.forEach(e=>{
-        if(done.hasOwnProperty(e.slot)){
-            done[e.slot] = true;
-        }
-    });
-
-    // 🔥 HITUNG JUMLAH YANG SELESAI
-    const doneCount = Object.values(done).filter(v => v).length;
-
-    // 🔥 UPDATE UI
-    const statDoneEl = document.getElementById('statDone');
-    if(statDoneEl){
-        statDoneEl.textContent = doneCount;
-    }
-
-    // tetap update slot UI
+    const today=getTodayKey();
+    const td=state.data.filter(e=>normalizeDate(e.date)===today);
+    const done={};SLOTS.forEach(s=>done[s.slot]=false);
+    td.forEach(e=>{if(done.hasOwnProperty(e.slot))done[e.slot]=true;});
+    const doneCount=Object.values(done).filter(v=>v).length;
+    const statDoneEl=document.getElementById('statDone');
+    if(statDoneEl)statDoneEl.textContent=doneCount;
     document.querySelectorAll('.p-slot').forEach(el=>{
-        const slot = el.dataset.slot;
-        if(done[slot]){
-            el.classList.add('done');
-        }else{
-            el.classList.remove('done');
-        }
+        const slot=el.dataset.slot;
+        if(done[slot]){el.classList.add('done');}else{el.classList.remove('done');}
     });
 }
 
 /* ====== INPUT ====== */
 var gdsInput=document.getElementById('gdsInput'),submitBtn=document.getElementById('submitBtn'),levemirBtn=document.getElementById('levemirBtn'),resultCard=document.getElementById('resultCard'),inputRow=document.getElementById('inputRow');
-function selectSlot(slot){state.selectedSlot=slot;document.querySelectorAll('.slot-btn').forEach(function(b){b.classList.toggle('active',b.dataset.slot===slot);});document.querySelectorAll('.p-slot').forEach(function(el){el.classList.toggle('active-slot',el.dataset.slot===slot);});if(slot==='levemir'){inputRow.style.display='none';levemirBtn.style.display='block';}else{inputRow.style.display='flex';levemirBtn.style.display='none';gdsInput.focus();}updateSubmitBtn();resultCard.classList.remove('show');}
+function selectSlot(slot){state.selectedSlot=slot;document.querySelectorAll('.slot-btn').forEach(function(b){b.classList.toggle('active',b.dataset.slot===slot);});document.querySelectorAll('.p-slot').forEach(function(el){el.classList.toggle('active-slot',el.dataset.slot===slot);});if(slot==='levemir'){inputRow.style.display='none';levemirBtn.style.display='flex';}else{inputRow.style.display='flex';levemirBtn.style.display='none';gdsInput.focus();}updateSubmitBtn();resultCard.classList.remove('show');}
 function updateSubmitBtn(){
-    const slot = state.selectedSlot;
-
-    submitBtn.disabled = !(
-        slot &&
-        slot !== 'levemir' &&
-        gdsInput.value.trim() !== '' &&
-        Number(gdsInput.value) >= 0
-    );
+    const slot=state.selectedSlot;
+    submitBtn.disabled=!(slot&&slot!=='levemir'&&gdsInput.value.trim()!==''&&Number(gdsInput.value)>=0);
 }
-gdsInput.addEventListener('input',updateSubmitBtn);gdsInput.addEventListener('keydown',function(e){if(e.key==='Enter'&&!submitBtn.disabled)handleSubmit();});
-submitBtn.addEventListener('click',handleSubmit);levemirBtn.addEventListener('click',handleLevemir);
+gdsInput.addEventListener('input',updateSubmitBtn);
+gdsInput.addEventListener('keydown',function(e){if(e.key==='Enter'&&!submitBtn.disabled)handleSubmit();});
+submitBtn.addEventListener('click',handleSubmit);
+levemirBtn.addEventListener('click',handleLevemir);
 document.querySelectorAll('.slot-btn').forEach(function(b){b.addEventListener('click',function(){selectSlot(b.dataset.slot);});});
 document.querySelectorAll('.p-slot').forEach(function(el){el.addEventListener('click',function(){selectSlot(el.dataset.slot);});});
 
-async function handleSubmit(){var slot=state.selectedSlot,gdsVal=parseInt(gdsInput.value.trim());if(!slot||slot==='levemir'||isNaN(gdsVal)||gdsVal<0)return;var s=SLOTS.find(function(s){return s.slot===slot;}),cat=getCat(gdsVal);var entry={date:getTodayKey(),time:getTimeStr(),slot:slot,gds:gdsVal,dose:null,doseType:null,category:cat.cls};if(s.type==='gds-insulin'){var dose=calcDose(gdsVal,slot);entry.dose=dose;entry.doseType='rapid';var adj=gdsVal>300?'+ 2':gdsVal>200?'+ 1':gdsVal<100?'- 1':'(sesuai)';var dcCls=gdsVal>300?'danger-card':'';var nh='';if(gdsVal>300)nh='<div class="result-note danger-note"><i class="fa-solid fa-circle-exclamation" style="margin-right:4px"></i>GDS sangat tinggi!</div>';else if(gdsVal<70)nh='<div class="result-note danger-note"><i class="fa-solid fa-circle-exclamation" style="margin-right:4px"></i>Hipoglikemia!</div>';resultCard.innerHTML='<div class="result-gds">GDS '+s.label+': <span class="'+cat.cls+'">'+gdsVal+' mg/dL</span> <span style="font-size:11px;color:var(--muted)">('+cat.label+')</span></div><div class="result-dose '+dcCls+'"><div class="label"><strong>Dosis Insulin</strong>Default '+DEFAULT_DOSES[slot]+' '+adj+'</div><div class="val">'+dose+' <small>unit</small></div></div>'+nh;}else{resultCard.innerHTML='<div class="result-gds">GDS Dini Hari: <span class="'+cat.cls+'">'+gdsVal+' mg/dL</span> <span style="font-size:11px;color:var(--muted)">('+cat.label+')</span></div>';}resultCard.classList.add('show');var ok=await submitData(entry);if(ok){showToast('Tersimpan');state.data.unshift(entry);updateProgress();renderAll();gdsInput.value='';state.selectedSlot='';document.querySelectorAll('.slot-btn').forEach(function(b){b.classList.remove('active');});document.querySelectorAll('.p-slot').forEach(function(el){el.classList.remove('active-slot');});inputRow.style.display='flex';levemirBtn.style.display='none';updateSubmitBtn();try{Telegram.WebApp.HapticFeedback.notificationOccurred('success');}catch(e){}}else showToast('Gagal menyimpan','error');}
-async function handleLevemir(){var entry={date:getTodayKey(),time:getTimeStr(),slot:'levemir',gds:null,dose:LEVEMIR_DOSE,doseType:'levemir',category:'good'};var ok=await submitData(entry);if(ok){showToast('Levemir 8 unit tercatat');state.data.unshift(entry);updateProgress();renderAll();try{Telegram.WebApp.HapticFeedback.notificationOccurred('success');Telegram.WebApp.close();}catch(e){}}else showToast('Gagal menyimpan','error');}
+async function handleSubmit(){
+    var slot=state.selectedSlot,gdsVal=parseInt(gdsInput.value.trim());
+    if(!slot||slot==='levemir'||isNaN(gdsVal)||gdsVal<0)return;
+    var s=SLOTS.find(function(s){return s.slot===slot;}),cat=getCat(gdsVal);
+    var entry={date:getTodayKey(),time:getTimeStr(),slot:slot,gds:gdsVal,dose:null,doseType:null,category:cat.cls};
+    if(s.type==='gds-insulin'){
+        var dose=calcDose(gdsVal,slot);entry.dose=dose;entry.doseType='rapid';
+        var adj=gdsVal>300?'+ 2':gdsVal>200?'+ 1':gdsVal<100?'- 1':'(sesuai)';
+        var dcCls=gdsVal>300?'danger-card':'';
+        var nh='';
+        if(gdsVal>300)nh='<div class="result-note danger-note"><i class="fa-solid fa-triangle-exclamation"></i>GDS sangat tinggi! Segera konsultasi.</div>';
+        else if(gdsVal<70)nh='<div class="result-note danger-note"><i class="fa-solid fa-triangle-exclamation"></i>Hipoglikemia terdeteksi!</div>';
+        var catIcon=cat.cls==='good'?'fa-circle-check':cat.cls==='warn'?'fa-circle-exclamation':'fa-triangle-exclamation';
+        resultCard.innerHTML='<div class="result-top"><div class="result-top-icon '+cat.cls+'"><i class="fa-solid '+catIcon+'"></i></div><div class="result-top-text"><div class="rt-label">GDS '+s.label+'</div><div class="rt-value '+cat.cls+'">'+gdsVal+' <small style="font-size:12px;font-weight:400;color:var(--muted)">mg/dL</small><span class="rt-tag '+cat.cls+'">'+cat.label+'</span></div></div></div><div class="result-body"><div class="result-dose '+dcCls+'"><div class="label"><strong>Dosis Insulin</strong>Default '+DEFAULT_DOSES[slot]+' '+adj+'</div><div class="val">'+dose+' <small>unit</small></div></div>'+nh+'</div>';
+    }else{
+        var catIcon2=cat.cls==='good'?'fa-circle-check':cat.cls==='warn'?'fa-circle-exclamation':'fa-triangle-exclamation';
+        resultCard.innerHTML='<div class="result-top"><div class="result-top-icon '+cat.cls+'"><i class="fa-solid '+catIcon2+'"></i></div><div class="result-top-text"><div class="rt-label">GDS Dini Hari</div><div class="rt-value '+cat.cls+'">'+gdsVal+' <small style="font-size:12px;font-weight:400;color:var(--muted)">mg/dL</small><span class="rt-tag '+cat.cls+'">'+cat.label+'</span></div></div></div><div class="result-body"></div>';
+    }
+    resultCard.classList.add('show');
+    var ok=await submitData(entry);
+    if(ok){
+        showToast('Data tersimpan berhasil');
+        state.data.unshift(entry);updateProgress();renderAll();
+        gdsInput.value='';state.selectedSlot='';
+        document.querySelectorAll('.slot-btn').forEach(function(b){b.classList.remove('active');});
+        document.querySelectorAll('.p-slot').forEach(function(el){el.classList.remove('active-slot');});
+        inputRow.style.display='flex';levemirBtn.style.display='none';updateSubmitBtn();
+        try{Telegram.WebApp.HapticFeedback.notificationOccurred('success');}catch(e){}
+    }else showToast('Gagal menyimpan','error');
+}
+
+async function handleLevemir(){
+    var entry={date:getTodayKey(),time:getTimeStr(),slot:'levemir',gds:null,dose:LEVEMIR_DOSE,doseType:'levemir',category:'good'};
+    var ok=await submitData(entry);
+    if(ok){
+        showToast('Levemir 8 unit tercatat');
+        state.data.unshift(entry);updateProgress();renderAll();
+        try{Telegram.WebApp.HapticFeedback.notificationOccurred('success');Telegram.WebApp.close();}catch(e){}
+    }else showToast('Gagal menyimpan','error');
+}
 
 /* ====== CHART GDS ====== */
 function renderGdsChart(){
-    if(!state.gdsChart) return;
-    var entries = filterByPeriod(
-        state.data.filter(e => e.gds != null),
-        gdsPeriod
-    );
-
-    if(!state.gdsChart) return;
-
-    // 🔥 SORT BERDASARKAN DATETIME
-    entries.sort((a, b) => {
-        const da = new Date(normalizeDate(a.date) + 'T' + (a.time || '00:00'));
-        const db = new Date(normalizeDate(b.date) + 'T' + (b.time || '00:00'));
-        return da - db;
-    });
-
-    const labels = entries.map(e => fmtLabel(e.date, e.time));
-    const vals   = entries.map(e => e.gds);
-    const colors = entries.map(e => ptColor(e.gds));
-
-    state.gdsChart.data.labels = labels;
-    state.gdsChart.data.datasets[0].data = vals;
-
-    state.gdsChart.data.datasets[0].pointBackgroundColor = colors;
-    state.gdsChart.data.datasets[0].pointBorderColor = colors;
-    state.gdsChart.data.datasets[0].pointRadius = 5;
-    state.gdsChart.data.datasets[0].pointHoverRadius = 6;
-
+    if(!state.gdsChart)return;
+    var entries=filterByPeriod(state.data.filter(e=>e.gds!=null),gdsPeriod);
+    entries.sort((a,b)=>{const da=new Date(normalizeDate(a.date)+'T'+(a.time||'00:00')),db=new Date(normalizeDate(b.date)+'T'+(b.time||'00:00'));return da-db;});
+    const labels=entries.map(e=>fmtLabel(e.date,e.time)),vals=entries.map(e=>e.gds),colors=entries.map(e=>ptColor(e.gds));
+    state.gdsChart.data.labels=labels;
+    state.gdsChart.data.datasets[0].data=vals;
+    state.gdsChart.data.datasets[0].pointBackgroundColor=colors;
+    state.gdsChart.data.datasets[0].pointBorderColor=colors;
+    state.gdsChart.data.datasets[0].pointRadius=5;
+    state.gdsChart.data.datasets[0].pointHoverRadius=7;
     state.gdsChart.update();
-    
-    const stats = calcStats(vals);
-
-    const statsEl = document.getElementById('gdsStats');
+    const stats=calcStats(vals);
+    const statsEl=document.getElementById('gdsStats');
     if(statsEl){
-    
-        if(vals.length === 0){
-            statsEl.innerHTML = `
-                <div class="dose-stat total-stat"><div class="dv">-</div><div class="dl">Min</div></div>
-                <div class="dose-stat total-stat"><div class="dv">-</div><div class="dl">Max</div></div>
-                <div class="dose-stat total-stat"><div class="dv">-</div><div class="dl">Avg</div></div>
-            `;
-            return;
-        }
-    
-        statsEl.innerHTML = `
-            <div class="dose-stat total-stat">
-                <div class="dv">${stats.min}</div>
-                <div class="dl">Min</div>
-            </div>
-            <div class="dose-stat total-stat">
-                <div class="dv">${stats.max}</div>
-                <div class="dl">Max</div>
-            </div>
-            <div class="dose-stat total-stat">
-                <div class="dv">${stats.avg}</div>
-                <div class="dl">Avg</div>
-            </div>
-        `;
+        if(vals.length===0){statsEl.innerHTML='<div class="dose-stat total-stat"><div class="dv">-</div><div class="dl"><i class="fa-solid fa-arrow-down" style="font-size:9px;margin-right:2px"></i>Min</div></div><div class="dose-stat total-stat"><div class="dv">-</div><div class="dl"><i class="fa-solid fa-arrow-up" style="font-size:9px;margin-right:2px"></i>Max</div></div><div class="dose-stat total-stat"><div class="dv">-</div><div class="dl"><i class="fa-solid fa-chart-simple" style="font-size:9px;margin-right:2px"></i>Avg</div></div><div class="dose-stat total-stat"><div class="dv">0</div><div class="dl"><i class="fa-solid fa-hashtag" style="font-size:9px;margin-right:2px"></i>Data</div></div>';return;}
+        statsEl.innerHTML='<div class="dose-stat total-stat"><div class="dv">'+stats.min+'</div><div class="dl"><i class="fa-solid fa-arrow-down" style="font-size:9px;margin-right:2px"></i>Min</div></div><div class="dose-stat total-stat"><div class="dv">'+stats.max+'</div><div class="dl"><i class="fa-solid fa-arrow-up" style="font-size:9px;margin-right:2px"></i>Max</div></div><div class="dose-stat total-stat"><div class="dv">'+stats.avg+'</div><div class="dl"><i class="fa-solid fa-chart-simple" style="font-size:9px;margin-right:2px"></i>Avg</div></div><div class="dose-stat total-stat"><div class="dv">'+vals.length+'</div><div class="dl"><i class="fa-solid fa-hashtag" style="font-size:9px;margin-right:2px"></i>Data</div></div>';
     }
 }
 
 /* ====== CHART DOSIS ====== */
 function renderDoseChart(){
-    if(!state.doseChart) return;
-    var entries = filterByPeriod(state.data, dosePeriod);
-
-    // 🔥 FILTER TYPE YANG BENAR
-    if(doseType === 'insulin'){
-        entries = entries.filter(e => e.doseType === 'rapid');
-    }else if(doseType === 'levemir'){
-        entries = entries.filter(e => e.doseType === 'levemir');
-    }
-
-    var grouped = {};
-
-    entries.forEach(e=>{
-        let d = normalizeDate(e.date);
-        if(!grouped[d]) grouped[d] = {ins:0, lev:0};
-
-        if(e.doseType==='rapid') grouped[d].ins += e.dose;
-        if(e.doseType==='levemir') grouped[d].lev += e.dose;
-    });
-    entries.sort((a, b) => {
-        const da = new Date(normalizeDate(a.date));
-        const db = new Date(normalizeDate(b.date));
-        return da - db;
-    });
-    var dates = Object.keys(grouped).sort();
-
-    const insulinData = dates.map(d => grouped[d].ins);
-    const levemirData = dates.map(d => grouped[d].lev);
-    const totalData   = dates.map(d => grouped[d].ins + grouped[d].lev);
-
-    state.doseChart.data.labels = dates;
-    state.doseChart.data.datasets[0].data = insulinData;
-    state.doseChart.data.datasets[1].data = levemirData;
-
+    if(!state.doseChart)return;
+    var entries=filterByPeriod(state.data,dosePeriod);
+    if(doseType==='insulin')entries=entries.filter(e=>e.doseType==='rapid');
+    else if(doseType==='levemir')entries=entries.filter(e=>e.doseType==='levemir');
+    var grouped={};
+    entries.forEach(e=>{let d=normalizeDate(e.date);if(!grouped[d])grouped[d]={ins:0,lev:0};if(e.doseType==='rapid')grouped[d].ins+=e.dose;if(e.doseType==='levemir')grouped[d].lev+=e.dose;});
+    entries.sort((a,b)=>{const da=new Date(normalizeDate(a.date)),db=new Date(normalizeDate(b.date));return da-db;});
+    var dates=Object.keys(grouped).sort();
+    state.doseChart.data.labels=dates;
+    state.doseChart.data.datasets[0].data=dates.map(d=>grouped[d].ins);
+    state.doseChart.data.datasets[1].data=dates.map(d=>grouped[d].lev);
     state.doseChart.update();
-
-    // stats aman
-    // stats
-const statsEl = document.getElementById('doseStats');
-
-if(statsEl){
-
-    let insulinArr = [];
-    let levemirArr = [];
-    let totalArr = [];
-
-    entries.forEach(e=>{
-        if(e.doseType === 'rapid'){
-            insulinArr.push(e.dose || 0);
-            totalArr.push(e.dose || 0);
-        }
-        if(e.doseType === 'levemir'){
-            levemirArr.push(e.dose || 0);
-            totalArr.push(e.dose || 0);
-        }
-    });
-
-    // 🔥 HANDLE DATA KOSONG
-    if(totalArr.length === 0){
-        statsEl.innerHTML = `
-            <div class="dose-stat insulin-stat"><div class="dv">-</div><div class="dl">Ins Avg</div></div>
-            <div class="dose-stat levemir-stat"><div class="dv">-</div><div class="dl">Lev Avg</div></div>
-            <div class="dose-stat total-stat"><div class="dv">-</div><div class="dl">Max</div></div>
-        `;
-        return;
+    const statsEl=document.getElementById('doseStats');
+    if(statsEl){
+        let insulinArr=[],levemirArr=[],totalArr=[];
+        entries.forEach(e=>{if(e.doseType==='rapid'){insulinArr.push(e.dose||0);totalArr.push(e.dose||0);}if(e.doseType==='levemir'){levemirArr.push(e.dose||0);totalArr.push(e.dose||0);}});
+        if(totalArr.length===0){statsEl.innerHTML='<div class="dose-stat insulin-stat"><div class="dv">-</div><div class="dl"><i class="fa-solid fa-syringe" style="font-size:9px;margin-right:2px"></i>Insulin</div></div><div class="dose-stat levemir-stat"><div class="dv">-</div><div class="dl"><i class="fa-solid fa-moon" style="font-size:9px;margin-right:2px"></i>Levemir</div></div><div class="dose-stat total-stat"><div class="dv">-</div><div class="dl"><i class="fa-solid fa-arrow-up" style="font-size:9px;margin-right:2px"></i>Max</div></div><div class="dose-stat total-stat"><div class="dv">-</div><div class="dl"><i class="fa-solid fa-sigma" style="font-size:9px;margin-right:2px"></i>Total</div></div>';return;}
+        const totStats=calcStats(totalArr),totalSum=totalArr.reduce((a,b)=>a+b,0);
+        const insSum=insulinArr.reduce((a,b)=>a+b,0),levSum=levemirArr.reduce((a,b)=>a+b,0);
+        statsEl.innerHTML='<div class="dose-stat insulin-stat"><div class="dv">'+insSum+'</div><div class="dl"><i class="fa-solid fa-syringe" style="font-size:9px;margin-right:2px"></i>Insulin</div></div><div class="dose-stat levemir-stat"><div class="dv">'+levSum+'</div><div class="dl"><i class="fa-solid fa-moon" style="font-size:9px;margin-right:2px"></i>Levemir</div></div><div class="dose-stat total-stat"><div class="dv">'+totStats.max+'</div><div class="dl"><i class="fa-solid fa-arrow-up" style="font-size:9px;margin-right:2px"></i>Max</div></div><div class="dose-stat total-stat"><div class="dv">'+totalSum+'</div><div class="dl"><i class="fa-solid fa-sigma" style="font-size:9px;margin-right:2px"></i>Total</div></div>';
     }
+}
 
-    const totStats = calcStats(totalArr);
-    const totalSum = totalArr.reduce((a,b)=>a+b,0);
-    
-    statsEl.innerHTML = `
-        <div class="dose-stat total-stat">
-            <div class="dv">${totStats.min}</div>
-            <div class="dl">Min</div>
-        </div>
-        <div class="dose-stat total-stat">
-            <div class="dv">${totStats.max}</div>
-            <div class="dl">Max</div>
-        </div>
-        <div class="dose-stat total-stat">
-            <div class="dv">${totStats.avg}</div>
-            <div class="dl">Avg</div>
-        </div>
-        <div class="dose-stat total-stat">
-            <div class="dv">${totalSum}</div>
-            <div class="dl">Total</div>
-        </div>
-    `;
-}
-}
-    
 /* ====== HISTORY ====== */
 function renderHistory(){
-
-    var entries = filterByPeriod(state.data, historyPeriod);
-    var list = document.getElementById('historyList');
-
-    if(!list) return;
-
-    if(entries.length === 0){
-        list.innerHTML = `
-            <div class="empty-box">
-                <i class="fa-solid fa-box-open"></i>
-                <p>Tidak ada data</p>
-            </div>
-        `;
-        return;
-    }
-
-    var grouped = {};
-
-    entries.forEach(e=>{
-        let d = normalizeDate(e.date);
-        if(!grouped[d]) grouped[d] = [];
-        grouped[d].push(e);
-    });
-
-    let html = '';
-
+    var entries=filterByPeriod(state.data,historyPeriod);
+    var list=document.getElementById('historyList');
+    if(!list)return;
+    if(entries.length===0){list.innerHTML='<div class="empty-box"><i class="fa-solid fa-clipboard-list"></i><p>Belum ada data riwayat</p></div>';return;}
+    var grouped={};
+    entries.forEach(e=>{let d=normalizeDate(e.date);if(!grouped[d])grouped[d]=[];grouped[d].push(e);});
+    let html='';
     Object.keys(grouped).sort().reverse().forEach(date=>{
-
-        html += `<div class="hp-date-label">${date}</div>`;
-
+        html+='<div class="hp-date-label"><i class="fa-regular fa-calendar" style="font-size:10px"></i>'+date+'</div>';
         grouped[date].forEach(e=>{
-
-            let icon = 'fa-droplet';
-            let iconClass = 'gds';
-            let value = e.gds ? e.gds+' mg/dL' : '-';
-            let dose = e.dose ? e.dose+'u' : '';
-
-            if(e.doseType === 'rapid'){
-                icon = 'fa-syringe';
-                iconClass = 'insulin';
-                value = dose;
-            }
-
-            if(e.doseType === 'levemir'){
-                icon = 'fa-moon';
-                iconClass = 'levemir';
-                value = dose;
-            }
-
-            html += `
-            <div class="hp-item">
-                
-                <div class="hp-item-icon ${iconClass}">
-                    <i class="fa-solid ${icon}"></i>
-                </div>
-
-                <div class="hp-item-info">
-                    <div class="hp-item-title">${e.slot}</div>
-                    <div class="hp-item-sub">${e.time || ''}</div>
-                </div>
-
-                <div class="hp-item-val ${iconClass}-v">
-                    ${value}
-                </div>
-
-            </div>`;
+            let icon='fa-droplet',iconClass='gds',value=e.gds?e.gds+' mg/dL':'—',badge='<span class="hp-item-badge gds-b">GDS</span>';
+            if(e.doseType==='rapid'){icon='fa-syringe';iconClass='insulin';value=e.dose?e.dose+' unit':'—';badge='<span class="hp-item-badge ins-b">Insulin</span>';}
+            if(e.doseType==='levemir'){icon='fa-syringe';iconClass='levemir';value=e.dose?e.dose+' unit':'—';badge='<span class="hp-item-badge lev-b">Levemir</span>';}
+            if(e.gds&&(e.gds>300||e.gds<70))iconClass='high';
+            html+='<div class="hp-item"><div class="hp-item-icon '+iconClass+'"><i class="fa-solid '+icon+'"></i></div><div class="hp-item-info"><div class="hp-item-title">'+e.slot+'</div><div class="hp-item-sub"><i class="fa-regular fa-clock"></i>'+e.time+'</div></div><div class="hp-item-right"><div class="hp-item-val '+iconClass+'-v">'+value+'</div>'+badge+'</div></div>';
         });
     });
-
-    list.innerHTML = html;
+    list.innerHTML=html;
 }
 
-function renderAll(){
-    renderGdsChart();
-    renderDoseChart();
-    renderHistory();
-    updateProgress();
-}
+function renderAll(){renderGdsChart();renderDoseChart();renderHistory();updateProgress();}
 
 /* ====== TOGGLES ====== */
 function setupToggle(btnId,secId){var btn=document.getElementById(btnId),sec=document.getElementById(secId);btn.addEventListener('click',function(){var open=btn.classList.toggle('open');sec.style.display=open?'block':'none';});}
 setupToggle('gdsToggle','gdsSection');
 setupToggle('doseToggle','doseSection');
 setupToggle('historyToggleBtn','historySection');
-
 document.getElementById('historyToggle').addEventListener('click',function(){var sec=document.getElementById('historySection');sec.style.display=sec.style.display==='none'?'block':'none';if(sec.style.display==='block')renderHistory();});
 
 /* ====== FILTERS ====== */
@@ -618,106 +605,64 @@ document.getElementById('historyFilters').addEventListener('click',function(e){v
 
 /* ====== COUNTDOWN ====== */
 var SCHEDULES_CK=[{hour:2,minute:0,slot:'dini-hari',label:'Cek GDS Dini Hari'},{hour:6,minute:0,slot:'sarapan',label:'GDS + Insulin Sarapan'},{hour:12,minute:0,slot:'siang',label:'GDS + Insulin Siang'},{hour:18,minute:0,slot:'malam',label:'GDS + Insulin Malam'},{hour:20,minute:30,slot:'levemir',label:'Suntik Levemir'}];
-function updateCountdown(){var now=new Date(),nowT=now.getHours()*60+now.getMinutes(),today=getTodayKey();var todayData=state.data.filter(function(e){return normalizeDate(e.date)===today;});var done={};SCHEDULES_CK.forEach(function(s){done[s.slot]=todayData.some(function(e){return e.slot===s.slot;});});var next=null;for(var i=0;i<SCHEDULES_CK.length;i++){var s=SCHEDULES_CK[i];if(done[s.slot])continue;var sT=s.hour*60+s.minute;if(sT>nowT){if(!next||sT<next.total)next={hour:s.hour,minute:s.minute,label:s.label,total:sT,tomorrow:false};}else if(!next){next={hour:s.hour,minute:s.minute,label:s.label,total:sT+1440,tomorrow:true};}}if(!next){var f=SCHEDULES_CK[0];next={hour:f.hour,minute:f.minute,label:f.label,total:f.hour*60+f.minute+1440,tomorrow:true};}var diff=next.total-nowT,h=Math.floor(diff/60),m=diff%60;document.getElementById('nrLabel').textContent=(next.tomorrow?'Besok ':'')+String(next.hour).padStart(2,'0')+':'+String(next.minute).padStart(2,'0')+' '+next.label.split('+')[0].trim();document.getElementById('nrCountdown').textContent=String(h).padStart(2,'0')+':'+String(m).padStart(2,'0');SCHEDULES_CK.forEach(function(s){var sT=s.hour*60+s.minute;if(!done[s.slot]&&Math.abs(nowT-sT)<=15){var el=document.querySelector('.p-slot[data-slot="'+s.slot+'"]');if(el&&!el.classList.contains('active-slot'))el.classList.add('active-slot');}});}
-let lastLength = 0;
-
-setInterval(async ()=>{
-    const newData = await fetchData();
-
-    // 🔥 cek perubahan simpel & cepat
-    if(newData.length !== lastLength){
-        lastLength = newData.length;
-        state.data = newData;
-
-        renderAll();
-        updateCountdown();
+function updateCountdown(){
+    var now=new Date(),nowT=now.getHours()*60+now.getMinutes(),today=getTodayKey();
+    var todayData=state.data.filter(function(e){return normalizeDate(e.date)===today;});
+    var done={};SCHEDULES_CK.forEach(function(s){done[s.slot]=todayData.some(function(e){return e.slot===s.slot;});});
+    var next=null;
+    for(var i=0;i<SCHEDULES_CK.length;i++){
+        var s=SCHEDULES_CK[i];if(done[s.slot])continue;
+        var sT=s.hour*60+s.minute;
+        if(sT>nowT){if(!next||sT<next.total)next={hour:s.hour,minute:s.minute,label:s.label,total:sT,tomorrow:false};}
+        else if(!next){next={hour:s.hour,minute:s.minute,label:s.label,total:sT+1440,tomorrow:true};}
     }
-}, 5000);
+    if(!next){var f=SCHEDULES_CK[0];next={hour:f.hour,minute:f.minute,label:f.label,total:f.hour*60+f.minute+1440,tomorrow:true};}
+    var diff=next.total-nowT,h=Math.floor(diff/60),m=diff%60;
+    document.getElementById('nrLabel').textContent=(next.tomorrow?'Besok ':'')+String(next.hour).padStart(2,'0')+':'+String(next.minute).padStart(2,'0')+' '+next.label.split('+')[0].trim();
+    document.getElementById('nrCountdown').textContent=String(h).padStart(2,'0')+':'+String(m).padStart(2,'0');
+    SCHEDULES_CK.forEach(function(s){
+        var sT=s.hour*60+s.minute;
+        if(!done[s.slot]&&Math.abs(nowT-sT)<=15){
+            var el=document.querySelector('.p-slot[data-slot="'+s.slot+'"]');
+            if(el&&!el.classList.contains('active-slot'))el.classList.add('active-slot');
+        }
+    });
+}
+
+let lastLength=0;
+setInterval(async()=>{
+    const newData=await fetchData();
+    if(newData.length!==lastLength){lastLength=newData.length;state.data=newData;renderAll();updateCountdown();}
+},5000);
 
 /* ====== AUTO SLOT FROM URL ====== */
 var params=new URLSearchParams(window.location.search);var autoSlot=params.get('slot');if(autoSlot)selectSlot(autoSlot);
 
 function initCharts(){
-
-    // ===== GDS CHART =====
-    const gdsCtx = document.getElementById('gdsCanvas').getContext('2d');
-
-    state.gdsChart = new Chart(gdsCtx, {
-        type: 'line',
-        data: {
-            labels: [],
-            datasets: [{
-                label: 'GDS',
-                data: [],
-                borderWidth: 2,
-                tension: 0.3,
-                fill: false
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: { display: false }
-            },
-            scales: {
-                y: {
-                    beginAtZero: false
-                }
-            }
-        }
+    const gdsCtx=document.getElementById('gdsCanvas').getContext('2d');
+    state.gdsChart=new Chart(gdsCtx,{
+        type:'line',
+        data:{labels:[],datasets:[{label:'GDS',data:[],borderWidth:2.5,tension:.35,fill:false,borderColor:'#00E5A0',pointBackgroundColor:'#00E5A0',pointBorderColor:'#00E5A0',pointRadius:5,pointHoverRadius:7}]},
+        options:{responsive:true,interaction:{intersect:false,mode:'index'},plugins:{legend:{display:false},tooltip:{backgroundColor:'#142540',titleColor:'#EDF0F5',bodyColor:'#C8D0DC',borderColor:'#1C3258',borderWidth:1,cornerRadius:10,padding:12,titleFont:{family:'Space Grotesk',weight:'600'},bodyFont:{family:'Space Grotesk'}}},scales:{x:{grid:{color:'rgba(30,39,68,.5)',drawBorder:false},ticks:{color:'#5E7490',font:{family:'Space Grotesk',size:10},maxRotation:45}},y:{grid:{color:'rgba(30,39,68,.5)',drawBorder:false},ticks:{color:'#5E7490',font:{family:'Space Grotesk',size:11}},beginAtZero:false}}}
     });
-
-    // ===== DOSE CHART =====
-    const doseCtx = document.getElementById('doseCanvas').getContext('2d');
-
-    state.doseChart = new Chart(doseCtx, {
-        type: 'bar',
-        data: {
-            labels: [],
-            datasets: [
-                {
-                    label: 'Insulin',
-                    data: [],
-                    borderWidth: 1,
-                    backgroundColor: '#4488FF'
-                },
-                {
-                    label: 'Levemir',
-                    data: [],
-                    borderWidth: 1,
-                    backgroundColor: '#FFB547'
-                }
-            ]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    display: true
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
-        }
+    const doseCtx=document.getElementById('doseCanvas').getContext('2d');
+    state.doseChart=new Chart(doseCtx,{
+        type:'bar',
+        data:{labels:[],datasets:[{label:'Insulin',data:[],borderWidth:0,borderRadius:6,backgroundColor:'#4D94FF'},{label:'Levemir',data:[],borderWidth:0,borderRadius:6,backgroundColor:'#FFB547'}]},
+        options:{responsive:true,interaction:{intersect:false,mode:'index'},plugins:{legend:{display:false},tooltip:{backgroundColor:'#142540',titleColor:'#EDF0F5',bodyColor:'#C8D0DC',borderColor:'#1C3258',borderWidth:1,cornerRadius:10,padding:12,titleFont:{family:'Space Grotesk',weight:'600'},bodyFont:{family:'Space Grotesk'}}},scales:{x:{grid:{display:false},ticks:{color:'#5E7490',font:{family:'Space Grotesk',size:10},maxRotation:45}},y:{grid:{color:'rgba(30,39,68,.5)',drawBorder:false},ticks:{color:'#5E7490',font:{family:'Space Grotesk',size:11},stepSize:1},beginAtZero:true}}}
     });
 }
-    
+
 /* ====== INIT ====== */
 async function init(){
-    state.data = await fetchData();
-
-    initCharts(); // 🔥 WAJIB
+    state.data=await fetchData();
+    initCharts();
     updateProgress();
     renderAll();
     updateCountdown();
-    setInterval(updateCountdown, 1000);
+    setInterval(updateCountdown,1000);
 }
-
 init();
-
 </script>
 </body>
 </html>
