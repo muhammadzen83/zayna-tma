@@ -376,10 +376,11 @@
         <div id="dietSection" style="padding: 0 20px 14px;">
             <div id="dietList"></div>
             <div style="margin-top:12px;padding:12px;border-radius:var(--radius-sm);background:var(--warning-dim);border:1px solid var(--warning-border);font-size:11px;color:var(--warning);line-height:1.5">
-                <strong><i class="fa-solid fa-circle-info" style="margin-right:4px"></i>Catatan Diet:</strong><br>
-                • Porsi sesuai takaran yang tertera<br>
-                • Pilih sayur hijau, hindari santan & gorengan<br>
-                • Minum air putih 8 gelas per hari
+                <strong><i class="fa-solid fa-triangle-exclamation" style="margin-right:4px"></i>PERHATIAN:</strong><br>
+                1. 🥦 Pilih sayuran yang aman — hindari jagung pipil dan kentang<br>
+                2. 🍳 Lauk boleh digoreng, tapi tanpa tambahan tepung<br>
+                3. 🔥 Boleh digoreng atau dipanggang, namun hindari kecap dan saus<br>
+                4. ⏰ Batas makan sampai pukul 22:00, setelah itu tidak dianjurkan makan
             </div>
         </div>
     </div>
@@ -552,9 +553,9 @@ function renderHistory(){
 var DIET_UI = [
   { slot:'makan-pagi', time:'06:00', label:'Makan Pagi', icon:'fa-mug-hot', color:'var(--warning)', target:'KH 45g | Protein 18g', menu:'Nasi 100 gram, Telur 1.5 butir, Sayur 75 gram (lauk tidak perlu digoreng)' },
   { slot:'snack-pagi', time:'09:00', label:'Snack Pagi', icon:'fa-glass-water', color:'var(--accent)', target:'KH 23g | Protein 9g', menu:'Susu isocal 200 ml (42 gram)' },
-  { slot:'makan-siang', time:'12:00', label:'Makan Siang', icon:'fa-bowl-food', color:'var(--warning)', target:'KH 56g | Protein 23g', menu:'Nasi 100 gram, Lauk hewani 50 gram, Lauk nabati : Tempe 50 gram, Sayur 75 gram (jangan diberi lauk yang mengandung tepung-tepungan)' },
+  { slot:'makan-siang', time:'12:00', label:'Makan Siang', icon:'fa-bowl-food', color:'var(--warning)', target:'KH 56g | Protein 23g', menu:'Nasi 100 gram, Lauk hewani 50 gram, Lauk nabati : tempe 50 gram, Sayur 75 gram (jangan diberi lauk yang mengandung tepung-tepungan)' },
   { slot:'snack-siang', time:'15:00', label:'Snack Siang', icon:'fa-apple-whole', color:'var(--accent)', target:'KH 23g | Protein 9g', menu:'Buah 1 penukar, Telur rebus 1 butir, Gabin 2 keping' },
-  { slot:'makan-sore', time:'18:00', label:'Makan Sore', icon:'fa-plate-wheat', color:'var(--warning)', target:'KH 56g | Protein 23g', menu:'Nasi 100 gram, Lauk hewani 50 gram, Lauk nabati : Tempe 50 gram, Sayur 75 gram (jangan diberi lauk yang mengandung tepung-tepungan)' },
+  { slot:'makan-sore', time:'18:00', label:'Makan Sore', icon:'fa-plate-wheat', color:'var(--warning)', target:'KH 56g | Protein 23g', menu:'Nasi 100 gram, Lauk hewani 50 gram, Lauk nabati : tempe 50 gram, Sayur 75 gram (jangan diberi lauk yang mengandung tepung-tepungan)' },
   { slot:'snack-malam', time:'21:00', label:'Snack Malam', icon:'fa-moon', color:'var(--accent)', target:'KH 23g | Protein 9g', menu:'Susu isocal 200 ml (42 gram)' }
 ];
 
