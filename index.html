@@ -257,8 +257,8 @@
             div class="hdr-actions">
                 <button class="hdr-btn" id="navGds" title="Grafik GDS"><i class="fa-solid fa-chart-line"></i></button>
                 <button class="hdr-btn" id="navDose" title="Grafik Dosis"><i class="fa-solid fa-prescription-bottle-medical"></i></button>
-                <button class="hdr-btn" id="navDiet" title="Panduan Diet"><i class="fa-solid fa-utensils"></i></button>
                 <button class="hdr-btn" id="historyToggle" title="Riwayat"><i class="fa-solid fa-clock-rotate-left"></i></button>
+                <button class="hdr-btn" id="navDiet" title="Panduan Diet"><i class="fa-solid fa-utensils"></i></button>
             </div>
         </header>
 
@@ -597,9 +597,15 @@ function renderAll(){renderGdsChart();renderDoseChart();renderHistory();renderDi
 
 function setupToggle(btnId,secId){var btn=document.getElementById(btnId),sec=document.getElementById(secId);btn.addEventListener('click',function(){var open=btn.classList.toggle('open');sec.style.display=open?'block':'none';});}
 setupToggle('gdsToggle','gdsSection');setupToggle('doseToggle','doseSection');setupToggle('historyToggleBtn','historySection');
-document.getElementById('historyToggle').addEventListener('click',function(){var sec=document.getElementById('historySection');sec.style.display=sec.style.display==='none'?'block':'none';if(sec.style.display==='block')sec.scrollIntoView({behavior:'smooth',block:'start'});});
+//document.getElementById('historyToggle').addEventListener('click',function(){var sec=document.getElementById('historySection');sec.style.display=sec.style.display==='none'?'block':'none';if(sec.style.display==='block')sec.scrollIntoView({behavior:'smooth',block:'start'});});
 
 // Navigasi cepat header (Scroll ke section yang dituju & pastikan section terbuka)
+document.getElementById('historyToggle').addEventListener('click', function() {
+    var sec = document.getElementById('historySection');
+    var btn = document.getElementById('historyToggleBtn');
+    if(!btn.classList.contains('open')) btn.click();
+    sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+});
 document.getElementById('navGds').addEventListener('click', function() {
     var sec = document.getElementById('gdsSection');
     var btn = document.getElementById('gdsToggle');
