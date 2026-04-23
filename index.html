@@ -235,6 +235,7 @@
             #gdsStats{grid-template-columns:repeat(2,1fr)}
             #doseStats{grid-template-columns:repeat(2,1fr)}
             #doseSlotFilters .fb{font-size:10px;padding:5px 9px}
+            #gdsSlotFilters .fb{font-size:10px;padding:5px 9px}
         }
         @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
     </style>
@@ -314,6 +315,13 @@
                 <button class="fb" data-period="7">7 Hari</button>
                 <button class="fb" data-period="30">30 Hari</button>
                 <button class="fb" data-period="all"><i class="fa-solid fa-infinity" style="font-size:10px"></i>Semua</button>
+            </div>
+            <div class="filter-bar" id="gdsSlotFilters">
+                <button class="fb type-btn active" data-gs="all"><i class="fa-solid fa-layer-group" style="font-size:10px"></i>Semua</button>
+                <button class="fb type-btn" data-gs="dini-hari"><i class="fa-solid fa-moon" style="font-size:10px"></i>Dini Hari</button>
+                <button class="fb type-btn" data-gs="sarapan"><i class="fa-solid fa-mug-hot" style="font-size:10px"></i>Sarapan</button>
+                <button class="fb type-btn" data-gs="siang"><i class="fa-solid fa-sun" style="font-size:10px"></i>Siang</button>
+                <button class="fb type-btn" data-gs="malam"><i class="fa-solid fa-cloud-moon" style="font-size:10px"></i>Malam</button>
             </div>
             <div class="scoreboard" id="gdsStats"></div>
             <div class="chart-section">
@@ -398,7 +406,7 @@
 const state = { data: [], gdsChart: null, doseChart: null, selectedSlot: '' };
 var SLOTS=[{slot:'dini-hari',label:'Dini Hari',icon:'fa-moon',type:'gds-only'},{slot:'sarapan',label:'Sarapan',icon:'fa-sun',type:'gds-insulin'},{slot:'siang',label:'Siang',icon:'fa-cloud-sun',type:'gds-insulin'},{slot:'malam',label:'Malam',icon:'fa-cloud-moon',type:'gds-insulin'},{slot:'levemir',label:'levemir',icon:'fa-cloud-moon',type:'levemir'}];
 var DEFAULT_DOSES={sarapan:4,siang:5,malam:5},LEVEMIR_DOSE=8;
-var gdsPeriod='today',dosePeriod='7',doseSlot='all',doseType='all',historyPeriod='today';
+var gdsSlot='all',gdsPeriod='today',dosePeriod='7',doseSlot='all',doseType='all',historyPeriod='today';
 
 try{Telegram.WebApp.ready();Telegram.WebApp.expand();Telegram.WebApp.setHeaderColor('#060D1B');}catch(e){}
 
@@ -473,6 +481,7 @@ async function handleLevemir(){
 function renderGdsChart(){
     if(!state.gdsChart)return;
     var entries=filterByPeriod(state.data.filter(e=>e.gds!=null),gdsPeriod);
+    if(gdsSlot!=='all') entries=entries.filter(e=>e.slot===gdsSlot);
     entries.sort((a,b)=>{const da=new Date(normalizeDate(a.date)+'T'+(a.time||'00:00')),db=new Date(normalizeDate(b.date)+'T'+(b.time||'00:00'));return da-db;});
     const labels=entries.map(e=>fmtLabel(e.date,e.time)),vals=entries.map(e=>e.gds),colors=entries.map(e=>ptColor(e.gds));
     state.gdsChart.data.labels=labels;state.gdsChart.data.datasets[0].data=vals;
@@ -629,6 +638,15 @@ document.getElementById('navDiet').addEventListener('click', function() {
 });
     
 document.getElementById('gdsFilters').addEventListener('click',function(e){var btn=e.target.closest('.fb');if(!btn)return;document.querySelectorAll('#gdsFilters .fb').forEach(function(b){b.classList.remove('active');});btn.classList.add('active');gdsPeriod=btn.dataset.period;renderGdsChart();});
+document.getElementById('gdsSlotFilters').addEventListener('click',function(e){
+    var btn=e.target.closest('.fb');
+    if(!btn)return;
+    document.querySelectorAll('#gdsSlotFilters .fb').forEach(function(b){b.classList.remove('active','active-insulin');});
+    gdsSlot=btn.dataset.gs;
+    if(gdsSlot!=='all') btn.classList.add('active','active-insulin');
+    else btn.classList.add('active');
+    renderGdsChart();
+});
 document.getElementById('dosePeriodFilters').addEventListener('click',function(e){var btn=e.target.closest('.fb');if(!btn)return;document.querySelectorAll('#dosePeriodFilters .fb').forEach(function(b){b.classList.remove('active');});btn.classList.add('active');dosePeriod=btn.dataset.dp;renderDoseChart();});
 document.getElementById('doseSlotFilters').addEventListener('click',function(e){
     var btn=e.target.closest('.fb');
