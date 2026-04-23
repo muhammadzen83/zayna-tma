@@ -645,13 +645,11 @@ document.getElementById('historyFilters').addEventListener('click',function(e){v
 var SCHEDULES_CK=[
     {hour:2,minute:0,slot:'dini-hari',label:'Cek GDS Dini Hari'},
     {hour:6,minute:0,slot:'sarapan',label:'GDS + Insulin'},
-    {hour:9,minute:0,slot:'snack-pagi',label:'Snack Pagi',isDiet:true},
     {hour:12,minute:0,slot:'siang',label:'GDS + Insulin'},
-    {hour:15,minute:0,slot:'snack-siang',label:'Snack Siang',isDiet:true},
     {hour:18,minute:0,slot:'malam',label:'GDS + Insulin'},
-    {hour:20,minute:30,slot:'levemir',label:'Suntik Levemir'},
-    {hour:21,minute:0,slot:'snack-malam',label:'Snack Malam',isDiet:true}
+    {hour:20,minute:30,slot:'levemir',label:'Suntik Levemir'}
 ];
+    
 function updateCountdown(){
     var now=new Date(),nowT=now.getHours()*60+now.getMinutes(),today=getTodayKey();
     var todayData=state.data.filter(function(e){return normalizeDate(e.date)===today;});
