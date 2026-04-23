@@ -254,8 +254,10 @@
                     <h1>Diabetes Monitor</h1>
                     <p><i class="fa-solid fa-heart-pulse" style="margin-right:3px;font-size:10px;color:var(--danger)"></i>Zayna Kamila</p>
                 </div>
-            </div>
-            <div class="hdr-actions">
+            div class="hdr-actions">
+                <button class="hdr-btn" id="navGds" title="Grafik GDS"><i class="fa-solid fa-chart-line"></i></button>
+                <button class="hdr-btn" id="navDose" title="Grafik Dosis"><i class="fa-solid fa-prescription-bottle-medical"></i></button>
+                <button class="hdr-btn" id="navDiet" title="Panduan Diet"><i class="fa-solid fa-utensils"></i></button>
                 <button class="hdr-btn" id="historyToggle" title="Riwayat"><i class="fa-solid fa-clock-rotate-left"></i></button>
             </div>
         </header>
@@ -595,8 +597,28 @@ function renderAll(){renderGdsChart();renderDoseChart();renderHistory();renderDi
 
 function setupToggle(btnId,secId){var btn=document.getElementById(btnId),sec=document.getElementById(secId);btn.addEventListener('click',function(){var open=btn.classList.toggle('open');sec.style.display=open?'block':'none';});}
 setupToggle('gdsToggle','gdsSection');setupToggle('doseToggle','doseSection');setupToggle('historyToggleBtn','historySection');
-document.getElementById('historyToggle').addEventListener('click',function(){var sec=document.getElementById('historySection');sec.style.display=sec.style.display==='none'?'block':'none';if(sec.style.display==='block')renderHistory();});
+document.getElementById('historyToggle').addEventListener('click',function(){var sec=document.getElementById('historySection');sec.style.display=sec.style.display==='none'?'block':'none';if(sec.style.display==='block')sec.scrollIntoView({behavior:'smooth',block:'start'});});
 
+// Navigasi cepat header (Scroll ke section yang dituju & pastikan section terbuka)
+document.getElementById('navGds').addEventListener('click', function() {
+    var sec = document.getElementById('gdsSection');
+    var btn = document.getElementById('gdsToggle');
+    if(!btn.classList.contains('open')) btn.click(); // Buka kalau tertutup
+    sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+});
+document.getElementById('navDose').addEventListener('click', function() {
+    var sec = document.getElementById('doseSection');
+    var btn = document.getElementById('doseToggle');
+    if(!btn.classList.contains('open')) btn.click();
+    sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+});
+document.getElementById('navDiet').addEventListener('click', function() {
+    var sec = document.getElementById('dietSection');
+    var btn = document.getElementById('dietToggle');
+    if(!btn.classList.contains('open')) btn.click();
+    sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+});
+    
 document.getElementById('gdsFilters').addEventListener('click',function(e){var btn=e.target.closest('.fb');if(!btn)return;document.querySelectorAll('#gdsFilters .fb').forEach(function(b){b.classList.remove('active');});btn.classList.add('active');gdsPeriod=btn.dataset.period;renderGdsChart();});
 document.getElementById('dosePeriodFilters').addEventListener('click',function(e){var btn=e.target.closest('.fb');if(!btn)return;document.querySelectorAll('#dosePeriodFilters .fb').forEach(function(b){b.classList.remove('active');});btn.classList.add('active');dosePeriod=btn.dataset.dp;renderDoseChart();});
 document.getElementById('historyFilters').addEventListener('click',function(e){var btn=e.target.closest('.fb');if(!btn)return;document.querySelectorAll('#historyFilters .fb').forEach(function(b){b.classList.remove('active');});btn.classList.add('active');historyPeriod=btn.dataset.hp;renderHistory();});
