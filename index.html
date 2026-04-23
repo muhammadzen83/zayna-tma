@@ -334,11 +334,6 @@
                 <button class="fb" data-dp="30">30 Hari</button>
                 <button class="fb" data-dp="all"><i class="fa-solid fa-infinity" style="font-size:10px"></i>Semua</button>
             </div>
-            <div class="filter-bar" id="doseTypeFilters">
-                <button class="fb type-btn active-insulin" data-dt="all"><i class="fa-solid fa-layer-group" style="font-size:10px"></i>Semua</button>
-                <button class="fb type-btn" data-dt="insulin"><i class="fa-solid fa-syringe" style="font-size:10px"></i>Insulin</button>
-                <button class="fb type-btn" data-dt="levemir"><i class="fa-solid fa-moon" style="font-size:10px"></i>Levemir</button>
-            </div>
             
             <!-- Scoreboard Dosis Baru -->
             <div class="scoreboard" id="doseStats"></div>
@@ -464,8 +459,6 @@ function renderGdsChart(){
 function renderDoseChart(){
     if(!state.doseChart)return;
     var entries=filterByPeriod(state.data,dosePeriod);
-    if(doseType==='insulin')entries=entries.filter(e=>e.doseType==='rapid');
-    else if(doseType==='levemir')entries=entries.filter(e=>e.doseType==='levemir');
     
     var grouped={};
     entries.forEach(e=>{let d=normalizeDate(e.date);if(!grouped[d])grouped[d]={ins:0,lev:0};if(e.doseType==='rapid')grouped[d].ins+=e.dose;if(e.doseType==='levemir')grouped[d].lev+=e.dose;});
@@ -491,27 +484,27 @@ function renderDoseChart(){
 
         if(insulinArr.length===0 && levemirArr.length===0){
             statsEl.innerHTML = `
-                <div class="dose-stat insulin-stat"><div class="dv">-</div><div class="dl">Ins Min</div></div>
-                <div class="dose-stat insulin-stat"><div class="dv">-</div><div class="dl">Ins Max</div></div>
-                <div class="dose-stat insulin-stat"><div class="dv">-</div><div class="dl">Ins Avg</div></div>
-                <div class="dose-stat insulin-stat"><div class="dv">-</div><div class="dl">Ins Tot</div></div>
-                <div class="dose-stat levemir-stat"><div class="dv">-</div><div class="dl">Lev Min</div></div>
-                <div class="dose-stat levemir-stat"><div class="dv">-</div><div class="dl">Lev Max</div></div>
-                <div class="dose-stat levemir-stat"><div class="dv">-</div><div class="dl">Lev Avg</div></div>
-                <div class="dose-stat levemir-stat"><div class="dv">-</div><div class="dl">Lev Tot</div></div>
+                <div class="dose-stat insulin-stat"><div class="dv">-</div><div class="dl"><i class="fa-solid fa-syringe" style="font-size:9px;color:var(--insulin)"></i> Min</div></div>
+                <div class="dose-stat insulin-stat"><div class="dv">-</div><div class="dl"><i class="fa-solid fa-syringe" style="font-size:9px;color:var(--insulin)"></i> Max</div></div>
+                <div class="dose-stat insulin-stat"><div class="dv">-</div><div class="dl"><i class="fa-solid fa-syringe" style="font-size:9px;color:var(--insulin)"></i> Avg</div></div>
+                <div class="dose-stat insulin-stat"><div class="dv">-</div><div class="dl"><i class="fa-solid fa-syringe" style="font-size:9px;color:var(--insulin)"></i> Tot</div></div>
+                <div class="dose-stat levemir-stat"><div class="dv">-</div><div class="dl"><i class="fa-solid fa-syringe" style="font-size:9px;color:var(--levemir)"></i> Min</div></div>
+                <div class="dose-stat levemir-stat"><div class="dv">-</div><div class="dl"><i class="fa-solid fa-syringe" style="font-size:9px;color:var(--levemir)"></i> Max</div></div>
+                <div class="dose-stat levemir-stat"><div class="dv">-</div><div class="dl"><i class="fa-solid fa-syringe" style="font-size:9px;color:var(--levemir)"></i> Avg</div></div>
+                <div class="dose-stat levemir-stat"><div class="dv">-</div><div class="dl"><i class="fa-solid fa-syringe" style="font-size:9px;color:var(--levemir)"></i> Tot</div></div>
             `;
             return;
         }
 
         statsEl.innerHTML = `
-            <div class="dose-stat insulin-stat"><div class="dv">${insulinArr.length ? insStats.min : '-'}</div><div class="dl">Ins Min</div></div>
-            <div class="dose-stat insulin-stat"><div class="dv">${insulinArr.length ? insStats.max : '-'}</div><div class="dl">Ins Max</div></div>
-            <div class="dose-stat insulin-stat"><div class="dv">${insulinArr.length ? insStats.avg : '-'}</div><div class="dl">Ins Avg</div></div>
-            <div class="dose-stat insulin-stat"><div class="dv">${insulinArr.length ? insSum : '-'}</div><div class="dl">Ins Tot</div></div>
-            <div class="dose-stat levemir-stat"><div class="dv">${levemirArr.length ? levStats.min : '-'}</div><div class="dl">Lev Min</div></div>
-            <div class="dose-stat levemir-stat"><div class="dv">${levemirArr.length ? levStats.max : '-'}</div><div class="dl">Lev Max</div></div>
-            <div class="dose-stat levemir-stat"><div class="dv">${levemirArr.length ? levStats.avg : '-'}</div><div class="dl">Lev Avg</div></div>
-            <div class="dose-stat levemir-stat"><div class="dv">${levemirArr.length ? levSum : '-'}</div><div class="dl">Lev Tot</div></div>
+            <div class="dose-stat insulin-stat"><div class="dv">${insulinArr.length ? insStats.min : '-'}</div><div class="dl"><i class="fa-solid fa-syringe" style="font-size:9px;color:var(--insulin)"></i> Min</div></div>
+            <div class="dose-stat insulin-stat"><div class="dv">${insulinArr.length ? insStats.max : '-'}</div><div class="dl"><i class="fa-solid fa-syringe" style="font-size:9px;color:var(--insulin)"></i> Max</div></div>
+            <div class="dose-stat insulin-stat"><div class="dv">${insulinArr.length ? insStats.avg : '-'}</div><div class="dl"><i class="fa-solid fa-syringe" style="font-size:9px;color:var(--insulin)"></i> Avg</div></div>
+            <div class="dose-stat insulin-stat"><div class="dv">${insulinArr.length ? insSum : '-'}</div><div class="dl"><i class="fa-solid fa-syringe" style="font-size:9px;color:var(--insulin)"></i> Tot</div></div>
+            <div class="dose-stat levemir-stat"><div class="dv">${levemirArr.length ? levStats.min : '-'}</div><div class="dl"><i class="fa-solid fa-syringe" style="font-size:9px;color:var(--levemir)"></i> Min</div></div>
+            <div class="dose-stat levemir-stat"><div class="dv">${levemirArr.length ? levStats.max : '-'}</div><div class="dl"><i class="fa-solid fa-syringe" style="font-size:9px;color:var(--levemir)"></i> Max</div></div>
+            <div class="dose-stat levemir-stat"><div class="dv">${levemirArr.length ? levStats.avg : '-'}</div><div class="dl"><i class="fa-solid fa-syringe" style="font-size:9px;color:var(--levemir)"></i> Avg</div></div>
+            <div class="dose-stat levemir-stat"><div class="dv">${levemirArr.length ? levSum : '-'}</div><div class="dl"><i class="fa-solid fa-syringe" style="font-size:9px;color:var(--levemir)"></i> Tot</div></div>
         `;
     }
 }
@@ -543,7 +536,6 @@ document.getElementById('historyToggle').addEventListener('click',function(){var
 
 document.getElementById('gdsFilters').addEventListener('click',function(e){var btn=e.target.closest('.fb');if(!btn)return;document.querySelectorAll('#gdsFilters .fb').forEach(function(b){b.classList.remove('active');});btn.classList.add('active');gdsPeriod=btn.dataset.period;renderGdsChart();});
 document.getElementById('dosePeriodFilters').addEventListener('click',function(e){var btn=e.target.closest('.fb');if(!btn)return;document.querySelectorAll('#dosePeriodFilters .fb').forEach(function(b){b.classList.remove('active');});btn.classList.add('active');dosePeriod=btn.dataset.dp;renderDoseChart();});
-document.getElementById('doseTypeFilters').addEventListener('click',function(e){var btn=e.target.closest('.fb');if(!btn)return;document.querySelectorAll('#doseTypeFilters .fb').forEach(function(b){b.classList.remove('active','active-insulin','active-levemir');});if(btn.dataset.dt==='insulin')btn.classList.add('active-insulin');else if(btn.dataset.dt==='levemir')btn.classList.add('active-levemir');else btn.classList.add('active');doseType=btn.dataset.dt;renderDoseChart();});
 document.getElementById('historyFilters').addEventListener('click',function(e){var btn=e.target.closest('.fb');if(!btn)return;document.querySelectorAll('#historyFilters .fb').forEach(function(b){b.classList.remove('active');});btn.classList.add('active');historyPeriod=btn.dataset.hp;renderHistory();});
 
 var SCHEDULES_CK=[{hour:2,minute:0,slot:'dini-hari',label:'Cek GDS Dini Hari'},{hour:6,minute:0,slot:'sarapan',label:'GDS + Insulin Sarapan'},{hour:12,minute:0,slot:'siang',label:'GDS + Insulin Siang'},{hour:18,minute:0,slot:'malam',label:'GDS + Insulin Malam'},{hour:20,minute:30,slot:'levemir',label:'Suntik Levemir'}];
