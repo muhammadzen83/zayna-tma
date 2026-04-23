@@ -484,26 +484,26 @@ function renderDoseChart(){
 
         if(insulinArr.length===0 && levemirArr.length===0){
             statsEl.innerHTML = `
-                <div class="dose-stat insulin-stat"><div class="dv">-</div><div class="dl"><i class="fa-solid fa-syringe" style="font-size:9px;color:var(--insulin)"></i> Min</div></div>
-                <div class="dose-stat insulin-stat"><div class="dv">-</div><div class="dl"><i class="fa-solid fa-syringe" style="font-size:9px;color:var(--insulin)"></i> Max</div></div>
-                <div class="dose-stat insulin-stat"><div class="dv">-</div><div class="dl"><i class="fa-solid fa-syringe" style="font-size:9px;color:var(--insulin)"></i> Avg</div></div>
+                <div class="dose-stat insulin-stat"><div class="dv">-</div><div class="dl"><i class="fa-solid fa-arrow-down" style="font-size:9px;color:var(--insulin)"></i> Min</div></div>
+                <div class="dose-stat insulin-stat"><div class="dv">-</div><div class="dl"><i class="fa-solid fa-arrow-up" style="font-size:9px;color:var(--insulin)"></i> Max</div></div>
+                <div class="dose-stat insulin-stat"><div class="dv">-</div><div class="dl"><i class="fa-solid fa-chart-simple" style="font-size:9px;color:var(--insulin)"></i> Avg</div></div>
                 <div class="dose-stat insulin-stat"><div class="dv">-</div><div class="dl"><i class="fa-solid fa-syringe" style="font-size:9px;color:var(--insulin)"></i> Tot</div></div>
-                <div class="dose-stat levemir-stat"><div class="dv">-</div><div class="dl"><i class="fa-solid fa-syringe" style="font-size:9px;color:var(--levemir)"></i> Min</div></div>
-                <div class="dose-stat levemir-stat"><div class="dv">-</div><div class="dl"><i class="fa-solid fa-syringe" style="font-size:9px;color:var(--levemir)"></i> Max</div></div>
-                <div class="dose-stat levemir-stat"><div class="dv">-</div><div class="dl"><i class="fa-solid fa-syringe" style="font-size:9px;color:var(--levemir)"></i> Avg</div></div>
+                <div class="dose-stat levemir-stat"><div class="dv">-</div><div class="dl"><i class="fa-solid fa-arrow-down" style="font-size:9px;color:var(--levemir)"></i> Min</div></div>
+                <div class="dose-stat levemir-stat"><div class="dv">-</div><div class="dl"><i class="fa-solid fa-arrow-up" style="font-size:9px;color:var(--levemir)"></i> Max</div></div>
+                <div class="dose-stat levemir-stat"><div class="dv">-</div><div class="dl"><i class="fa-solid fa-chart-simple" style="font-size:9px;color:var(--levemir)"></i> Avg</div></div>
                 <div class="dose-stat levemir-stat"><div class="dv">-</div><div class="dl"><i class="fa-solid fa-syringe" style="font-size:9px;color:var(--levemir)"></i> Tot</div></div>
             `;
             return;
         }
 
         statsEl.innerHTML = `
-            <div class="dose-stat insulin-stat"><div class="dv">${insulinArr.length ? insStats.min : '-'}</div><div class="dl"><i class="fa-solid fa-syringe" style="font-size:9px;color:var(--insulin)"></i> Min</div></div>
-            <div class="dose-stat insulin-stat"><div class="dv">${insulinArr.length ? insStats.max : '-'}</div><div class="dl"><i class="fa-solid fa-syringe" style="font-size:9px;color:var(--insulin)"></i> Max</div></div>
-            <div class="dose-stat insulin-stat"><div class="dv">${insulinArr.length ? insStats.avg : '-'}</div><div class="dl"><i class="fa-solid fa-syringe" style="font-size:9px;color:var(--insulin)"></i> Avg</div></div>
+            <div class="dose-stat insulin-stat"><div class="dv">${insulinArr.length ? insStats.min : '-'}</div><div class="dl"><i class="fa-solid fa-arrow-down" style="font-size:9px;color:var(--insulin)"></i> Min</div></div>
+            <div class="dose-stat insulin-stat"><div class="dv">${insulinArr.length ? insStats.max : '-'}</div><div class="dl"><i class="fa-solid fa-arrow-up" style="font-size:9px;color:var(--insulin)"></i> Max</div></div>
+            <div class="dose-stat insulin-stat"><div class="dv">${insulinArr.length ? insStats.avg : '-'}</div><div class="dl"><i class="fa-solid fa-chart-simple" style="font-size:9px;color:var(--insulin)"></i> Avg</div></div>
             <div class="dose-stat insulin-stat"><div class="dv">${insulinArr.length ? insSum : '-'}</div><div class="dl"><i class="fa-solid fa-syringe" style="font-size:9px;color:var(--insulin)"></i> Tot</div></div>
-            <div class="dose-stat levemir-stat"><div class="dv">${levemirArr.length ? levStats.min : '-'}</div><div class="dl"><i class="fa-solid fa-syringe" style="font-size:9px;color:var(--levemir)"></i> Min</div></div>
-            <div class="dose-stat levemir-stat"><div class="dv">${levemirArr.length ? levStats.max : '-'}</div><div class="dl"><i class="fa-solid fa-syringe" style="font-size:9px;color:var(--levemir)"></i> Max</div></div>
-            <div class="dose-stat levemir-stat"><div class="dv">${levemirArr.length ? levStats.avg : '-'}</div><div class="dl"><i class="fa-solid fa-syringe" style="font-size:9px;color:var(--levemir)"></i> Avg</div></div>
+            <div class="dose-stat levemir-stat"><div class="dv">${levemirArr.length ? levStats.min : '-'}</div><div class="dl"><i class="fa-solid fa-arrow-down" style="font-size:9px;color:var(--levemir)"></i> Min</div></div>
+            <div class="dose-stat levemir-stat"><div class="dv">${levemirArr.length ? levStats.max : '-'}</div><div class="dl"><i class="fa-solid fa-arrow-up" style="font-size:9px;color:var(--levemir)"></i> Max</div></div>
+            <div class="dose-stat levemir-stat"><div class="dv">${levemirArr.length ? levStats.avg : '-'}</div><div class="dl"><i class="fa-solid fa-chart-simple" style="font-size:9px;color:var(--levemir)"></i> Avg</div></div>
             <div class="dose-stat levemir-stat"><div class="dv">${levemirArr.length ? levSum : '-'}</div><div class="dl"><i class="fa-solid fa-syringe" style="font-size:9px;color:var(--levemir)"></i> Tot</div></div>
         `;
     }
