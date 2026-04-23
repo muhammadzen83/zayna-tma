@@ -645,15 +645,26 @@ document.getElementById('historyFilters').addEventListener('click',function(e){v
 var SCHEDULES_CK=[
     {hour:2,minute:0,slot:'dini-hari',label:'Cek GDS Dini Hari'},
     {hour:6,minute:0,slot:'sarapan',label:'GDS + Insulin'},
+    {hour:9,minute:0,slot:'snack-pagi',label:'Snack Pagi',autoDone:true},
     {hour:12,minute:0,slot:'siang',label:'GDS + Insulin'},
+    {hour:15,minute:0,slot:'snack-siang',label:'Snack Siang',autoDone:true},
     {hour:18,minute:0,slot:'malam',label:'GDS + Insulin'},
-    {hour:20,minute:30,slot:'levemir',label:'Suntik Levemir'}
+    {hour:20,minute:30,slot:'levemir',label:'Suntik Levemir'},
+    {hour:21,minute:0,slot:'snack-malam',label:'Snack Malam',autoDone:true}
 ];
     
 function updateCountdown(){
     var now=new Date(),nowT=now.getHours()*60+now.getMinutes(),today=getTodayKey();
     var todayData=state.data.filter(function(e){return normalizeDate(e.date)===today;});
-    var done={};SCHEDULES_CK.forEach(function(s){done[s.slot]=todayData.some(function(e){return e.slot===s.slot;});});
+    var nowT2=now.getHours()*60+now.getMinutes();
+    var done={};SCHEDULES_CK.forEach(function(s){
+        done[s.slot]=todayData.some(function(e){return e.slot===s.slot;});
+        /* Slot diet otomatis done jika waktunya sudah lewat */
+        if(s.autoDone && !done[s.slot]){
+            var sT2=s.hour*60+s.minute;
+            if(nowT2>=sT2) done[s.slot]=true;
+        }
+    });
     var next=null;
     for(var i=0;i<SCHEDULES_CK.length;i++){var s=SCHEDULES_CK[i];if(done[s.slot])continue;var sT=s.hour*60+s.minute;if(sT>nowT){if(!next||sT<next.total)next={hour:s.hour,minute:s.minute,label:s.label,total:sT,tomorrow:false};}else if(!next){next={hour:s.hour,minute:s.minute,label:s.label,total:sT+1440,tomorrow:true};}}
     if(!next){var f=SCHEDULES_CK[0];next={hour:f.hour,minute:f.minute,label:f.label,total:f.hour*60+f.minute+1440,tomorrow:true};}
