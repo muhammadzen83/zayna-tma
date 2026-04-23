@@ -481,6 +481,11 @@ function renderGdsChart(){
 
 /* ====== CHART DOSIS ====== */
 function renderDoseChart(){
+    let data = doseData; // array data dosis yang sudah ada
+    if (filterWaktu !== 'semua') {
+        data = data.filter(d => d.waktu === filterWaktu);
+    }
+    
     if(!state.doseChart)return;
     var entries=filterByPeriod(state.data,dosePeriod);
     
