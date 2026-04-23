@@ -46,7 +46,6 @@
         *{margin:0;padding:0;box-sizing:border-box}
         body{font-family:'Space Grotesk',sans-serif;background:var(--bg);color:var(--fg);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased}
 
-        /* Ambient */
         .ambient{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
         .ambient-orb{position:absolute;border-radius:50%;filter:blur(140px);opacity:.10}
         .ambient-orb.a{width:420px;height:420px;background:var(--accent);top:-160px;left:-120px;animation:orbA 20s ease-in-out infinite}
@@ -56,12 +55,10 @@
         @keyframes orbB{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-40px,-30px) scale(1.1)}}
         @keyframes orbC{0%,100%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(-30%,-60%) scale(1.2)}}
 
-        /* Noise overlay */
         .ambient::after{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.03'/%3E%3C/svg%3E");opacity:.4}
 
         .shell{position:relative;z-index:1;display:flex;flex-direction:column;min-height:100vh;max-width:520px;margin:0 auto;padding:0 0 32px}
 
-        /* Header */
         .hdr{padding:18px 20px 14px;display:flex;align-items:center;justify-content:space-between;gap:12px}
         .brand{display:flex;align-items:center;gap:12px}
         .brand-icon{width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,var(--accent),#00B88C);display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--bg);box-shadow:0 6px 24px rgba(0,229,160,.25);position:relative}
@@ -72,7 +69,6 @@
         .hdr-btn{width:38px;height:38px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--card);color:var(--muted);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;font-size:14px}
         .hdr-btn:hover{border-color:var(--accent-border);color:var(--accent);background:var(--accent-dim)}
 
-        /* Info bar */
         .info-bar{margin:0 20px 6px;padding:10px 14px;border-radius:var(--radius-sm);display:flex;align-items:center;gap:10px;font-size:11px;font-weight:500;transition:all .25s}
         .info-bar.bot{background:var(--accent-dim);border:1px solid var(--accent-border);color:var(--accent)}
         .info-bar.bot i{font-size:15px}
@@ -82,7 +78,6 @@
         .info-bar .nr-value{color:var(--fg2);font-weight:600}
         .info-bar .nr-countdown{margin-left:auto;color:var(--accent);font-weight:700;font-size:13px;font-variant-numeric:tabular-nums;letter-spacing:.5px}
 
-        /* Progress strip */
         .progress-strip{padding:10px 20px 8px}
         .progress-slots{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
         .p-slot{text-align:center;padding:10px 2px 8px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--card);cursor:pointer;transition:all .25s;position:relative;overflow:hidden}
@@ -99,7 +94,6 @@
         .p-slot.active-slot::before{background:var(--accent)}
         .p-slot.active-slot .p-icon,.p-slot.active-slot .p-time{color:var(--accent)}
 
-        /* Stats grid */
         .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:6px 20px 12px}
         .stat-card{padding:14px 12px;border-radius:var(--radius);background:var(--card);border:1px solid var(--border);display:flex;align-items:center;gap:12px;transition:all .25s}
         .stat-card:hover{border-color:var(--border2);transform:translateY(-1px)}
@@ -109,7 +103,6 @@
         .stat-card.neutral .stat-icon{background:var(--accent-dim);color:var(--accent)}
         .stat-card.neutral .stat-val{color:var(--fg)}
 
-        /* Section */
         .sec-head{padding:16px 20px 8px;display:flex;align-items:center;justify-content:space-between}
         .sec-title{font-size:13px;font-weight:700;display:flex;align-items:center;gap:8px;color:var(--fg)}
         .sec-title i{width:26px;height:26px;border-radius:var(--radius-xs);display:flex;align-items:center;justify-content:center;font-size:11px}
@@ -121,7 +114,6 @@
         .sec-toggle.open{color:var(--accent);border-color:var(--accent-border);background:var(--accent-dim)}
         .sec-toggle i{transition:transform .25s}.sec-toggle.open i{transform:rotate(180deg)}
 
-        /* Filters */
         .filter-bar{display:flex;gap:5px;flex-wrap:wrap;padding:0 20px 10px}
         .fb{padding:6px 12px;border-radius:var(--radius-xs);border:1px solid var(--border);background:transparent;color:var(--muted);font-family:inherit;font-size:11px;font-weight:500;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:5px}
         .fb:hover{border-color:var(--border2);color:var(--fg2)}
@@ -129,7 +121,6 @@
         .fb.type-btn.active-insulin{background:var(--insulin-dim);border-color:var(--insulin-border);color:var(--insulin)}
         .fb.type-btn.active-levemir{background:var(--levemir-dim);border-color:var(--levemir-border);color:var(--levemir)}
 
-        /* Input */
         .input-section{padding:0 20px 14px}
         .slot-btns{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:12px}
         .slot-btn{padding:10px 8px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--card);color:var(--muted);font-size:11px;font-family:inherit;cursor:pointer;transition:all .2s;display:flex;flex-direction:column;align-items:center;gap:5px;font-weight:500}
@@ -151,7 +142,6 @@
         .levemir-btn:active{transform:scale(.98)}
         .levemir-btn.done{opacity:.3;pointer-events:none}
 
-        /* Result card */
         .result-card{margin:0 20px 14px;padding:0;border-radius:var(--radius);background:var(--card);border:1px solid var(--border);display:none;overflow:hidden}
         .result-card.show{display:block;animation:slideUp .35s ease-out}
         @keyframes slideUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
@@ -178,7 +168,6 @@
         .result-note.warn-note{display:flex;background:var(--warning-dim);color:var(--warning);border:1px solid var(--warning-border)}
         .result-note.danger-note{display:flex;background:var(--danger-dim);color:var(--danger);border:1px solid var(--danger-border)}
 
-        /* Chart */
         .chart-section{padding:0 20px 14px}
         .chart-wrap{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px 14px 12px;position:relative}
         .chart-wrap canvas{width:100%!important;max-height:260px}
@@ -186,8 +175,11 @@
         .chart-legend-item{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--muted);font-weight:500}
         .chart-legend-dot{width:8px;height:8px;border-radius:50%}
 
-        /* Dose stats */
-        .dose-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:14px;padding:0 20px}
+        /* Scoreboard Grids */
+        .scoreboard{display:grid;gap:6px;margin-bottom:14px;padding:0 20px}
+        #gdsStats{grid-template-columns:repeat(4,1fr)}
+        #doseStats{grid-template-columns:repeat(4,1fr)} /* 4 kolom: Min, Max, Avg, Tot */
+        
         .dose-stat{padding:12px 6px;border-radius:var(--radius-sm);text-align:center;background:var(--card);border:1px solid var(--border);transition:all .25s}
         .dose-stat:hover{transform:translateY(-2px);border-color:var(--border2)}
         .dose-stat .dv{font-size:20px;font-weight:700;margin-bottom:2px;line-height:1.1}
@@ -199,7 +191,6 @@
         .dose-stat.levemir-stat{background:var(--levemir-dim);border-color:var(--levemir-border)}
         .dose-stat.levemir-stat .dv{color:var(--levemir)}
 
-        /* History */
         .history-section{padding:0 20px 14px}
         .hp-date-label{font-size:10px;font-weight:700;color:var(--muted);margin:14px 0 8px;text-transform:uppercase;letter-spacing:.8px;display:flex;align-items:center;gap:8px}
         .hp-date-label::after{content:'';flex:1;height:1px;background:var(--border)}
@@ -228,21 +219,21 @@
         .empty-box i{font-size:36px;opacity:.15;display:block;margin-bottom:12px}
         .empty-box p{font-size:13px;font-weight:500}
 
-        /* Toast */
         .toast-container{position:fixed;top:12px;left:50%;transform:translateX(-50%);z-index:300;display:flex;flex-direction:column;gap:8px;pointer-events:none}
         .toast{padding:12px 18px;border-radius:var(--radius-sm);background:var(--card2);border:1px solid var(--border2);color:var(--fg);font-size:12px;font-family:inherit;font-weight:500;box-shadow:0 10px 32px rgba(0,0,0,.5);animation:toastIn .3s ease-out,toastOut .3s ease-in 2.5s forwards;display:flex;align-items:center;gap:10px;pointer-events:auto;max-width:90vw;backdrop-filter:blur(12px)}
         .toast i{font-size:15px;flex-shrink:0}.toast.success i{color:var(--accent)}.toast.error i{color:var(--danger)}
         @keyframes toastIn{from{opacity:0;transform:translateY(-14px)}to{opacity:1;transform:translateY(0)}}
         @keyframes toastOut{to{opacity:0;transform:translateY(-14px)}}
 
-        /* Divider */
         .divider{height:1px;background:var(--border);margin:0 20px}
 
         @media(max-width:540px){
             .shell{max-width:100%}
             .p-slot .p-label{display:none}
             .slot-btns{grid-template-columns:repeat(2,1fr)}
-            .dose-stats{grid-template-columns:repeat(2,1fr)}
+            /* Pecah jadi 2 kolom di mobile supaya tidak kecil */
+            #gdsStats{grid-template-columns:repeat(2,1fr)}
+            #doseStats{grid-template-columns:repeat(2,1fr)}
         }
         @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
     </style>
@@ -256,7 +247,6 @@
     <div class="toast-container" id="toastContainer"></div>
 
     <div class="shell">
-        <!-- Header -->
         <header class="hdr">
             <div class="brand">
                 <div class="brand-icon"><i class="fa-solid fa-droplet"></i></div>
@@ -270,7 +260,6 @@
             </div>
         </header>
 
-        <!-- Info bars -->
         <div class="info-bar bot"><i class="fa-brands fa-telegram"></i><span>Reminder via Telegram Bot — selalu tepat waktu</span></div>
         <div class="info-bar reminder" id="nextReminder">
             <i class="fa-solid fa-bell"></i>
@@ -279,58 +268,23 @@
             <span class="nr-countdown" id="nrCountdown">—:—</span>
         </div>
 
-        <!-- Progress -->
         <div class="progress-strip">
             <div class="progress-slots" id="progressSlots">
-                <div class="p-slot" data-slot="dini-hari">
-                    <div class="p-icon"><i class="fa-solid fa-moon"></i></div>
-                    <div class="p-time">02:00</div>
-                    <div class="p-label">GDS</div>
-                </div>
-                <div class="p-slot" data-slot="sarapan">
-                    <div class="p-icon"><i class="fa-solid fa-mug-hot"></i></div>
-                    <div class="p-time">06:00</div>
-                    <div class="p-label">Sarapan</div>
-                </div>
-                <div class="p-slot" data-slot="siang">
-                    <div class="p-icon"><i class="fa-solid fa-sun"></i></div>
-                    <div class="p-time">12:00</div>
-                    <div class="p-label">Siang</div>
-                </div>
-                <div class="p-slot" data-slot="malam">
-                    <div class="p-icon"><i class="fa-solid fa-cloud-moon"></i></div>
-                    <div class="p-time">18:00</div>
-                    <div class="p-label">Malam</div>
-                </div>
-                <div class="p-slot" data-slot="levemir">
-                    <div class="p-icon"><i class="fa-solid fa-syringe"></i></div>
-                    <div class="p-time">20:30</div>
-                    <div class="p-label">Levemir</div>
-                </div>
+                <div class="p-slot" data-slot="dini-hari"><div class="p-icon"><i class="fa-solid fa-moon"></i></div><div class="p-time">02:00</div><div class="p-label">GDS</div></div>
+                <div class="p-slot" data-slot="sarapan"><div class="p-icon"><i class="fa-solid fa-mug-hot"></i></div><div class="p-time">06:00</div><div class="p-label">Sarapan</div></div>
+                <div class="p-slot" data-slot="siang"><div class="p-icon"><i class="fa-solid fa-sun"></i></div><div class="p-time">12:00</div><div class="p-label">Siang</div></div>
+                <div class="p-slot" data-slot="malam"><div class="p-icon"><i class="fa-solid fa-cloud-moon"></i></div><div class="p-time">18:00</div><div class="p-label">Malam</div></div>
+                <div class="p-slot" data-slot="levemir"><div class="p-icon"><i class="fa-solid fa-syringe"></i></div><div class="p-time">20:30</div><div class="p-label">Levemir</div></div>
             </div>
         </div>
 
-        <!-- Stats -->
         <div class="stats-grid" id="statsGrid">
-            <div class="stat-card neutral">
-                <div class="stat-icon"><i class="fa-solid fa-circle-check"></i></div>
-                <div class="stat-info">
-                    <div class="stat-val" id="statDone">—</div>
-                    <div class="stat-label">Selesai Hari Ini</div>
-                </div>
-            </div>
-            <div class="stat-card neutral">
-                <div class="stat-icon"><i class="fa-solid fa-list-check"></i></div>
-                <div class="stat-info">
-                    <div class="stat-val" id="statTotal">5</div>
-                    <div class="stat-label">Total Jadwal</div>
-                </div>
-            </div>
+            <div class="stat-card neutral"><div class="stat-icon"><i class="fa-solid fa-circle-check"></i></div><div class="stat-info"><div class="stat-val" id="statDone">—</div><div class="stat-label">Selesai Hari Ini</div></div></div>
+            <div class="stat-card neutral"><div class="stat-icon"><i class="fa-solid fa-list-check"></i></div><div class="stat-info"><div class="stat-val" id="statTotal">5</div><div class="stat-label">Total Jadwal</div></div></div>
         </div>
 
         <div class="divider"></div>
 
-        <!-- Input -->
         <div class="sec-head"><div class="sec-title"><i class="fa-solid fa-syringe ic-input"></i>Input Pengukuran</div></div>
         <div class="input-section">
             <div class="slot-btns" id="slotBtns">
@@ -349,7 +303,6 @@
 
         <div class="divider"></div>
 
-        <!-- GDS Chart -->
         <div class="sec-head"><div class="sec-title"><i class="fa-solid fa-chart-line ic-gds"></i>Grafik GDS</div><button class="sec-toggle open" id="gdsToggle"><i class="fa-solid fa-chevron-down"></i></button></div>
         <div id="gdsSection">
             <div class="filter-bar" id="gdsFilters">
@@ -358,7 +311,7 @@
                 <button class="fb" data-period="30">30 Hari</button>
                 <button class="fb" data-period="all"><i class="fa-solid fa-infinity" style="font-size:10px"></i>Semua</button>
             </div>
-            <div class="dose-stats" id="gdsStats"></div>
+            <div class="scoreboard" id="gdsStats"></div>
             <div class="chart-section">
                 <div class="chart-wrap">
                     <canvas id="gdsCanvas"></canvas>
@@ -373,7 +326,6 @@
 
         <div class="divider"></div>
 
-        <!-- Dose Chart -->
         <div class="sec-head"><div class="sec-title"><i class="fa-solid fa-prescription-bottle-medical ic-dose"></i>Grafik Dosis Harian</div><button class="sec-toggle open" id="doseToggle"><i class="fa-solid fa-chevron-down"></i></button></div>
         <div id="doseSection">
             <div class="filter-bar" id="dosePeriodFilters">
@@ -387,7 +339,10 @@
                 <button class="fb type-btn" data-dt="insulin"><i class="fa-solid fa-syringe" style="font-size:10px"></i>Insulin</button>
                 <button class="fb type-btn" data-dt="levemir"><i class="fa-solid fa-moon" style="font-size:10px"></i>Levemir</button>
             </div>
-            <div class="dose-stats" id="doseStats"></div>
+            
+            <!-- Scoreboard Dosis Baru -->
+            <div class="scoreboard" id="doseStats"></div>
+
             <div class="chart-section">
                 <div class="chart-wrap">
                     <canvas id="doseCanvas"></canvas>
@@ -401,7 +356,6 @@
 
         <div class="divider"></div>
 
-        <!-- History -->
         <div class="sec-head"><div class="sec-title"><i class="fa-solid fa-clock-rotate-left ic-history"></i>Riwayat</div><button class="sec-toggle open" id="historyToggleBtn"><i class="fa-solid fa-chevron-down"></i></button></div>
         <div id="historySection">
             <div class="filter-bar" id="historyFilters">
@@ -412,19 +366,11 @@
             </div>
             <div class="history-section" id="historyList"></div>
         </div>
-
-        <!-- Footer spacer -->
         <div style="height:16px"></div>
     </div>
 
 <script>
-const state = {
-    data: [],
-    gdsChart: null,
-    doseChart: null,
-    selectedSlot: ''
-};
-
+const state = { data: [], gdsChart: null, doseChart: null, selectedSlot: '' };
 var SLOTS=[{slot:'dini-hari',label:'Dini Hari',icon:'fa-moon',type:'gds-only'},{slot:'sarapan',label:'Sarapan',icon:'fa-sun',type:'gds-insulin'},{slot:'siang',label:'Siang',icon:'fa-cloud-sun',type:'gds-insulin'},{slot:'malam',label:'Malam',icon:'fa-cloud-moon',type:'gds-insulin'},{slot:'levemir',label:'levemir',icon:'fa-cloud-moon',type:'levemir'}];
 var DEFAULT_DOSES={sarapan:4,siang:5,malam:5},LEVEMIR_DOSE=8;
 var gdsPeriod='today',dosePeriod='7',doseType='all',historyPeriod='today';
@@ -452,26 +398,18 @@ function calcStats(arr){
 }
 
 function updateProgress(){
-    const today=getTodayKey();
-    const td=state.data.filter(e=>normalizeDate(e.date)===today);
+    const today=getTodayKey(), td=state.data.filter(e=>normalizeDate(e.date)===today);
     const done={};SLOTS.forEach(s=>done[s.slot]=false);
     td.forEach(e=>{if(done.hasOwnProperty(e.slot))done[e.slot]=true;});
     const doneCount=Object.values(done).filter(v=>v).length;
     const statDoneEl=document.getElementById('statDone');
     if(statDoneEl)statDoneEl.textContent=doneCount;
-    document.querySelectorAll('.p-slot').forEach(el=>{
-        const slot=el.dataset.slot;
-        if(done[slot]){el.classList.add('done');}else{el.classList.remove('done');}
-    });
+    document.querySelectorAll('.p-slot').forEach(el=>{const slot=el.dataset.slot;if(done[slot])el.classList.add('done');else el.classList.remove('done');});
 }
 
-/* ====== INPUT ====== */
 var gdsInput=document.getElementById('gdsInput'),submitBtn=document.getElementById('submitBtn'),levemirBtn=document.getElementById('levemirBtn'),resultCard=document.getElementById('resultCard'),inputRow=document.getElementById('inputRow');
 function selectSlot(slot){state.selectedSlot=slot;document.querySelectorAll('.slot-btn').forEach(function(b){b.classList.toggle('active',b.dataset.slot===slot);});document.querySelectorAll('.p-slot').forEach(function(el){el.classList.toggle('active-slot',el.dataset.slot===slot);});if(slot==='levemir'){inputRow.style.display='none';levemirBtn.style.display='flex';}else{inputRow.style.display='flex';levemirBtn.style.display='none';gdsInput.focus();}updateSubmitBtn();resultCard.classList.remove('show');}
-function updateSubmitBtn(){
-    const slot=state.selectedSlot;
-    submitBtn.disabled=!(slot&&slot!=='levemir'&&gdsInput.value.trim()!==''&&Number(gdsInput.value)>=0);
-}
+function updateSubmitBtn(){const slot=state.selectedSlot;submitBtn.disabled=!(slot&&slot!=='levemir'&&gdsInput.value.trim()!==''&&Number(gdsInput.value)>=0);}
 gdsInput.addEventListener('input',updateSubmitBtn);
 gdsInput.addEventListener('keydown',function(e){if(e.key==='Enter'&&!submitBtn.disabled)handleSubmit();});
 submitBtn.addEventListener('click',handleSubmit);
@@ -486,9 +424,7 @@ async function handleSubmit(){
     var entry={date:getTodayKey(),time:getTimeStr(),slot:slot,gds:gdsVal,dose:null,doseType:null,category:cat.cls};
     if(s.type==='gds-insulin'){
         var dose=calcDose(gdsVal,slot);entry.dose=dose;entry.doseType='rapid';
-        var adj=gdsVal>300?'+ 2':gdsVal>200?'+ 1':gdsVal<100?'- 1':'(sesuai)';
-        var dcCls=gdsVal>300?'danger-card':'';
-        var nh='';
+        var adj=gdsVal>300?'+ 2':gdsVal>200?'+ 1':gdsVal<100?'- 1':'(sesuai)';var dcCls=gdsVal>300?'danger-card':'';var nh='';
         if(gdsVal>300)nh='<div class="result-note danger-note"><i class="fa-solid fa-triangle-exclamation"></i>GDS sangat tinggi! Segera konsultasi.</div>';
         else if(gdsVal<70)nh='<div class="result-note danger-note"><i class="fa-solid fa-triangle-exclamation"></i>Hipoglikemia terdeteksi!</div>';
         var catIcon=cat.cls==='good'?'fa-circle-check':cat.cls==='warn'?'fa-circle-exclamation':'fa-triangle-exclamation';
@@ -499,25 +435,13 @@ async function handleSubmit(){
     }
     resultCard.classList.add('show');
     var ok=await submitData(entry);
-    if(ok){
-        showToast('Data tersimpan berhasil');
-        state.data.unshift(entry);updateProgress();renderAll();
-        gdsInput.value='';state.selectedSlot='';
-        document.querySelectorAll('.slot-btn').forEach(function(b){b.classList.remove('active');});
-        document.querySelectorAll('.p-slot').forEach(function(el){el.classList.remove('active-slot');});
-        inputRow.style.display='flex';levemirBtn.style.display='none';updateSubmitBtn();
-        try{Telegram.WebApp.HapticFeedback.notificationOccurred('success');}catch(e){}
-    }else showToast('Gagal menyimpan','error');
+    if(ok){showToast('Data tersimpan berhasil');state.data.unshift(entry);updateProgress();renderAll();gdsInput.value='';state.selectedSlot='';document.querySelectorAll('.slot-btn').forEach(function(b){b.classList.remove('active');});document.querySelectorAll('.p-slot').forEach(function(el){el.classList.remove('active-slot');});inputRow.style.display='flex';levemirBtn.style.display='none';updateSubmitBtn();try{Telegram.WebApp.HapticFeedback.notificationOccurred('success');}catch(e){}}else showToast('Gagal menyimpan','error');
 }
 
 async function handleLevemir(){
     var entry={date:getTodayKey(),time:getTimeStr(),slot:'levemir',gds:null,dose:LEVEMIR_DOSE,doseType:'levemir',category:'good'};
     var ok=await submitData(entry);
-    if(ok){
-        showToast('Levemir 8 unit tercatat');
-        state.data.unshift(entry);updateProgress();renderAll();
-        try{Telegram.WebApp.HapticFeedback.notificationOccurred('success');Telegram.WebApp.close();}catch(e){}
-    }else showToast('Gagal menyimpan','error');
+    if(ok){showToast('Levemir 8 unit tercatat');state.data.unshift(entry);updateProgress();renderAll();try{Telegram.WebApp.HapticFeedback.notificationOccurred('success');Telegram.WebApp.close();}catch(e){}}else showToast('Gagal menyimpan','error');
 }
 
 /* ====== CHART GDS ====== */
@@ -526,15 +450,10 @@ function renderGdsChart(){
     var entries=filterByPeriod(state.data.filter(e=>e.gds!=null),gdsPeriod);
     entries.sort((a,b)=>{const da=new Date(normalizeDate(a.date)+'T'+(a.time||'00:00')),db=new Date(normalizeDate(b.date)+'T'+(b.time||'00:00'));return da-db;});
     const labels=entries.map(e=>fmtLabel(e.date,e.time)),vals=entries.map(e=>e.gds),colors=entries.map(e=>ptColor(e.gds));
-    state.gdsChart.data.labels=labels;
-    state.gdsChart.data.datasets[0].data=vals;
-    state.gdsChart.data.datasets[0].pointBackgroundColor=colors;
-    state.gdsChart.data.datasets[0].pointBorderColor=colors;
-    state.gdsChart.data.datasets[0].pointRadius=5;
-    state.gdsChart.data.datasets[0].pointHoverRadius=7;
+    state.gdsChart.data.labels=labels;state.gdsChart.data.datasets[0].data=vals;
+    state.gdsChart.data.datasets[0].pointBackgroundColor=colors;state.gdsChart.data.datasets[0].pointBorderColor=colors;state.gdsChart.data.datasets[0].pointRadius=5;state.gdsChart.data.datasets[0].pointHoverRadius=7;
     state.gdsChart.update();
-    const stats=calcStats(vals);
-    const statsEl=document.getElementById('gdsStats');
+    const stats=calcStats(vals);const statsEl=document.getElementById('gdsStats');
     if(statsEl){
         if(vals.length===0){statsEl.innerHTML='<div class="dose-stat total-stat"><div class="dv">-</div><div class="dl"><i class="fa-solid fa-arrow-down" style="font-size:9px;margin-right:2px"></i>Min</div></div><div class="dose-stat total-stat"><div class="dv">-</div><div class="dl"><i class="fa-solid fa-arrow-up" style="font-size:9px;margin-right:2px"></i>Max</div></div><div class="dose-stat total-stat"><div class="dv">-</div><div class="dl"><i class="fa-solid fa-chart-simple" style="font-size:9px;margin-right:2px"></i>Avg</div></div><div class="dose-stat total-stat"><div class="dv">0</div><div class="dl"><i class="fa-solid fa-hashtag" style="font-size:9px;margin-right:2px"></i>Data</div></div>';return;}
         statsEl.innerHTML='<div class="dose-stat total-stat"><div class="dv">'+stats.min+'</div><div class="dl"><i class="fa-solid fa-arrow-down" style="font-size:9px;margin-right:2px"></i>Min</div></div><div class="dose-stat total-stat"><div class="dv">'+stats.max+'</div><div class="dl"><i class="fa-solid fa-arrow-up" style="font-size:9px;margin-right:2px"></i>Max</div></div><div class="dose-stat total-stat"><div class="dv">'+stats.avg+'</div><div class="dl"><i class="fa-solid fa-chart-simple" style="font-size:9px;margin-right:2px"></i>Avg</div></div><div class="dose-stat total-stat"><div class="dv">'+vals.length+'</div><div class="dl"><i class="fa-solid fa-hashtag" style="font-size:9px;margin-right:2px"></i>Data</div></div>';
@@ -547,6 +466,7 @@ function renderDoseChart(){
     var entries=filterByPeriod(state.data,dosePeriod);
     if(doseType==='insulin')entries=entries.filter(e=>e.doseType==='rapid');
     else if(doseType==='levemir')entries=entries.filter(e=>e.doseType==='levemir');
+    
     var grouped={};
     entries.forEach(e=>{let d=normalizeDate(e.date);if(!grouped[d])grouped[d]={ins:0,lev:0};if(e.doseType==='rapid')grouped[d].ins+=e.dose;if(e.doseType==='levemir')grouped[d].lev+=e.dose;});
     entries.sort((a,b)=>{const da=new Date(normalizeDate(a.date)),db=new Date(normalizeDate(b.date));return da-db;});
@@ -555,25 +475,52 @@ function renderDoseChart(){
     state.doseChart.data.datasets[0].data=dates.map(d=>grouped[d].ins);
     state.doseChart.data.datasets[1].data=dates.map(d=>grouped[d].lev);
     state.doseChart.update();
-    const statsEl=document.getElementById('doseStats');
+
+    const statsEl = document.getElementById('doseStats');
     if(statsEl){
-        let insulinArr=[],levemirArr=[],totalArr=[];
-        entries.forEach(e=>{if(e.doseType==='rapid'){insulinArr.push(e.dose||0);totalArr.push(e.dose||0);}if(e.doseType==='levemir'){levemirArr.push(e.dose||0);totalArr.push(e.dose||0);}});
-        if(totalArr.length===0){statsEl.innerHTML='<div class="dose-stat insulin-stat"><div class="dv">-</div><div class="dl"><i class="fa-solid fa-syringe" style="font-size:9px;margin-right:2px"></i>Insulin</div></div><div class="dose-stat levemir-stat"><div class="dv">-</div><div class="dl"><i class="fa-solid fa-moon" style="font-size:9px;margin-right:2px"></i>Levemir</div></div><div class="dose-stat total-stat"><div class="dv">-</div><div class="dl"><i class="fa-solid fa-arrow-up" style="font-size:9px;margin-right:2px"></i>Max</div></div><div class="dose-stat total-stat"><div class="dv">-</div><div class="dl"><i class="fa-solid fa-sigma" style="font-size:9px;margin-right:2px"></i>Total</div></div>';return;}
-        const totStats=calcStats(totalArr),totalSum=totalArr.reduce((a,b)=>a+b,0);
-        const insSum=insulinArr.reduce((a,b)=>a+b,0),levSum=levemirArr.reduce((a,b)=>a+b,0);
-        statsEl.innerHTML='<div class="dose-stat insulin-stat"><div class="dv">'+insSum+'</div><div class="dl"><i class="fa-solid fa-syringe" style="font-size:9px;margin-right:2px"></i>Insulin</div></div><div class="dose-stat levemir-stat"><div class="dv">'+levSum+'</div><div class="dl"><i class="fa-solid fa-moon" style="font-size:9px;margin-right:2px"></i>Levemir</div></div><div class="dose-stat total-stat"><div class="dv">'+totStats.max+'</div><div class="dl"><i class="fa-solid fa-arrow-up" style="font-size:9px;margin-right:2px"></i>Max</div></div><div class="dose-stat total-stat"><div class="dv">'+totalSum+'</div><div class="dl"><i class="fa-solid fa-sigma" style="font-size:9px;margin-right:2px"></i>Total</div></div>';
+        let insulinArr=[],levemirArr=[];
+        entries.forEach(e=>{
+            if(e.doseType==='rapid') insulinArr.push(e.dose||0);
+            if(e.doseType==='levemir') levemirArr.push(e.dose||0);
+        });
+
+                const insStats = calcStats(insulinArr);
+        const levStats = calcStats(levemirArr);
+        const insSum = insulinArr.reduce((a,b)=>a+b, 0);
+        const levSum = levemirArr.reduce((a,b)=>a+b, 0);
+
+        if(insulinArr.length===0 && levemirArr.length===0){
+            statsEl.innerHTML = `
+                <div class="dose-stat insulin-stat"><div class="dv">-</div><div class="dl">Ins Min</div></div>
+                <div class="dose-stat insulin-stat"><div class="dv">-</div><div class="dl">Ins Max</div></div>
+                <div class="dose-stat insulin-stat"><div class="dv">-</div><div class="dl">Ins Avg</div></div>
+                <div class="dose-stat insulin-stat"><div class="dv">-</div><div class="dl">Ins Tot</div></div>
+                <div class="dose-stat levemir-stat"><div class="dv">-</div><div class="dl">Lev Min</div></div>
+                <div class="dose-stat levemir-stat"><div class="dv">-</div><div class="dl">Lev Max</div></div>
+                <div class="dose-stat levemir-stat"><div class="dv">-</div><div class="dl">Lev Avg</div></div>
+                <div class="dose-stat levemir-stat"><div class="dv">-</div><div class="dl">Lev Tot</div></div>
+            `;
+            return;
+        }
+
+        statsEl.innerHTML = `
+            <div class="dose-stat insulin-stat"><div class="dv">${insulinArr.length ? insStats.min : '-'}</div><div class="dl">Ins Min</div></div>
+            <div class="dose-stat insulin-stat"><div class="dv">${insulinArr.length ? insStats.max : '-'}</div><div class="dl">Ins Max</div></div>
+            <div class="dose-stat insulin-stat"><div class="dv">${insulinArr.length ? insStats.avg : '-'}</div><div class="dl">Ins Avg</div></div>
+            <div class="dose-stat insulin-stat"><div class="dv">${insulinArr.length ? insSum : '-'}</div><div class="dl">Ins Tot</div></div>
+            <div class="dose-stat levemir-stat"><div class="dv">${levemirArr.length ? levStats.min : '-'}</div><div class="dl">Lev Min</div></div>
+            <div class="dose-stat levemir-stat"><div class="dv">${levemirArr.length ? levStats.max : '-'}</div><div class="dl">Lev Max</div></div>
+            <div class="dose-stat levemir-stat"><div class="dv">${levemirArr.length ? levStats.avg : '-'}</div><div class="dl">Lev Avg</div></div>
+            <div class="dose-stat levemir-stat"><div class="dv">${levemirArr.length ? levSum : '-'}</div><div class="dl">Lev Tot</div></div>
+        `;
     }
 }
 
 /* ====== HISTORY ====== */
 function renderHistory(){
-    var entries=filterByPeriod(state.data,historyPeriod);
-    var list=document.getElementById('historyList');
-    if(!list)return;
+    var entries=filterByPeriod(state.data,historyPeriod);var list=document.getElementById('historyList');if(!list)return;
     if(entries.length===0){list.innerHTML='<div class="empty-box"><i class="fa-solid fa-clipboard-list"></i><p>Belum ada data riwayat</p></div>';return;}
-    var grouped={};
-    entries.forEach(e=>{let d=normalizeDate(e.date);if(!grouped[d])grouped[d]=[];grouped[d].push(e);});
+    var grouped={};entries.forEach(e=>{let d=normalizeDate(e.date);if(!grouped[d])grouped[d]=[];grouped[d].push(e);});
     let html='';
     Object.keys(grouped).sort().reverse().forEach(date=>{
         html+='<div class="hp-date-label"><i class="fa-regular fa-calendar" style="font-size:10px"></i>'+date+'</div>';
@@ -590,77 +537,43 @@ function renderHistory(){
 
 function renderAll(){renderGdsChart();renderDoseChart();renderHistory();updateProgress();}
 
-/* ====== TOGGLES ====== */
 function setupToggle(btnId,secId){var btn=document.getElementById(btnId),sec=document.getElementById(secId);btn.addEventListener('click',function(){var open=btn.classList.toggle('open');sec.style.display=open?'block':'none';});}
-setupToggle('gdsToggle','gdsSection');
-setupToggle('doseToggle','doseSection');
-setupToggle('historyToggleBtn','historySection');
+setupToggle('gdsToggle','gdsSection');setupToggle('doseToggle','doseSection');setupToggle('historyToggleBtn','historySection');
 document.getElementById('historyToggle').addEventListener('click',function(){var sec=document.getElementById('historySection');sec.style.display=sec.style.display==='none'?'block':'none';if(sec.style.display==='block')renderHistory();});
 
-/* ====== FILTERS ====== */
 document.getElementById('gdsFilters').addEventListener('click',function(e){var btn=e.target.closest('.fb');if(!btn)return;document.querySelectorAll('#gdsFilters .fb').forEach(function(b){b.classList.remove('active');});btn.classList.add('active');gdsPeriod=btn.dataset.period;renderGdsChart();});
 document.getElementById('dosePeriodFilters').addEventListener('click',function(e){var btn=e.target.closest('.fb');if(!btn)return;document.querySelectorAll('#dosePeriodFilters .fb').forEach(function(b){b.classList.remove('active');});btn.classList.add('active');dosePeriod=btn.dataset.dp;renderDoseChart();});
 document.getElementById('doseTypeFilters').addEventListener('click',function(e){var btn=e.target.closest('.fb');if(!btn)return;document.querySelectorAll('#doseTypeFilters .fb').forEach(function(b){b.classList.remove('active','active-insulin','active-levemir');});if(btn.dataset.dt==='insulin')btn.classList.add('active-insulin');else if(btn.dataset.dt==='levemir')btn.classList.add('active-levemir');else btn.classList.add('active');doseType=btn.dataset.dt;renderDoseChart();});
 document.getElementById('historyFilters').addEventListener('click',function(e){var btn=e.target.closest('.fb');if(!btn)return;document.querySelectorAll('#historyFilters .fb').forEach(function(b){b.classList.remove('active');});btn.classList.add('active');historyPeriod=btn.dataset.hp;renderHistory();});
 
-/* ====== COUNTDOWN ====== */
 var SCHEDULES_CK=[{hour:2,minute:0,slot:'dini-hari',label:'Cek GDS Dini Hari'},{hour:6,minute:0,slot:'sarapan',label:'GDS + Insulin Sarapan'},{hour:12,minute:0,slot:'siang',label:'GDS + Insulin Siang'},{hour:18,minute:0,slot:'malam',label:'GDS + Insulin Malam'},{hour:20,minute:30,slot:'levemir',label:'Suntik Levemir'}];
 function updateCountdown(){
     var now=new Date(),nowT=now.getHours()*60+now.getMinutes(),today=getTodayKey();
     var todayData=state.data.filter(function(e){return normalizeDate(e.date)===today;});
     var done={};SCHEDULES_CK.forEach(function(s){done[s.slot]=todayData.some(function(e){return e.slot===s.slot;});});
     var next=null;
-    for(var i=0;i<SCHEDULES_CK.length;i++){
-        var s=SCHEDULES_CK[i];if(done[s.slot])continue;
-        var sT=s.hour*60+s.minute;
-        if(sT>nowT){if(!next||sT<next.total)next={hour:s.hour,minute:s.minute,label:s.label,total:sT,tomorrow:false};}
-        else if(!next){next={hour:s.hour,minute:s.minute,label:s.label,total:sT+1440,tomorrow:true};}
-    }
+    for(var i=0;i<SCHEDULES_CK.length;i++){var s=SCHEDULES_CK[i];if(done[s.slot])continue;var sT=s.hour*60+s.minute;if(sT>nowT){if(!next||sT<next.total)next={hour:s.hour,minute:s.minute,label:s.label,total:sT,tomorrow:false};}else if(!next){next={hour:s.hour,minute:s.minute,label:s.label,total:sT+1440,tomorrow:true};}}
     if(!next){var f=SCHEDULES_CK[0];next={hour:f.hour,minute:f.minute,label:f.label,total:f.hour*60+f.minute+1440,tomorrow:true};}
     var diff=next.total-nowT,h=Math.floor(diff/60),m=diff%60;
     document.getElementById('nrLabel').textContent=(next.tomorrow?'Besok ':'')+String(next.hour).padStart(2,'0')+':'+String(next.minute).padStart(2,'0')+' '+next.label.split('+')[0].trim();
     document.getElementById('nrCountdown').textContent=String(h).padStart(2,'0')+':'+String(m).padStart(2,'0');
-    SCHEDULES_CK.forEach(function(s){
-        var sT=s.hour*60+s.minute;
-        if(!done[s.slot]&&Math.abs(nowT-sT)<=15){
-            var el=document.querySelector('.p-slot[data-slot="'+s.slot+'"]');
-            if(el&&!el.classList.contains('active-slot'))el.classList.add('active-slot');
-        }
-    });
+    SCHEDULES_CK.forEach(function(s){var sT=s.hour*60+s.minute;if(!done[s.slot]&&Math.abs(nowT-sT)<=15){var el=document.querySelector('.p-slot[data-slot="'+s.slot+'"]');if(el&&!el.classList.contains('active-slot'))el.classList.add('active-slot');}});
 }
 
 let lastLength=0;
-setInterval(async()=>{
-    const newData=await fetchData();
-    if(newData.length!==lastLength){lastLength=newData.length;state.data=newData;renderAll();updateCountdown();}
-},5000);
+setInterval(async()=>{const newData=await fetchData();if(newData.length!==lastLength){lastLength=newData.length;state.data=newData;renderAll();updateCountdown();}},5000);
 
-/* ====== AUTO SLOT FROM URL ====== */
 var params=new URLSearchParams(window.location.search);var autoSlot=params.get('slot');if(autoSlot)selectSlot(autoSlot);
 
 function initCharts(){
     const gdsCtx=document.getElementById('gdsCanvas').getContext('2d');
-    state.gdsChart=new Chart(gdsCtx,{
-        type:'line',
-        data:{labels:[],datasets:[{label:'GDS',data:[],borderWidth:2.5,tension:.35,fill:false,borderColor:'#00E5A0',pointBackgroundColor:'#00E5A0',pointBorderColor:'#00E5A0',pointRadius:5,pointHoverRadius:7}]},
-        options:{responsive:true,interaction:{intersect:false,mode:'index'},plugins:{legend:{display:false},tooltip:{backgroundColor:'#142540',titleColor:'#EDF0F5',bodyColor:'#C8D0DC',borderColor:'#1C3258',borderWidth:1,cornerRadius:10,padding:12,titleFont:{family:'Space Grotesk',weight:'600'},bodyFont:{family:'Space Grotesk'}}},scales:{x:{grid:{color:'rgba(30,39,68,.5)',drawBorder:false},ticks:{color:'#5E7490',font:{family:'Space Grotesk',size:10},maxRotation:45}},y:{grid:{color:'rgba(30,39,68,.5)',drawBorder:false},ticks:{color:'#5E7490',font:{family:'Space Grotesk',size:11}},beginAtZero:false}}}
-    });
+    state.gdsChart=new Chart(gdsCtx,{type:'line',data:{labels:[],datasets:[{label:'GDS',data:[],borderWidth:2.5,tension:.35,fill:false,borderColor:'#00E5A0',pointBackgroundColor:'#00E5A0',pointBorderColor:'#00E5A0',pointRadius:5,pointHoverRadius:7}]},options:{responsive:true,interaction:{intersect:false,mode:'index'},plugins:{legend:{display:false},tooltip:{backgroundColor:'#142540',titleColor:'#EDF0F5',bodyColor:'#C8D0DC',borderColor:'#1C3258',borderWidth:1,cornerRadius:10,padding:12,titleFont:{family:'Space Grotesk',weight:'600'},bodyFont:{family:'Space Grotesk'}}},scales:{x:{grid:{color:'rgba(30,39,68,.5)',drawBorder:false},ticks:{color:'#5E7490',font:{family:'Space Grotesk',size:10},maxRotation:45}},y:{grid:{color:'rgba(30,39,68,.5)',drawBorder:false},ticks:{color:'#5E7490',font:{family:'Space Grotesk',size:11}},beginAtZero:false}}}});
     const doseCtx=document.getElementById('doseCanvas').getContext('2d');
-    state.doseChart=new Chart(doseCtx,{
-        type:'bar',
-        data:{labels:[],datasets:[{label:'Insulin',data:[],borderWidth:0,borderRadius:6,backgroundColor:'#4D94FF'},{label:'Levemir',data:[],borderWidth:0,borderRadius:6,backgroundColor:'#FFB547'}]},
-        options:{responsive:true,interaction:{intersect:false,mode:'index'},plugins:{legend:{display:false},tooltip:{backgroundColor:'#142540',titleColor:'#EDF0F5',bodyColor:'#C8D0DC',borderColor:'#1C3258',borderWidth:1,cornerRadius:10,padding:12,titleFont:{family:'Space Grotesk',weight:'600'},bodyFont:{family:'Space Grotesk'}}},scales:{x:{grid:{display:false},ticks:{color:'#5E7490',font:{family:'Space Grotesk',size:10},maxRotation:45}},y:{grid:{color:'rgba(30,39,68,.5)',drawBorder:false},ticks:{color:'#5E7490',font:{family:'Space Grotesk',size:11},stepSize:1},beginAtZero:true}}}
-    });
+    state.doseChart=new Chart(doseCtx,{type:'bar',data:{labels:[],datasets:[{label:'Insulin',data:[],borderWidth:0,borderRadius:6,backgroundColor:'#4D94FF'},{label:'Levemir',data:[],borderWidth:0,borderRadius:6,backgroundColor:'#FFB547'}]},options:{responsive:true,interaction:{intersect:false,mode:'index'},plugins:{legend:{display:false},tooltip:{backgroundColor:'#142540',titleColor:'#EDF0F5',bodyColor:'#C8D0DC',borderColor:'#1C3258',borderWidth:1,cornerRadius:10,padding:12,titleFont:{family:'Space Grotesk',weight:'600'},bodyFont:{family:'Space Grotesk'}}},scales:{x:{grid:{display:false},ticks:{color:'#5E7490',font:{family:'Space Grotesk',size:10},maxRotation:45}},y:{grid:{color:'rgba(30,39,68,.5)',drawBorder:false},ticks:{color:'#5E7490',font:{family:'Space Grotesk',size:11},stepSize:1},beginAtZero:true}}}});
 }
 
-/* ====== INIT ====== */
 async function init(){
-    state.data=await fetchData();
-    initCharts();
-    updateProgress();
-    renderAll();
-    updateCountdown();
-    setInterval(updateCountdown,1000);
+    state.data=await fetchData();initCharts();updateProgress();renderAll();updateCountdown();setInterval(updateCountdown,1000);
 }
 init();
 </script>
