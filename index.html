@@ -362,6 +362,26 @@
             <div class="history-section" id="historyList"></div>
         </div>
         <div style="height:16px"></div>
+
+        <div class="divider"></div>
+
+        <!-- Panduan Diet -->
+        <div class="sec-head">
+            <div class="sec-title">
+                <i class="fa-solid fa-utensils" style="background:var(--warning-dim);color:var(--warning)"></i>
+                Panduan Diet Hari Ini
+            </div>
+            <button class="sec-toggle open" id="dietToggle"><i class="fa-solid fa-chevron-down"></i></button>
+        </div>
+        <div id="dietSection" style="padding: 0 20px 14px;">
+            <div id="dietList"></div>
+            <div style="margin-top:12px;padding:12px;border-radius:var(--radius-sm);background:var(--warning-dim);border:1px solid var(--warning-border);font-size:11px;color:var(--warning);line-height:1.5">
+                <strong><i class="fa-solid fa-circle-info" style="margin-right:4px"></i>Catatan Diet:</strong><br>
+                • Porsi sesuai takaran yang tertera<br>
+                • Pilih sayur hijau, hindari santan & gorengan<br>
+                • Minum air putih 8 gelas per hari
+            </div>
+        </div>
     </div>
 
 <script>
@@ -528,7 +548,49 @@ function renderHistory(){
     list.innerHTML=html;
 }
 
-function renderAll(){renderGdsChart();renderDoseChart();renderHistory();updateProgress();}
+/* ====== PANDUAN DIET ====== */
+var DIET_UI = [
+  { slot:'makan-pagi', time:'06:00', label:'Makan Pagi', icon:'fa-mug-hot', color:'var(--warning)', target:'KH 45g | Protein 18g', menu:'Nasi 100 gram, Telur 1.5 butir, Sayur 75 gram (lauk tidak perlu digoreng)' },
+  { slot:'snack-pagi', time:'09:00', label:'Snack Pagi', icon:'fa-glass-water', color:'var(--accent)', target:'KH 23g | Protein 9g', menu:'Susu isocal 200 ml (42 gram)' },
+  { slot:'makan-siang', time:'12:00', label:'Makan Siang', icon:'fa-bowl-food', color:'var(--warning)', target:'KH 56g | Protein 23g', menu:'Nasi 100 gram, Lauk hewani 50 gram, Lauk nabati : Tempe 50 gram, Sayur 75 gram (jangan diberi lauk yang mengandung tepung-tepungan)' },
+  { slot:'snack-siang', time:'15:00', label:'Snack Siang', icon:'fa-apple-whole', color:'var(--accent)', target:'KH 23g | Protein 9g', menu:'Buah 1 penukar, Telur rebus 1 butir, Gabin 2 keping' },
+  { slot:'makan-sore', time:'18:00', label:'Makan Sore', icon:'fa-plate-wheat', color:'var(--warning)', target:'KH 56g | Protein 23g', menu:'Nasi 100 gram, Lauk hewani 50 gram, Lauk nabati : Tempe 50 gram, Sayur 75 gram (jangan diberi lauk yang mengandung tepung-tepungan)' },
+  { slot:'snack-malam', time:'21:00', label:'Snack Malam', icon:'fa-moon', color:'var(--accent)', target:'KH 23g | Protein 9g', menu:'Susu isocal 200 ml (42 gram)' }
+];
+
+function renderDiet(){
+    var list = document.getElementById('dietList');
+    if(!list) return;
+    var today = getTodayKey();
+    var todayData = state.data.filter(e => normalizeDate(e.date) === today);
+    
+    var html = '';
+    DIET_UI.forEach(d => {
+        var isDone = todayData.some(e => e.slot === d.slot);
+        var opacity = isDone ? 'opacity: 0.4; pointer-events: none;' : '';
+        
+        html += `
+        <div class="hp-item" style="flex-wrap:wrap; ${opacity}">
+            <div class="hp-item-icon" style="background:${d.color === 'var(--warning)' ? 'var(--warning-dim)' : 'var(--accent-dim)'};color:${d.color}">
+                <i class="fa-solid ${d.icon}"></i>
+            </div>
+            <div class="hp-item-info" style="flex:1; min-width: 120px;">
+                <div class="hp-item-title" style="display:flex;align-items:center;gap:6px">
+                    ${d.label} 
+                    ${isDone ? '<i class="fa-solid fa-circle-check" style="font-size:11px;color:var(--accent)"></i>' : ''}
+                </div>
+                <div class="hp-item-sub">
+                    <i class="fa-regular fa-clock"></i>${d.time} &bull; ${d.target}
+                </div>
+                <div style="font-size:11px;color:var(--fg2);margin-top:4px;line-height:1.4">${d.menu}</div>
+            </div>
+        </div>`;
+    });
+    
+    list.innerHTML = html;
+}
+    
+function renderAll(){renderGdsChart();renderDoseChart();renderHistory();renderDiet();updateProgress();}
 
 function setupToggle(btnId,secId){var btn=document.getElementById(btnId),sec=document.getElementById(secId);btn.addEventListener('click',function(){var open=btn.classList.toggle('open');sec.style.display=open?'block':'none';});}
 setupToggle('gdsToggle','gdsSection');setupToggle('doseToggle','doseSection');setupToggle('historyToggleBtn','historySection');
@@ -538,7 +600,16 @@ document.getElementById('gdsFilters').addEventListener('click',function(e){var b
 document.getElementById('dosePeriodFilters').addEventListener('click',function(e){var btn=e.target.closest('.fb');if(!btn)return;document.querySelectorAll('#dosePeriodFilters .fb').forEach(function(b){b.classList.remove('active');});btn.classList.add('active');dosePeriod=btn.dataset.dp;renderDoseChart();});
 document.getElementById('historyFilters').addEventListener('click',function(e){var btn=e.target.closest('.fb');if(!btn)return;document.querySelectorAll('#historyFilters .fb').forEach(function(b){b.classList.remove('active');});btn.classList.add('active');historyPeriod=btn.dataset.hp;renderHistory();});
 
-var SCHEDULES_CK=[{hour:2,minute:0,slot:'dini-hari',label:'Cek GDS Dini Hari'},{hour:6,minute:0,slot:'sarapan',label:'GDS + Insulin Sarapan'},{hour:12,minute:0,slot:'siang',label:'GDS + Insulin Siang'},{hour:18,minute:0,slot:'malam',label:'GDS + Insulin Malam'},{hour:20,minute:30,slot:'levemir',label:'Suntik Levemir'}];
+var SCHEDULES_CK=[
+    {hour:2,minute:0,slot:'dini-hari',label:'Cek GDS Dini Hari'},
+    {hour:6,minute:0,slot:'sarapan',label:'GDS + Insulin'},
+    {hour:9,minute:0,slot:'snack-pagi',label:'Snack Pagi',isDiet:true},
+    {hour:12,minute:0,slot:'siang',label:'GDS + Insulin'},
+    {hour:15,minute:0,slot:'snack-siang',label:'Snack Siang',isDiet:true},
+    {hour:18,minute:0,slot:'malam',label:'GDS + Insulin'},
+    {hour:20,minute:30,slot:'levemir',label:'Suntik Levemir'},
+    {hour:21,minute:0,slot:'snack-malam',label:'Snack Malam',isDiet:true}
+];
 function updateCountdown(){
     var now=new Date(),nowT=now.getHours()*60+now.getMinutes(),today=getTodayKey();
     var todayData=state.data.filter(function(e){return normalizeDate(e.date)===today;});
