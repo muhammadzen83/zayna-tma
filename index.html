@@ -341,8 +341,8 @@
         <div class="sec-head"><div class="sec-title"><i class="fa-solid fa-prescription-bottle-medical ic-dose"></i>Grafik Dosis Harian</div><button class="sec-toggle open" id="doseToggle"><i class="fa-solid fa-chevron-down"></i></button></div>
         <div id="doseSection">
             <div class="filter-bar" id="dosePeriodFilters">
-                <button class="fb" data-dp="today"><i class="fa-solid fa-calendar-day" style="font-size:10px"></i>Hari Ini</button>
-                <button class="fb active" data-dp="7">7 Hari</button>
+                <button class="fb active" data-dp="today"><i class="fa-solid fa-calendar-day" style="font-size:10px"></i>Hari Ini</button>
+                <button class="fb" data-dp="7">7 Hari</button>
                 <button class="fb" data-dp="30">30 Hari</button>
                 <button class="fb" data-dp="all"><i class="fa-solid fa-infinity" style="font-size:10px"></i>Semua</button>
             </div>
@@ -406,7 +406,7 @@
 const state = { data: [], gdsChart: null, doseChart: null, selectedSlot: '' };
 var SLOTS=[{slot:'dini-hari',label:'Dini Hari',icon:'fa-moon',type:'gds-only'},{slot:'sarapan',label:'Sarapan',icon:'fa-sun',type:'gds-insulin'},{slot:'siang',label:'Siang',icon:'fa-cloud-sun',type:'gds-insulin'},{slot:'malam',label:'Malam',icon:'fa-cloud-moon',type:'gds-insulin'},{slot:'levemir',label:'levemir',icon:'fa-cloud-moon',type:'levemir'}];
 var DEFAULT_DOSES={sarapan:4,siang:5,malam:5},LEVEMIR_DOSE=8;
-var gdsSlot='all',gdsPeriod='today',dosePeriod='7',doseSlot='all',doseType='all',historyPeriod='today';
+var gdsSlot='all',gdsPeriod='today',dosePeriod='today',doseSlot='all',doseType='all',historyPeriod='today';
 
 try{Telegram.WebApp.ready();Telegram.WebApp.expand();Telegram.WebApp.setHeaderColor('#060D1B');}catch(e){}
 
