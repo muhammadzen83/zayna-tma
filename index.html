@@ -20,8 +20,7 @@
             --border: #162744; --border2: #1C3258;
             --insulin: #4D94FF; --insulin-dim: rgba(77,148,255,.07); --insulin-border: rgba(77,148,255,.18);
             --levemir: #FFB547; --levemir-dim: rgba(255,181,71,.07); --levemir-border: rgba(255,181,71,.18);
-            --ai: #A78BFA; --ai2: #8B5CF6; --ai-dim: rgba(167,139,250,.07); --ai-border: rgba(167,139,250,.18);
-            --pred: #F472B6; --pred2: #EC4899; --pred-dim: rgba(244,114,182,.07); --pred-border: rgba(244,114,182,.18);
+            --ai: #A78BFA; --ai2: #8B5CF6; --ai-dim: rgba(167,139,250,.07); --ai-border: rgba(167,139,250,.18); --ai-glow: rgba(167,139,250,.12);
             --radius: 14px; --radius-sm: 10px; --radius-xs: 8px;
         }
         *{margin:0;padding:0;box-sizing:border-box}
@@ -57,7 +56,8 @@
         .info-bar.bot i{font-size:15px}
         .info-bar.reminder{background:var(--card);border:1px solid var(--border)}
         .info-bar.reminder i{color:var(--accent);font-size:14px}
-        .info-bar .nr-label{color:var(--muted)}.info-bar .nr-value{color:var(--fg2);font-weight:600}
+        .info-bar .nr-label{color:var(--muted)}
+        .info-bar .nr-value{color:var(--fg2);font-weight:600}
         .info-bar .nr-countdown{margin-left:auto;color:var(--accent);font-weight:700;font-size:13px;font-variant-numeric:tabular-nums;letter-spacing:.5px}
         .progress-strip{padding:10px 20px 8px}
         .progress-slots{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
@@ -67,7 +67,8 @@
         .p-slot .p-icon{font-size:14px;color:var(--muted);margin-bottom:4px;transition:color .25s}
         .p-slot .p-time{font-size:12px;font-weight:700;color:var(--muted);margin-bottom:2px;transition:color .25s}
         .p-slot .p-label{font-size:9px;color:var(--muted);opacity:.6;font-weight:500;text-transform:uppercase;letter-spacing:.5px}
-        .p-slot.done{border-color:var(--accent-border);background:var(--accent-dim)}.p-slot.done::before{background:var(--accent)}
+        .p-slot.done{border-color:var(--accent-border);background:var(--accent-dim)}
+        .p-slot.done::before{background:var(--accent)}
         .p-slot.done .p-icon,.p-slot.done .p-time{color:var(--accent)}
         .p-slot.done::after{content:'\f00c';font-family:'Font Awesome 6 Free';font-weight:900;position:absolute;top:4px;right:4px;font-size:7px;color:var(--accent);background:var(--bg);width:14px;height:14px;border-radius:50%;display:flex;align-items:center;justify-content:center;line-height:1}
         .p-slot.active-slot{border-color:var(--accent);background:var(--accent-dim);box-shadow:0 0 24px rgba(0,229,160,.08)}
@@ -79,14 +80,18 @@
         .stat-icon{width:40px;height:40px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
         .stat-info .stat-val{font-size:22px;font-weight:700;line-height:1.1}
         .stat-info .stat-label{font-size:10px;color:var(--muted);font-weight:500;margin-top:2px}
-        .stat-card.neutral .stat-icon{background:var(--accent-dim);color:var(--accent)}.stat-card.neutral .stat-val{color:var(--fg)}
+        .stat-card.neutral .stat-icon{background:var(--accent-dim);color:var(--accent)}
+        .stat-card.neutral .stat-val{color:var(--fg)}
         .sec-head{padding:16px 20px 8px;display:flex;align-items:center;justify-content:space-between}
         .sec-title{font-size:13px;font-weight:700;display:flex;align-items:center;gap:8px;color:var(--fg)}
         .sec-title i{width:26px;height:26px;border-radius:var(--radius-xs);display:flex;align-items:center;justify-content:center;font-size:11px}
-        .sec-title .ic-ai{background:var(--ai-dim);color:var(--ai)}
-        .sec-title .ic-pred{background:var(--pred-dim);color:var(--pred)}
+        .sec-title .ic-gds{background:var(--accent-dim);color:var(--accent)}
+        .sec-title .ic-dose{background:var(--insulin-dim);color:var(--insulin)}
         .sec-title .ic-input{background:rgba(168,85,247,.08);color:#A855F7}
-        .sec-link{font-size:11px;color:var(--accent);cursor:pointer;font-weight:600;display:flex;align-items:center;gap:4px;transition:opacity .2s}.sec-link:hover{opacity:.7}
+        .sec-title .ic-history{background:var(--warning-dim);color:var(--warning)}
+        .sec-title .ic-ai{background:var(--ai-dim);color:var(--ai)}
+        .sec-link{font-size:11px;color:var(--accent);cursor:pointer;font-weight:600;display:flex;align-items:center;gap:4px;transition:opacity .2s}
+        .sec-link:hover{opacity:.7}
         .filter-bar{display:flex;gap:5px;flex-wrap:wrap;padding:0 20px 10px}
         .fb{padding:6px 12px;border-radius:var(--radius-xs);border:1px solid var(--border);background:transparent;color:var(--muted);font-family:inherit;font-size:11px;font-weight:500;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:5px}
         .fb:hover{border-color:var(--border2);color:var(--fg2)}
@@ -111,7 +116,8 @@
         .submit-btn:disabled{opacity:.25;cursor:not-allowed;transform:none;box-shadow:none}
         .levemir-btn{width:100%;padding:16px;border-radius:var(--radius);border:1px solid var(--accent-border);background:var(--accent-dim);color:var(--accent);font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;transition:all .25s;display:none;align-items:center;justify-content:center;gap:10px}
         .levemir-btn:hover{background:rgba(0,229,160,.12);border-color:rgba(0,229,160,.3);transform:translateY(-1px)}
-        .levemir-btn:active{transform:scale(.98)}.levemir-btn.done{opacity:.3;pointer-events:none}
+        .levemir-btn:active{transform:scale(.98)}
+        .levemir-btn.done{opacity:.3;pointer-events:none}
         .result-card{margin:0 20px 14px;padding:0;border-radius:var(--radius);background:var(--card);border:1px solid var(--border);display:none;overflow:hidden}
         .result-card.show{display:block;animation:slideUp .35s ease-out}
         @keyframes slideUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
@@ -127,17 +133,28 @@
         .result-top-text .rt-tag{display:inline-block;font-size:9px;font-weight:600;padding:2px 7px;border-radius:20px;margin-left:8px;text-transform:uppercase;letter-spacing:.5px}
         .rt-tag.good{background:var(--accent-dim);color:var(--accent)}.rt-tag.warn{background:var(--warning-dim);color:var(--warning)}.rt-tag.danger{background:var(--danger-dim);color:var(--danger)}
         .result-body{padding:14px 16px}
+
+        /* ====== DUAL DOSE DISPLAY ====== */
         .dose-dual{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
         .dose-box{padding:14px;border-radius:var(--radius-sm);border:1px solid var(--border);text-align:center;transition:all .2s;position:relative}
         .dose-box .dose-box-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
         .dose-box .dose-box-val{font-size:28px;font-weight:700;line-height:1.1}
         .dose-box .dose-box-unit{font-size:11px;font-weight:400;color:var(--muted);margin-left:2px}
         .dose-box .dose-box-sub{font-size:10px;color:var(--muted);margin-top:4px;font-weight:500}
-        .dose-box.standard{background:var(--insulin-dim);border-color:var(--insulin-border)}.dose-box.standard .dose-box-label{color:var(--insulin)}.dose-box.standard .dose-box-val{color:var(--insulin)}
-        .dose-box.ai-recommend{background:var(--ai-dim);border-color:var(--ai-border)}.dose-box.ai-recommend .dose-box-label{color:var(--ai)}.dose-box.ai-recommend .dose-box-val{color:var(--ai)}
+        .dose-box.standard{background:var(--insulin-dim);border-color:var(--insulin-border)}
+        .dose-box.standard .dose-box-label{color:var(--insulin)}
+        .dose-box.standard .dose-box-val{color:var(--insulin)}
+        .dose-box.ai-recommend{background:var(--ai-dim);border-color:var(--ai-border)}
+        .dose-box.ai-recommend .dose-box-label{color:var(--ai)}
+        .dose-box.ai-recommend .dose-box-val{color:var(--ai)}
+        .dose-box.final-pick{background:var(--accent-dim);border-color:var(--accent-border);box-shadow:0 0 20px rgba(0,229,160,.08)}
+        .dose-box.final-pick .dose-box-label{color:var(--accent)}
+        .dose-box.final-pick .dose-box-val{color:var(--accent)}
         .dose-box .dose-pick-badge{position:absolute;top:6px;right:8px;font-size:8px;font-weight:700;padding:2px 6px;border-radius:10px;text-transform:uppercase;letter-spacing:.3px}
         .dose-box.standard .dose-pick-badge{background:var(--insulin);color:#fff}
         .dose-box.ai-recommend .dose-pick-badge{background:linear-gradient(135deg,var(--ai),var(--ai2));color:#fff}
+
+        /* ====== AI PANEL ====== */
         .ai-panel{margin-top:0;padding:14px;border-radius:var(--radius-sm);background:var(--ai-dim);border:1px solid var(--ai-border);position:relative;overflow:hidden}
         .ai-panel::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--ai),var(--ai2),var(--ai));opacity:.6}
         .ai-panel-head{display:flex;align-items:center;gap:8px;margin-bottom:10px}
@@ -159,35 +176,11 @@
         .ai-reason i{font-size:7px;margin-top:4px;flex-shrink:0;color:var(--ai);opacity:.7}
         .ai-reason strong{color:var(--fg2);font-weight:600}
         .ai-diff-row{display:flex;align-items:center;gap:6px;margin-top:10px;padding:8px 10px;border-radius:var(--radius-xs);background:rgba(167,139,250,.04);border:1px dashed var(--ai-border);font-size:11px;font-weight:600;color:var(--ai)}
-        .ai-diff-row i{font-size:10px}.ai-diff-row .ai-diff-val{margin-left:auto;font-size:16px;font-weight:700}
+        .ai-diff-row i{font-size:10px}
+        .ai-diff-row .ai-diff-val{margin-left:auto;font-size:16px;font-weight:700}
         .ai-no-data{font-size:10px;color:var(--muted);text-align:center;padding:8px 0;font-style:italic}
-        /* ====== PREDICTION ====== */
-        .pred-panel{padding:14px;border-radius:var(--radius-sm);background:var(--pred-dim);border:1px solid var(--pred-border);position:relative;overflow:hidden}
-        .pred-panel::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--pred),var(--pred2),var(--pred));opacity:.6}
-        .pred-panel-head{display:flex;align-items:center;gap:8px;margin-bottom:12px}
-        .pred-badge{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:20px;background:linear-gradient(135deg,var(--pred),var(--pred2));color:#fff;font-size:9px;font-weight:700;letter-spacing:.5px;text-transform:uppercase}
-        .pred-badge i{font-size:8px}
-        .pred-slot-row{display:flex;align-items:center;gap:10px;padding:10px;border-radius:var(--radius-xs);background:rgba(244,114,182,.03);border:1px solid rgba(244,114,182,.08);margin-bottom:6px;transition:all .2s}
-        .pred-slot-row:last-child{margin-bottom:0}
-        .pred-slot-row:hover{background:rgba(244,114,182,.06);border-color:rgba(244,114,182,.15)}
-        .pred-slot-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;background:var(--pred-dim);color:var(--pred)}
-        .pred-slot-info{flex:1;min-width:0}
-        .pred-slot-name{font-size:12px;font-weight:700;color:var(--fg);text-transform:capitalize}
-        .pred-slot-time{font-size:10px;color:var(--muted);font-weight:500}
-        .pred-slot-right{text-align:right;flex-shrink:0}
-        .pred-slot-val{font-size:20px;font-weight:700;line-height:1.1}
-        .pred-slot-range{font-size:9px;color:var(--muted);font-weight:500;margin-top:2px;font-variant-numeric:tabular-nums}
-        .pred-slot-cat{font-size:8px;font-weight:700;padding:2px 6px;border-radius:10px;display:inline-block;margin-top:3px;text-transform:uppercase;letter-spacing:.3px}
-        .pred-slot-cat.good{background:var(--accent-dim);color:var(--accent)}
-        .pred-slot-cat.warn{background:var(--warning-dim);color:var(--warning)}
-        .pred-slot-cat.danger{background:var(--danger-dim);color:var(--danger)}
-        .pred-no-data{font-size:10px;color:var(--muted);text-align:center;padding:8px 0}
-        .pred-result-inline{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:var(--radius-xs);background:var(--pred-dim);border:1px solid var(--pred-border);margin-top:10px;font-size:11px}
-        .pred-result-inline i{color:var(--pred);font-size:14px;flex-shrink:0}
-        .pred-result-inline .pri-text{flex:1;color:var(--fg2);line-height:1.4}
-        .pred-result-inline .pri-text strong{color:var(--fg)}
-        .pred-result-inline .pri-val{font-size:18px;font-weight:700;color:var(--pred);flex-shrink:0;text-align:right}
-        .pred-result-inline .pri-val small{font-size:10px;font-weight:400;color:var(--muted);display:block}
+
+        /* ====== AI INSIGHTS (Home) ====== */
         .ai-insights{padding:0 20px 14px}
         .ai-insight-card{padding:14px;border-radius:var(--radius);background:var(--card);border:1px solid var(--border);transition:all .25s;position:relative;overflow:hidden}
         .ai-insight-card::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:linear-gradient(180deg,var(--ai),var(--ai2));border-radius:0 2px 2px 0}
@@ -217,7 +210,8 @@
         .chart-legend-item{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--muted);font-weight:500}
         .chart-legend-dot{width:8px;height:8px;border-radius:50%}
         .scoreboard{display:grid;gap:6px;margin-bottom:14px;padding:0 20px}
-        #gdsStats,#doseStats{grid-template-columns:repeat(4,1fr)}
+        #gdsStats{grid-template-columns:repeat(4,1fr)}
+        #doseStats{grid-template-columns:repeat(4,1fr)}
         .dose-stat{padding:12px 6px;border-radius:var(--radius-sm);text-align:center;background:var(--card);border:1px solid var(--border);transition:all .25s}
         .dose-stat:hover{transform:translateY(-2px);border-color:var(--border2)}
         .dose-stat .dv{font-size:20px;font-weight:700;margin-bottom:2px;line-height:1.1}
@@ -232,27 +226,42 @@
         .hp-item{display:flex;align-items:center;gap:12px;padding:12px;border-radius:var(--radius-sm);background:var(--card);border:1px solid var(--border);margin-bottom:6px;transition:all .25s}
         .hp-item:hover{transform:translateX(3px);border-color:var(--border2);background:var(--card-hover)}
         .hp-item-icon{width:38px;height:38px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
-        .hp-item-icon.gds{background:var(--accent-dim);color:var(--accent)}.hp-item-icon.insulin{background:var(--insulin-dim);color:var(--insulin)}.hp-item-icon.levemir{background:var(--levemir-dim);color:var(--levemir)}.hp-item-icon.high{background:var(--danger-dim);color:var(--danger)}
+        .hp-item-icon.gds{background:var(--accent-dim);color:var(--accent)}
+        .hp-item-icon.insulin{background:var(--insulin-dim);color:var(--insulin)}
+        .hp-item-icon.levemir{background:var(--levemir-dim);color:var(--levemir)}
+        .hp-item-icon.high{background:var(--danger-dim);color:var(--danger)}
         .hp-item-info{flex:1;min-width:0}
         .hp-item-title{font-size:13px;font-weight:600;text-transform:capitalize;line-height:1.2}
-        .hp-item-sub{font-size:11px;color:var(--muted);margin-top:2px;display:flex;align-items:center;gap:6px}.hp-item-sub i{font-size:9px}
+        .hp-item-sub{font-size:11px;color:var(--muted);margin-top:2px;display:flex;align-items:center;gap:6px}
+        .hp-item-sub i{font-size:9px}
         .hp-item-right{text-align:right;flex-shrink:0;min-width:80px}
         .hp-item-val{font-size:16px;font-weight:700;line-height:1.2}
-        .hp-item-val.good{color:var(--accent)}.hp-item-val.warn{color:var(--warning)}.hp-item-val.bad{color:var(--danger)}.hp-item-val.insulin-v{color:var(--insulin)}.hp-item-val.levemir-v{color:var(--levemir)}
+        .hp-item-val.good{color:var(--accent)}.hp-item-val.warn{color:var(--warning)}.hp-item-val.bad{color:var(--danger)}
+        .hp-item-val.insulin-v{color:var(--insulin)}.hp-item-val.levemir-v{color:var(--levemir)}
         .hp-item-badge{font-size:9px;font-weight:600;padding:2px 7px;border-radius:20px;margin-top:3px;display:inline-block;text-transform:uppercase;letter-spacing:.3px}
-        .hp-item-badge.gds-b{background:var(--accent-dim);color:var(--accent)}.hp-item-badge.ins-b{background:var(--insulin-dim);color:var(--insulin)}.hp-item-badge.lev-b{background:var(--levemir-dim);color:var(--levemir)}
-        .hp-item-dose{font-size:11px;color:var(--insulin);font-weight:600;margin-top:3px;display:flex;align-items:center;gap:4px}.hp-item-dose i{font-size:9px}.hp-item-dose.levemir-d{color:var(--levemir)}
-        .empty-box{text-align:center;padding:40px 20px;color:var(--muted)}.empty-box i{font-size:36px;opacity:.15;display:block;margin-bottom:12px}.empty-box p{font-size:13px;font-weight:500}
+        .hp-item-badge.gds-b{background:var(--accent-dim);color:var(--accent)}
+        .hp-item-badge.ins-b{background:var(--insulin-dim);color:var(--insulin)}
+        .hp-item-badge.lev-b{background:var(--levemir-dim);color:var(--levemir)}
+        .hp-item-dose{font-size:11px;color:var(--insulin);font-weight:600;margin-top:3px;display:flex;align-items:center;gap:4px}
+        .hp-item-dose i{font-size:9px}
+        .hp-item-dose.levemir-d{color:var(--levemir)}
+        .empty-box{text-align:center;padding:40px 20px;color:var(--muted)}
+        .empty-box i{font-size:36px;opacity:.15;display:block;margin-bottom:12px}
+        .empty-box p{font-size:13px;font-weight:500}
         .toast-container{position:fixed;top:12px;left:50%;transform:translateX(-50%);z-index:300;display:flex;flex-direction:column;gap:8px;pointer-events:none}
         .toast{padding:12px 18px;border-radius:var(--radius-sm);background:var(--card2);border:1px solid var(--border2);color:var(--fg);font-size:12px;font-family:inherit;font-weight:500;box-shadow:0 10px 32px rgba(0,0,0,.5);animation:toastIn .3s ease-out,toastOut .3s ease-in 2.5s forwards;display:flex;align-items:center;gap:10px;pointer-events:auto;max-width:90vw;backdrop-filter:blur(12px)}
         .toast i{font-size:15px;flex-shrink:0}.toast.success i{color:var(--accent)}.toast.error i{color:var(--danger)}
         @keyframes toastIn{from{opacity:0;transform:translateY(-14px)}to{opacity:1;transform:translateY(0)}}
         @keyframes toastOut{to{opacity:0;transform:translateY(-14px)}}
         .divider{height:1px;background:var(--border);margin:0 20px}
-        .diet-compact-item{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border)}.diet-compact-item:last-child{border-bottom:none}
+        .diet-compact-item{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border)}
+        .diet-compact-item:last-child{border-bottom:none}
         .diet-compact-icon{width:30px;height:30px;border-radius:var(--radius-xs);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
-        .diet-compact-info{flex:1;min-width:0}.diet-compact-label{font-size:12px;font-weight:600;color:var(--fg)}.diet-compact-sub{font-size:10px;color:var(--muted)}
-        .diet-compact-check{font-size:13px;color:var(--muted)}.diet-compact-check.done{color:var(--accent)}
+        .diet-compact-info{flex:1;min-width:0}
+        .diet-compact-label{font-size:12px;font-weight:600;color:var(--fg)}
+        .diet-compact-sub{font-size:10px;color:var(--muted)}
+        .diet-compact-check{font-size:13px;color:var(--muted)}
+        .diet-compact-check.done{color:var(--accent)}
         .input-disabled-note{font-size:11px;color:var(--warning);font-weight:500;display:flex;align-items:center;gap:6px;margin-top:8px;padding:8px 12px;border-radius:var(--radius-xs);background:var(--warning-dim);border:1px solid var(--warning-border)}
         .data-table-wrap{padding:0 0 16px;margin-top:4px;overflow-x:auto}
         .data-table{width:100%;border-collapse:separate;border-spacing:0;font-size:11px;border-radius:var(--radius);overflow:hidden;border:1px solid var(--border);background:var(--card)}
@@ -260,13 +269,23 @@
         .data-table thead th:first-child{text-align:left;padding-left:14px}
         .data-table tbody td{padding:10px 8px;text-align:center;border-bottom:1px solid var(--border);color:var(--fg2);font-weight:500;vertical-align:middle}
         .data-table tbody td:first-child{text-align:left;padding-left:14px;color:var(--muted);font-weight:600;font-size:10px;white-space:nowrap}
-        .data-table tbody tr:last-child td{border-bottom:none}.data-table tbody tr{transition:background .15s}.data-table tbody tr:hover{background:var(--card-hover)}
+        .data-table tbody tr:last-child td{border-bottom:none}
+        .data-table tbody tr{transition:background .15s}
+        .data-table tbody tr:hover{background:var(--card-hover)}
         .data-table .cell-val{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:6px;font-weight:700;font-size:12px;font-variant-numeric:tabular-nums}
-        .data-table .cell-val.good{background:var(--accent-dim);color:var(--accent)}.data-table .cell-val.warn{background:var(--warning-dim);color:var(--warning)}.data-table .cell-val.danger{background:var(--danger-dim);color:var(--danger)}.data-table .cell-val.empty{background:transparent;color:var(--muted);opacity:.25;font-weight:400}
-        .data-table .cell-val.insulin-c{background:var(--insulin-dim);color:var(--insulin)}.data-table .cell-val.levemir-c{background:var(--levemir-dim);color:var(--levemir)}
+        .data-table .cell-val.good{background:var(--accent-dim);color:var(--accent)}
+        .data-table .cell-val.warn{background:var(--warning-dim);color:var(--warning)}
+        .data-table .cell-val.danger{background:var(--danger-dim);color:var(--danger)}
+        .data-table .cell-val.empty{background:transparent;color:var(--muted);opacity:.25;font-weight:400}
+        .data-table .cell-val.insulin-c{background:var(--insulin-dim);color:var(--insulin)}
+        .data-table .cell-val.levemir-c{background:var(--levemir-dim);color:var(--levemir)}
         .data-table .cell-dose-unit{font-size:9px;font-weight:400;opacity:.6}
         .data-table .row-total{font-weight:700!important;color:var(--fg)!important}
-        @media(max-width:540px){.shell{max-width:100%}.p-slot .p-label{display:none}.slot-btns{grid-template-columns:repeat(2,1fr)}#gdsStats,#doseStats{grid-template-columns:repeat(2,1fr)}#doseSlotFilters .fb,#gdsSlotFilters .fb{font-size:10px;padding:5px 9px}}
+        @media(max-width:540px){
+            .shell{max-width:100%}.p-slot .p-label{display:none}.slot-btns{grid-template-columns:repeat(2,1fr)}
+            #gdsStats{grid-template-columns:repeat(2,1fr)}#doseStats{grid-template-columns:repeat(2,1fr)}
+            #doseSlotFilters .fb,#gdsSlotFilters .fb{font-size:10px;padding:5px 9px}
+        }
         @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
     </style>
 </head>
@@ -275,7 +294,10 @@
     <div class="toast-container" id="toastContainer"></div>
     <div class="shell">
         <header class="hdr">
-            <div class="brand"><div class="brand-icon"><i class="fa-solid fa-droplet"></i></div><div><h1>Diabetes Monitor</h1><p><i class="fa-solid fa-heart-pulse" style="margin-right:3px;font-size:10px;color:var(--danger)"></i>Zayna Kamila</p></div></div>
+            <div class="brand">
+                <div class="brand-icon"><i class="fa-solid fa-droplet"></i></div>
+                <div><h1>Diabetes Monitor</h1><p><i class="fa-solid fa-heart-pulse" style="margin-right:3px;font-size:10px;color:var(--danger)"></i>Zayna Kamila</p></div>
+            </div>
             <div class="hdr-actions">
                 <button class="hdr-btn active" data-page="homePage" title="Home"><i class="fa-solid fa-house"></i></button>
                 <button class="hdr-btn" data-page="gdsPage" title="Grafik GDS"><i class="fa-solid fa-chart-line"></i></button>
@@ -284,6 +306,7 @@
                 <button class="hdr-btn" data-page="dietPage" title="Panduan Diet"><i class="fa-solid fa-utensils"></i></button>
             </div>
         </header>
+
         <!-- HOME -->
         <div class="page active" id="homePage">
             <div class="info-bar bot"><i class="fa-brands fa-telegram"></i><span>Reminder via Telegram Bot — selalu tepat waktu</span></div>
@@ -303,9 +326,6 @@
             <div class="sec-head"><div class="sec-title"><i class="fa-solid fa-brain ic-ai"></i>AI Insights</div></div>
             <div class="ai-insights" id="aiInsights"></div>
             <div class="divider"></div>
-            <div class="sec-head"><div class="sec-title"><i class="fa-solid fa-wand-magic-sparkles ic-pred"></i>Prediksi GDS</div></div>
-            <div style="padding:0 20px 14px" id="predHome"></div>
-            <div class="divider"></div>
             <div class="sec-head"><div class="sec-title"><i class="fa-solid fa-syringe ic-input"></i>Input Pengukuran</div></div>
             <div class="input-section">
                 <div class="slot-btns" id="slotBtns">
@@ -314,7 +334,10 @@
                     <button class="slot-btn" data-slot="siang"><i class="fa-solid fa-sun"></i><span>12:00</span></button>
                     <button class="slot-btn" data-slot="malam"><i class="fa-solid fa-cloud-moon"></i><span>18:00</span></button>
                 </div>
-                <div class="input-row" id="inputRow"><input type="number" class="gds-input" id="gdsInput" placeholder="Hasil GDS (mg/dL)" min="0" max="999"><button class="submit-btn" id="submitBtn" disabled><i class="fa-solid fa-paper-plane"></i></button></div>
+                <div class="input-row" id="inputRow">
+                    <input type="number" class="gds-input" id="gdsInput" placeholder="Hasil GDS (mg/dL)" min="0" max="999">
+                    <button class="submit-btn" id="submitBtn" disabled><i class="fa-solid fa-paper-plane"></i></button>
+                </div>
                 <button class="levemir-btn" id="levemirBtn"><i class="fa-solid fa-syringe"></i>Konfirmasi Levemir 8 unit</button>
                 <div class="input-disabled-note" id="dupNote" style="display:none"><i class="fa-solid fa-circle-info"></i><span id="dupNoteText"></span></div>
             </div>
@@ -323,6 +346,7 @@
             <div class="sec-head"><div class="sec-title"><i class="fa-solid fa-utensils" style="background:var(--warning-dim);color:var(--warning)"></i>Diet Hari Ini</div><span class="sec-link" onclick="showPage('dietPage')">Lihat Detail <i class="fa-solid fa-arrow-right" style="font-size:9px"></i></span></div>
             <div style="padding:0 20px 14px"><div id="dietCompact"></div></div>
         </div>
+
         <!-- GDS -->
         <div class="page" id="gdsPage">
             <div class="page-title-bar"><div class="ptb-back" onclick="showPage('homePage')"><i class="fa-solid fa-arrow-left"></i></div><span class="ptb-text">Grafik GDS</span></div>
@@ -331,6 +355,7 @@
             <div class="scoreboard" id="gdsStats"></div>
             <div class="chart-section"><div class="chart-wrap"><canvas id="gdsCanvas"></canvas><div class="chart-legend"><div class="chart-legend-item"><div class="chart-legend-dot" style="background:var(--accent)"></div>Normal</div><div class="chart-legend-item"><div class="chart-legend-dot" style="background:var(--warning)"></div>Rendah/Tinggi</div><div class="chart-legend-item"><div class="chart-legend-dot" style="background:var(--danger)"></div>Kritis</div></div></div><div class="data-table-wrap" id="gdsTableWrap"></div></div>
         </div>
+
         <!-- DOSE -->
         <div class="page" id="dosePage">
             <div class="page-title-bar"><div class="ptb-back" onclick="showPage('homePage')"><i class="fa-solid fa-arrow-left"></i></div><span class="ptb-text">Grafik Dosis Harian</span></div>
@@ -339,12 +364,14 @@
             <div class="scoreboard" id="doseStats"></div>
             <div class="chart-section"><div class="chart-wrap"><canvas id="doseCanvas"></canvas><div class="chart-legend"><div class="chart-legend-item"><div class="chart-legend-dot" style="background:var(--insulin)"></div>Insulin</div><div class="chart-legend-item"><div class="chart-legend-dot" style="background:var(--levemir)"></div>Levemir</div></div></div><div class="data-table-wrap" id="doseTableWrap"></div></div>
         </div>
+
         <!-- HISTORY -->
         <div class="page" id="historyPage">
             <div class="page-title-bar"><div class="ptb-back" onclick="showPage('homePage')"><i class="fa-solid fa-arrow-left"></i></div><span class="ptb-text">Riwayat</span></div>
             <div class="filter-bar" id="historyFilters"><button class="fb active" data-hp="today"><i class="fa-solid fa-calendar-day" style="font-size:10px"></i>Hari Ini</button><button class="fb" data-hp="7">7 Hari</button><button class="fb" data-hp="30">30 Hari</button><button class="fb" data-hp="all"><i class="fa-solid fa-infinity" style="font-size:10px"></i>Semua</button></div>
             <div class="history-section" id="historyList"></div>
         </div>
+
         <!-- DIET -->
         <div class="page" id="dietPage">
             <div class="page-title-bar"><div class="ptb-back" onclick="showPage('homePage')"><i class="fa-solid fa-arrow-left"></i></div><span class="ptb-text">Panduan Diet Hari Ini</span></div>
@@ -365,29 +392,28 @@
 <script>
 var state={data:[],gdsChart:null,doseChart:null,selectedSlot:'',currentPage:'homePage'};
 var SLOTS=[
-    {slot:'dini-hari',label:'Dini Hari',icon:'fa-moon',type:'gds-only',time:'02:00'},
-    {slot:'sarapan',label:'Sarapan',icon:'fa-mug-hot',type:'gds-insulin',time:'06:00'},
-    {slot:'siang',label:'Siang',icon:'fa-cloud-sun',type:'gds-insulin',time:'12:00'},
-    {slot:'malam',label:'Malam',icon:'fa-cloud-moon',type:'gds-insulin',time:'18:00'},
-    {slot:'levemir',label:'levemir',icon:'fa-syringe',type:'levemir',time:'20:00'}
+    {slot:'dini-hari',label:'Dini Hari',icon:'fa-moon',type:'gds-only'},
+    {slot:'sarapan',label:'Sarapan',icon:'fa-sun',type:'gds-insulin'},
+    {slot:'siang',label:'Siang',icon:'fa-cloud-sun',type:'gds-insulin'},
+    {slot:'malam',label:'Malam',icon:'fa-cloud-moon',type:'gds-insulin'},
+    {slot:'levemir',label:'levemir',icon:'fa-cloud-moon',type:'levemir'}
 ];
 var DEFAULT_DOSES={sarapan:4,siang:6,malam:6},LEVEMIR_DOSE=8;
 var gdsSlot='all',gdsPeriod='today',dosePeriod='today',doseSlot='all',historyPeriod='today';
 var gdsChartInit=false,doseChartInit=false;
 var SLOT_LABELS={'dini-hari':'Dini Hari','sarapan':'Sarapan','siang':'Siang','malam':'Malam','levemir':'Levemir'};
-var SLOT_ICONS={'dini-hari':'fa-moon','sarapan':'fa-mug-hot','siang':'fa-sun','malam':'fa-cloud-moon'};
 try{Telegram.WebApp.ready();Telegram.WebApp.expand();Telegram.WebApp.setHeaderColor('#060D1B');}catch(e){}
 
-function showPage(pid){
+function showPage(pageId){
     document.querySelectorAll('.page').forEach(function(p){p.style.display='none';p.classList.remove('active');});
-    var page=document.getElementById(pid);if(!page)return;
-    page.style.display='block';page.classList.add('active');state.currentPage=pid;
-    document.querySelectorAll('.hdr-btn[data-page]').forEach(function(b){b.classList.toggle('active',b.dataset.page===pid);});
-    if(pid==='gdsPage'){if(!gdsChartInit){initGdsChart();gdsChartInit=true;}else state.gdsChart.resize();renderGdsChart();renderGdsTable();}
-    if(pid==='dosePage'){if(!doseChartInit){initDoseChart();doseChartInit=true;}else state.doseChart.resize();renderDoseChart();renderDoseTable();}
-    if(pid==='historyPage')renderHistory();
-    if(pid==='dietPage')renderDiet();
-    if(pid==='homePage'){renderDietCompact();updateProgress();renderAiInsights();renderPredHome();}
+    var page=document.getElementById(pageId);if(!page)return;
+    page.style.display='block';page.classList.add('active');state.currentPage=pageId;
+    document.querySelectorAll('.hdr-btn[data-page]').forEach(function(b){b.classList.toggle('active',b.dataset.page===pageId);});
+    if(pageId==='gdsPage'){if(!gdsChartInit){initGdsChart();gdsChartInit=true;}else state.gdsChart.resize();renderGdsChart();renderGdsTable();}
+    if(pageId==='dosePage'){if(!doseChartInit){initDoseChart();doseChartInit=true;}else state.doseChart.resize();renderDoseChart();renderDoseTable();}
+    if(pageId==='historyPage')renderHistory();
+    if(pageId==='dietPage')renderDiet();
+    if(pageId==='homePage'){renderDietCompact();updateProgress();renderAiInsights();}
     window.scrollTo({top:0,behavior:'smooth'});
 }
 document.querySelectorAll('.hdr-btn[data-page]').forEach(function(btn){btn.addEventListener('click',function(){showPage(this.dataset.page);});});
@@ -402,256 +428,221 @@ function showToast(msg,type){type=type||'success';var c=document.getElementById(
 async function fetchData(){try{var r=await fetch(API_URL+'?action=data',{redirect:'follow'});if(!r.ok)return[];var d=await r.json();return Array.isArray(d)?d:[];}catch(e){return[];}}
 async function submitData(entry){try{var r=await fetch(API_URL+'?action=submit',{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(entry),redirect:'follow'});var d=await r.json();return d.status==='ok';}catch(e){return false;}}
 function filterByPeriod(entries,period){if(period==='today'){var t=getTodayKey();return entries.filter(function(e){return normalizeDate(e.date)===t;});}var days=period==='7'?7:30;if(period==='all')return entries;var cutoff=new Date();cutoff.setDate(cutoff.getDate()-days);var cutStr=cutoff.toISOString().slice(0,10);return entries.filter(function(e){return normalizeDate(e.date)>=cutStr;});}
-function calcStats(arr){if(!arr.length)return{min:0,max:0,avg:0};return{min:Math.min.apply(null,arr),max:Math.max.apply(null,arr),avg:Math.round(arr.reduce(function(a,b){return a+b;},0)/arr.length)};}
-
-function calcStandardDose(gds,slot){var d=DEFAULT_DOSES[slot];if(gds>300)d+=2;else if(gds>200)d+=1;else if(gds<100)d-=1;return Math.max(0,d);}
-function getStandardReason(gds){if(gds>300)return'GDS sangat tinggi ('+gds+'), tambah +2 unit dari default';if(gds>200)return'GDS tinggi ('+gds+'), tambah +1 unit dari default';if(gds<70)return'GDS sangat rendah ('+gds+'), kurangi -2 unit (risiko hipo)';if(gds<100)return'GDS rendah ('+gds+'), kurangi -1 unit dari default';return'GDS normal ('+gds+'), dosis sesuai default';}
+function calcStats(arr){if(!arr.length)return{min:0,max:0,avg:0};var mn=Math.min.apply(null,arr),mx=Math.max.apply(null,arr),av=Math.round(arr.reduce(function(a,b){return a+b;},0)/arr.length);return{min:mn,max:mx,avg:av};}
 
 /* ====================================================================
-   SHARED HISTORY HELPERS
+   FORMULA STANDAR (tidak diubah — tetap dipakai)
+   ==================================================================== */
+function calcStandardDose(gds,slot){
+    var d=DEFAULT_DOSES[slot];
+    if(gds>300)d+=2;
+    else if(gds>200)d+=1;
+    else if(gds<100)d-=1;
+    return Math.max(0,d);
+}
+function getStandardReason(gds){
+    if(gds>300)return'GDS sangat tinggi ('+gds+'), tambah +2 unit dari default';
+    if(gds>200)return'GDS tinggi ('+gds+'), tambah +1 unit dari default';
+    if(gds<70)return'GDS sangat rendah ('+gds+'), kurangi -2 unit (risiko hipo)';
+    if(gds<100)return'GDS rendah ('+gds+'), kurangi -1 unit dari default';
+    return'GDS normal ('+gds+'), dosis sesuai default';
+}
+
+/* ====================================================================
+   AI DOSE ENGINE — rekomendasi TAMBAHAN di atas formula standar
    ==================================================================== */
 function getSlotHistory(slot,maxDays){
-    maxDays=maxDays||14;var cutoff=new Date();cutoff.setDate(cutoff.getDate()-maxDays);var cutStr=cutoff.toISOString().slice(0,10);
+    maxDays=maxDays||14;
+    var cutoff=new Date();cutoff.setDate(cutoff.getDate()-maxDays);var cutStr=cutoff.toISOString().slice(0,10);
     var entries=state.data.filter(function(e){return e.slot===slot&&e.gds!=null&&normalizeDate(e.date)>=cutStr;});
     entries.sort(function(a,b){var da=new Date(normalizeDate(a.date)+'T'+(a.time||'00:00')),db=new Date(normalizeDate(b.date)+'T'+(b.time||'00:00'));return da-db;});
     return entries;
 }
+
 function analyzeTrend(values){
     if(values.length<2)return{direction:'stable',slope:0,strength:0};
     var n=values.length,sumX=0,sumY=0,sumXY=0,sumX2=0;
     for(var i=0;i<n;i++){sumX+=i;sumY+=values[i];sumXY+=i*values[i];sumX2+=i*i;}
-    var denom=n*sumX2-sumX*sumX;if(Math.abs(denom)<0.0001)return{direction:'stable',slope:0,strength:0};
-    var slope=(n*sumXY-sumX*sumY)/denom;var avg=sumY/n;
+    var slope=(n*sumXY-sumX*sumY)/(n*sumX2-sumX*sumX);
+    var avg=sumY/n;
     var variance=0;for(var j=0;j<n;j++){variance+=Math.pow(values[j]-avg,2);}variance/=(n>1?n-1:1);
-    var stdDev=Math.sqrt(variance);var strength=Math.abs(slope);
-    var direction='stable';if(strength>3)direction=slope>0?'worsening':'improving';else if(strength>1)direction=slope>0?'worsening':'improving';
-    return{direction:direction,slope:Math.round(slope*10)/10,strength:strength,stdDev:Math.round(stdDev),isVolatile:stdDev>60&&values.length>=3,avg:Math.round(avg)};
+    var stdDev=Math.sqrt(variance);
+    var strength=Math.abs(slope);
+    var direction='stable';
+    if(strength>3)direction=slope>0?'worsening':'improving';
+    else if(strength>1)direction=slope>0?'worsening':'improving';
+    var isVolatile=stdDev>60&&values.length>=3;
+    return{direction:direction,slope:Math.round(slope*10)/10,strength:strength,stdDev:Math.round(stdDev),isVolatile:isVolatile,avg:Math.round(avg)};
 }
+
 function getDoseGdsPairs(slot,maxDays){
-    maxDays=maxDays||14;var cutoff=new Date();cutoff.setDate(cutoff.getDate()-maxDays);var cutStr=cutoff.toISOString().slice(0,10);
+    maxDays=maxDays||14;
+    var cutoff=new Date();cutoff.setDate(cutoff.getDate()-maxDays);var cutStr=cutoff.toISOString().slice(0,10);
     var entries=state.data.filter(function(e){return e.slot===slot&&e.gds!=null&&e.dose!=null&&normalizeDate(e.date)>=cutStr;});
     entries.sort(function(a,b){return new Date(normalizeDate(a.date))-new Date(normalizeDate(b.date));});
     return entries.map(function(e){return{dose:e.dose,gds:e.gds,date:e.date};});
 }
+
 function evaluateLastDose(slot){
     var pairs=getDoseGdsPairs(slot,7);
     if(pairs.length<2)return{effective:null,reason:'Data kurang untuk evaluasi'};
     var last=pairs[pairs.length-1],prev=pairs[pairs.length-2];
-    var inRange=last.gds>=100&&last.gds<=200,improved=last.gds<prev.gds,worsened=last.gds>prev.gds+15;
-    if(inRange&&improved)return{effective:true,reason:'Dosis '+last.dose+'u berhasil menurunkan GDS ke '+last.gds+' (dari '+prev.gds+')'};
-    if(inRange)return{effective:true,reason:'Dosis '+last.dose+'u menjaga GDS di '+last.gds+', dalam rentang normal'};
+    var gdsInRange=last.gds>=100&&last.gds<=200;
+    var improved=last.gds<prev.gds;
+    var worsened=last.gds>prev.gds+15;
+    if(gdsInRange&&improved)return{effective:true,reason:'Dosis '+last.dose+'u berhasil menurunkan GDS ke '+last.gds+' (dari '+prev.gds+')'};
+    if(gdsInRange)return{effective:true,reason:'Dosis '+last.dose+'u menjaga GDS di '+last.gds+', dalam rentang normal'};
     if(worsened)return{effective:false,reason:'Dosis '+last.dose+'u belum cukup, GDS naik dari '+prev.gds+' ke '+last.gds};
     if(last.gds>200)return{effective:false,reason:'Dosis '+last.dose+'u belum optimal, GDS masih '+last.gds};
-    if(last.gds<100)return{effective:false,reason:'Dosis '+last.dose+'u terlalu besar, GDS turun ke '+last.gds};
-    return{effective:null,reason:'Pola belum jelas'};
+    if(last.gds<100)return{effective:false,reason:'Dosis '+last.dose+'u terlalu besar, GDS turun ke '+last.gds+' (risiko hipo)'};
+    return{effective:null,reason:'Pola belum jelas dari data tersedia'};
 }
 
-/* ====================================================================
-   AI DOSE RECOMMENDATION
-   ==================================================================== */
 function aiRecommend(slot,standardDose,currentGds){
-    var history=getSlotHistory(slot,14);var gdsValues=history.map(function(e){return e.gds;});
-    var trend=analyzeTrend(gdsValues);var lastEval=evaluateLastDose(slot);var dosePairs=getDoseGdsPairs(slot,14);
-    var dataPoints=gdsValues.length;var reasons=[];var aiAdjustment=0;var confidence='low';
-    if(dataPoints>=3){
-        if(trend.direction==='improving'&&trend.strength>1.5){aiAdjustment-=1;reasons.push('<strong>Tren membaik</strong> — GDS turun ~'+Math.round(Math.abs(trend.slope))+' mg/dL/hari, kurangi -1 unit dari standar');}
-        else if(trend.direction==='worsening'&&trend.strength>1.5){aiAdjustment+=1;reasons.push('<strong>Tren memburuk</strong> — GDS naik ~'+Math.round(trend.slope)+' mg/dL/hari, tambah +1 unit dari standar');}
-        else if(trend.direction==='stable'){reasons.push('<strong>Tren stabil</strong> — rata-rata '+trend.avg+' mg/dL, tidak ada penyesuaian tren');}
-        else{reasons.push('<strong>Tren '+trend.direction+'</strong> lemah, pengaruh minimal');}
-        if(trend.isVolatile)reasons.push('<strong>Fluktuasi tinggi</strong> (SD='+trend.stdDev+'), perubahan dibatasi');
-    }
-    if(lastEval.effective===true&&dosePairs.length>=2){var ld=dosePairs[dosePairs.length-1].dose;if(ld<standardDose+aiAdjustment){aiAdjustment-=1;reasons.push('<strong>Dosis '+ld+'u terbukti efektif</strong>, sedikit kurangi dari standar');}else reasons.push(lastEval.reason);}
-    else if(lastEval.effective===false&&dosePairs.length>=2){var ld2=dosePairs[dosePairs.length-1].dose;if(ld2>=standardDose){aiAdjustment+=1;reasons.push('<strong>'+lastEval.reason+'</strong>, naikkan +1 unit');}else reasons.push(lastEval.reason);}
-    else if(lastEval.effective===null)reasons.push(lastEval.reason);
-    if(trend.isVolatile&&dataPoints>=3&&Math.abs(aiAdjustment)>2)aiAdjustment=aiAdjustment>0?2:-2;
-    if(dataPoints>=5&&dosePairs.length>=3)confidence='high';else if(dataPoints>=3&&dosePairs.length>=2)confidence='medium';else confidence='low';
-    var aiDose=Math.max(0,Math.min(20,standardDose+aiAdjustment));
-    return{standardDose:standardDose,aiAdjustment:aiAdjustment,aiDose:aiDose,trend:trend.direction,trendSlope:trend.slope,trendAvg:trend.avg,isVolatile:trend.isVolatile||false,stdDev:trend.stdDev,confidence:confidence,dataPoints:dataPoints,dosePairs:dosePairs.length,lastEval:lastEval,reasons:reasons,hasData:dataPoints>=2&&dosePairs.length>=1};
-}
-
-/* ====================================================================
-   PREDIKSI GDS — PREDICTION ENGINE
-   ==================================================================== */
-function predictNextGds(slot){
+    /* AI memberikan rekomendasi PENYESUAIAN di atas dosis standar */
     var history=getSlotHistory(slot,14);
     var gdsValues=history.map(function(e){return e.gds;});
-    var dosePairs=getDoseGdsPairs(slot,14);
-
-    /* Butuh minimal 3 data untuk prediksi bermakna */
-    if(gdsValues.length<3)return null;
-
     var trend=analyzeTrend(gdsValues);
-    var n=gdsValues.length;
+    var lastEval=evaluateLastDose(slot);
+    var dosePairs=getDoseGdsPairs(slot,14);
+    var dataPoints=gdsValues.length;
 
-    /* --- Komponen 1: Weighted Recent Average ---
-       Data terbaru diberi bobot lebih tinggi */
-    var wSum=0,wTotal=0;
-    for(var i=0;i<n;i++){
-        var w=Math.pow(1.5,i); /* bobot eksponensial: terbaru paling berat */
-        wSum+=gdsValues[i]*w;wTotal+=w;
-    }
-    var weightedAvg=Math.round(wSum/wTotal);
+    var reasons=[];
+    var aiAdjustment=0; /* selisih dari dosis standar */
+    var confidence='low';
 
-    /* --- Komponen 2: Linear Trend Projection ---
-       Proyeksikan 1 langkah ke depan */
-    var trendProjection=weightedAvg+trend.slope;
-
-    /* --- Komponen 3: Dose-Response Adjustment ---
-       Jika dosis terakhir berbeda dari rata-rata dosis, estimasi dampaknya */
-    var doseAdj=0;
-    if(dosePairs.length>=2){
-        var avgDose=0;dosePairs.forEach(function(p){avgDose+=p.dose;});avgDose/=dosePairs.length;
-        var lastDose=dosePairs[dosePairs.length-1].dose;
-        var doseDiff=lastDose-avgDose;
-        /* Setiap +1 unit dari rata-rata → estimasi -15 mg/dL GDS */
-        doseAdj=doseDiff*(-15);
-        /* Batasi dampak dosis supaya tidak terlalu ekstrem */
-        doseAdj=Math.max(-40,Math.min(40,doseAdj));
-    }
-
-    /* --- Komponen 4: Day-of-pattern (untuk data >= 5) ---
-       Cek apakah ada pola berdasarkan posisi hari dalam data */
-    var patternAdj=0;
-    if(n>=5){
-        /* Bandingkan nilai di posisi yang sama (modulo) jika ada siklus */
-        /* Untuk harian, cek apakah ada pola naik-turun periodik */
-        var last3=gdsValues.slice(-3);
-        var prev3=gdsValues.slice(-6,-3);
-        if(prev3.length===3){
-            var lastAvg=last3.reduce(function(a,b){return a+b;},0)/3;
-            var prevAvg=prev3.reduce(function(a,b){return a+b;},0)/3;
-            patternAdj=(lastAvg-prevAvg)*0.2; /* 20% dari perubahan periode sebelumnya */
-            patternAdj=Math.max(-20,Math.min(20,patternAdj));
+    /* --- Tren historis --- */
+    if(dataPoints>=3){
+        if(trend.direction==='improving'&&trend.strength>1.5){
+            aiAdjustment-=1;
+            reasons.push('<strong>Tren membaik</strong> — GDS turun ~'+Math.round(Math.abs(trend.slope))+' mg/dL/hari dalam '+dataPoints+' hari, kurangi -1 unit dari standar');
+        }else if(trend.direction==='worsening'&&trend.strength>1.5){
+            aiAdjustment+=1;
+            reasons.push('<strong>Tren memburuk</strong> — GDS naik ~'+Math.round(trend.slope)+' mg/dL/hari dalam '+dataPoints+' hari, tambah +1 unit dari standar');
+        }else if(trend.direction==='stable'){
+            reasons.push('<strong>Tren stabil</strong> — rata-rata '+trend.avg+' mg/dL dalam '+dataPoints+' hari, tidak ada penyesuaian tren');
+        }else{
+            reasons.push('<strong>Tren '+trend.direction+'</strong> lemah, pengaruh minimal terhadap dosis');
+        }
+        if(trend.isVolatile){
+            reasons.push('<strong>Fluktuasi tinggi</strong> (SD='+trend.stdDev+') — perubahan dibatasi untuk menghindari overshoot');
         }
     }
 
-    /* --- Gabungkan semua komponen --- */
-    var rawPrediction=trendProjection+doseAdj+patternAdj;
+    /* --- Efektivitas dosis terakhir --- */
+    if(lastEval.effective===true&&dosePairs.length>=2){
+        var lastDose=dosePairs[dosePairs.length-1].dose;
+        if(lastDose<standardDose+aiAdjustment){
+            aiAdjustment-=1;
+            reasons.push('<strong>Dosis '+lastDose+'u terbukti efektif</strong> — sedikit kurangi dari standar karena sebelumnya sudah optimal');
+        }else{
+            reasons.push(lastEval.reason+' — dosis standar sudah sesuai');
+        }
+    }else if(lastEval.effective===false&&dosePairs.length>=2){
+        var lastDose2=dosePairs[dosePairs.length-1].dose;
+        if(lastDose2>=standardDose){
+            aiAdjustment+=1;
+            reasons.push('<strong>'+lastEval.reason+'</strong> — naikkan +1 unit dari standar');
+        }else{
+            reasons.push(lastEval.reason+' — dosis sudah lebih rendah dari standar');
+        }
+    }else if(lastEval.effective===null){
+        reasons.push(lastEval.reason);
+    }
 
-    /* --- Smoothing: blend dengan weighted average (70% trend, 30% recent) --- */
-    var prediction=Math.round(weightedAvg*0.3+rawPrediction*0.7);
+    /* --- Volatilitas penalty --- */
+    if(trend.isVolatile&&dataPoints>=3){
+        var expectedChange=Math.abs(aiAdjustment);
+        if(expectedChange>2){
+            aiAdjustment=aiAdjustment>0?2:-2;
+            reasons.push('Perubahan dibatasi maks ±2 unit karena volatilitas tinggi');
+        }
+    }
 
-    /* --- Clamp ke rentang realistis --- */
-    prediction=Math.max(40,Math.min(450,prediction));
+    /* --- Confidence --- */
+    if(dataPoints>=5&&dosePairs.length>=3)confidence='high';
+    else if(dataPoints>=3&&dosePairs.length>=2)confidence='medium';
+    else confidence='low';
 
-    /* --- Rentang prediksi berdasarkan volatilitas --- */
-    var stdDev=trend.stdDev||30;
-    var rangeWidth=Math.round(stdDev*0.75); /* ~75% confidence interval */
-    rangeWidth=Math.max(15,Math.min(60,rangeWidth)); /* min 15, max 60 */
-    var predLow=Math.max(40,prediction-rangeWidth);
-    var predHigh=Math.min(450,prediction+rangeWidth);
-
-    /* --- Confidence prediksi --- */
-    var predConfidence='low';
-    if(n>=7&&dosePairs.length>=3&&stdDev<50)predConfidence='high';
-    else if(n>=4&&dosePairs.length>=2)predConfidence='medium';
-
-    /* --- Alasan prediksi --- */
-    var predReasons=[];
-    predReasons.push('Rata-rata tertimbang: <strong>'+weightedAvg+' mg/dL</strong>');
-    if(Math.abs(trend.slope)>0.5)predReasons.push('Tren '+(trend.direction==='improving'?'menurun':'naik')+' ~<strong>'+Math.round(Math.abs(trend.slope))+' mg/dL/hari</strong>');
-    if(doseAdj!==0)predReasons.push('Estimasi dampak dosis terakhir: <strong>'+(doseAdj>0?'+':'')+doseAdj+' mg/dL</strong>');
-    predReasons.push('Rentang prediksi: <strong>'+predLow+' — '+predHigh+'</strong> (SD='+stdDev+')');
-
-    var cat=getCat(prediction);
+    /* Hitung dosis akhir AI */
+    var aiDose=standardDose+aiAdjustment;
+    aiDose=Math.max(0,Math.min(20,aiDose));
 
     return{
-        predicted:prediction,
-        low:predLow,
-        high:predHigh,
-        cat:cat,
-        confidence:predConfidence,
-        dataPoints:n,
-        stdDev:stdDev,
+        standardDose:standardDose,
+        aiAdjustment:aiAdjustment,
+        aiDose:aiDose,
         trend:trend.direction,
-        reasons:predReasons,
-        lastGds:gdsValues[n-1],
-        lastDose:dosePairs.length?dosePairs[dosePairs.length-1].dose:null
+        trendSlope:trend.slope,
+        trendAvg:trend.avg,
+        isVolatile:trend.isVolatile||false,
+        stdDev:trend.stdDev,
+        confidence:confidence,
+        dataPoints:dataPoints,
+        dosePairs:dosePairs.length,
+        lastEval:lastEval,
+        reasons:reasons,
+        hasData:dataPoints>=2&&dosePairs.length>=1
     };
 }
 
 /* ====================================================================
-   PREDIKSI HOME
-   ==================================================================== */
-function renderPredHome(){
-    var el=document.getElementById('predHome');if(!el)return;
-    var today=getTodayKey(),todayData=state.data.filter(function(e){return normalizeDate(e.date)===today;});
-    var doneToday={};todayData.forEach(function(e){doneToday[e.slot]=true;});
-    var gdsSlots=['dini-hari','sarapan','siang','malam'];
-    var hasAnyPred=false;
-    var html='<div class="pred-panel"><div class="pred-panel-head"><span class="pred-badge"><i class="fa-solid fa-wand-magic-sparkles"></i>Prediksi</span><span style="font-size:10px;color:var(--muted);margin-left:auto">GDS berikutnya per slot</span></div>';
-    gdsSlots.forEach(function(slot){
-        var pred=predictNextGds(slot);
-        var slotObj=SLOTS.find(function(s){return s.slot===slot;});
-        if(!pred)return;
-        hasAnyPred=true;
-        var isDone=doneToday[slot];
-        var opacity=isDone?'opacity:0.4;':'';
-        html+='<div class="pred-slot-row" style="'+opacity+'">'+
-            '<div class="pred-slot-icon"><i class="fa-solid '+(SLOT_ICONS[slot]||'fa-droplet')+'"></i></div>'+
-            '<div class="pred-slot-info"><div class="pred-slot-name">'+(SLOT_LABELS[slot]||slot)+(isDone?' <i class="fa-solid fa-circle-check" style="font-size:10px;color:var(--accent)"></i>':'</div>')+
-            '<div class="pred-slot-time">'+slotObj.time+' &bull; '+pred.dataPoints+' data</div></div>'+
-            '<div class="pred-slot-right"><div class="pred-slot-val" style="color:var(--'+pred.cat.cls+(pred.cat.cls==='good'?'):(pred.cat.cls==='warn'?'):'>')+'">'+pred.predicted+'</div>'+
-            '<div class="pred-slot-range">'+pred.low+' — '+pred.high+'</div>'+
-            '<span class="pred-slot-cat '+pred.cat.cls+'">'+pred.cat.label+'</span></div></div>';
-    });
-    if(!hasAnyPred)html+='<div class="pred-no-data"><i class="fa-solid fa-chart-line" style="display:block;font-size:20px;opacity:.2;margin-bottom:6px"></i>Minimal 3 data per slot diperlukan untuk prediksi</div>';
-    html+='</div>';
-    el.innerHTML=html;
-}
-
-/* ====================================================================
-   AI INSIGHTS HOME
+   AI INSIGHTS (Home)
    ==================================================================== */
 function renderAiInsights(){
     var el=document.getElementById('aiInsights');if(!el)return;
-    var insights=[];var insulinSlots=['sarapan','siang','malam'];
+    var insights=[];
+    var insulinSlots=['sarapan','siang','malam'];
     insulinSlots.forEach(function(slot){
-        var history=getSlotHistory(slot,7);if(history.length<2)return;
-        var gdsVals=history.map(function(e){return e.gds;});var trend=analyzeTrend(gdsVals);var lastEval=evaluateLastDose(slot);
-        var lastGds=gdsVals[gdsVals.length-1],prevGds=gdsVals.length>=2?gdsVals[gdsVals.length-2]:null;
-        var cat=getCat(lastGds);var slotLabel=SLOT_LABELS[slot]||slot;
-        if(trend.direction==='worsening'&&trend.strength>1)insights.push({type:'danger',icon:'fa-arrow-trend-up',title:'Tren naik di '+slotLabel,text:'GDS naik rata-rata <strong>'+Math.round(trend.slope)+' mg/dL</strong>/hari ('+gdsVals.length+' hari, avg: '+trend.avg+').',slot:slot});
-        else if(trend.direction==='improving'&&trend.strength>1)insights.push({type:'good',icon:'fa-arrow-trend-down',title:'Tren membaik di '+slotLabel,text:'GDS menurun <strong>'+Math.round(Math.abs(trend.slope))+' mg/dL</strong>/hari.',slot:slot});
-        if(lastGds>200)insights.push({type:'warn',icon:'fa-circle-exclamation',title:'GDS tinggi: '+slotLabel,text:'Terakhir <strong>'+lastGds+' mg/dL</strong>'+(prevGds?' (sebelumnya '+prevGds+')':'')+'. '+(lastEval.effective===false?'Dosis perlu ditingkatkan.':'Monitor ketat.'),slot:slot});
-        else if(lastGds<100&&lastGds>=70)insights.push({type:'warn',icon:'fa-circle-exclamation',title:'GDS rendah: '+slotLabel,text:'Terakhir <strong>'+lastGds+' mg/dL</strong>. Pertimbangkan kurangi dosis.',slot:slot});
-        else if(lastGds<70)insights.push({type:'danger',icon:'fa-triangle-exclamation',title:'Hipoglikemia: '+slotLabel,text:'GDS <strong>'+lastGds+' mg/dL</strong> — di bawah ambang hipo!',slot:slot});
-        if(trend.isVolatile&&gdsVals.length>=3)insights.push({type:'warn',icon:'fa-wave-square',title:'Fluktuasi tinggi: '+slotLabel,text:'SD=<strong>'+trend.stdDev+'</strong> dalam '+gdsVals.length+' hari.',slot:slot});
-        if(trend.direction==='stable'&&cat.cls==='good'&&gdsVals.length>=3){if(gdsVals.every(function(v){return v>=100&&v<=200;}))insights.push({type:'good',icon:'fa-circle-check',title:'Kontrol baik: '+slotLabel,text:'Semua '+gdsVals.length+' pengukuran normal (avg: '+trend.avg+').',slot:slot});}
-    });
-    /* Prediksi-based insights */
-    insulinSlots.forEach(function(slot){
-        var pred=predictNextGds(slot);if(!pred)return;
-        if(pred.cat.cls==='danger')insights.push({type:'danger',icon:'fa-wand-magic-sparkles',title:'Prediksi: '+SLOT_LABELS[slot],text:'GDS berikutnya diprediksi <strong>'+pred.predicted+' mg/dL</strong> ('+pred.low+'—'+pred.high+'). '+SLOT_LABELS[slot]+' berisiko tinggi.',slot:slot});
-        else if(pred.cat.cls==='warn')insights.push({type:'warn',icon:'fa-wand-magic-sparkles',title:'Prediksi: '+SLOT_LABELS[slot],text:'GDS berikutnya diprediksi <strong>'+pred.predicted+' mg/dL</strong> ('+pred.low+'—'+pred.high+'). Perlu perhatian.',slot:slot});
+        var history=getSlotHistory(slot,7);
+        if(history.length<2)return;
+        var gdsVals=history.map(function(e){return e.gds;});
+        var trend=analyzeTrend(gdsVals);
+        var lastEval=evaluateLastDose(slot);
+        var lastGds=gdsVals[gdsVals.length-1];
+        var prevGds=gdsVals.length>=2?gdsVals[gdsVals.length-2]:null;
+        var cat=getCat(lastGds);
+        var slotLabel=SLOT_LABELS[slot]||slot;
+        if(trend.direction==='worsening'&&trend.strength>1){insights.push({type:'danger',icon:'fa-arrow-trend-up',title:'Tren naik di '+slotLabel,text:'GDS '+slotLabel+' naik rata-rata <strong>'+Math.round(trend.slope)+' mg/dL</strong>/hari ('+gdsVals.length+' hari, avg: '+trend.avg+'). Dosis mungkin perlu ditinjau.',slot:slot});}
+        else if(trend.direction==='improving'&&trend.strength>1){insights.push({type:'good',icon:'fa-arrow-trend-down',title:'Tren membaik di '+slotLabel,text:'GDS '+slotLabel+' menurun <strong>'+Math.round(Math.abs(trend.slope))+' mg/dL</strong>/hari. Pertahankan pola saat ini.',slot:slot});}
+        if(lastGds>200){insights.push({type:'warn',icon:'fa-circle-exclamation',title:'GDS tinggi: '+slotLabel,text:'Terakhir <strong>'+lastGds+' mg/dL</strong>'+(prevGds?' (sebelumnya '+prevGds+')':'')+'. '+(lastEval.effective===false?'Dosis perlu ditingkatkan.':'Monitor lebih ketat.'),slot:slot});}
+        else if(lastGds<100&&lastGds>=70){insights.push({type:'warn',icon:'fa-circle-exclamation',title:'GDS rendah: '+slotLabel,text:'Terakhir <strong>'+lastGds+' mg/dL</strong>. Pertimbangkan kurangi dosis.',slot:slot});}
+        else if(lastGds<70){insights.push({type:'danger',icon:'fa-triangle-exclamation',title:'Hipoglikemia: '+slotLabel,text:'GDS <strong>'+lastGds+' mg/dL</strong> — di bawah ambang hipo! Segera konsumsi gula cepat.',slot:slot});}
+        if(trend.isVolatile&&gdsVals.length>=3){insights.push({type:'warn',icon:'fa-wave-square',title:'Fluktuasi tinggi: '+slotLabel,text:'SD=<strong>'+trend.stdDev+'</strong> dalam '+gdsVals.length+' hari. Perubahan dosis dibatasi.',slot:slot});}
+        if(trend.direction==='stable'&&cat.cls==='good'&&gdsVals.length>=3){var allNormal=gdsVals.every(function(v){return v>=100&&v<=200;});if(allNormal)insights.push({type:'good',icon:'fa-circle-check',title:'Kontrol baik: '+slotLabel,text:'Semua '+gdsVals.length+' pengukuran normal (avg: '+trend.avg+'). Dosis optimal.',slot:slot});}
     });
     var priority={danger:0,warn:1,info:2,good:3};
     insights.sort(function(a,b){return priority[a.type]-priority[b.type];});
-    insights=insights.slice(0,5);
-    if(!insights.length){el.innerHTML='<div class="ai-insight-card"><div class="ai-insight-head"><span class="ai-badge"><i class="fa-solid fa-brain"></i>AI</span><span>Analisis</span></div><div class="ai-insight-empty"><i class="fa-solid fa-database"></i>Minimal 2 data per slot diperlukan</div></div>';return;}
-    var h='<div class="ai-insight-card"><div class="ai-insight-head"><span class="ai-badge"><i class="fa-solid fa-brain"></i>AI</span><span>Analisis & Prediksi</span></div><div class="ai-insight-items">';
-    insights.forEach(function(ins){h+='<div class="ai-insight-item"><div class="ai-ii-icon '+ins.type+'"><i class="fa-solid '+ins.icon+'"></i></div><div><div class="ai-ii-text">'+ins.text+'</div>'+(ins.slot?'<div class="ai-ii-slot"><i class="fa-regular fa-clock" style="font-size:8px;margin-right:3px"></i>'+SLOT_LABELS[ins.slot]+'</div>':'')+'</div></div>';});
-    h+='</div></div>';el.innerHTML=h;
+    insights=insights.slice(0,4);
+    if(!insights.length){el.innerHTML='<div class="ai-insight-card"><div class="ai-insight-head"><span class="ai-badge"><i class="fa-solid fa-brain"></i>AI</span><span>Analisis</span></div><div class="ai-insight-empty"><i class="fa-solid fa-database"></i>Minimal 2 data per slot diperlukan untuk analisis AI</div></div>';return;}
+    var html='<div class="ai-insight-card"><div class="ai-insight-head"><span class="ai-badge"><i class="fa-solid fa-brain"></i>AI</span><span>Analisis Mingguan</span></div><div class="ai-insight-items">';
+    insights.forEach(function(ins){html+='<div class="ai-insight-item"><div class="ai-ii-icon '+ins.type+'"><i class="fa-solid '+ins.icon+'"></i></div><div><div class="ai-ii-text">'+ins.text+'</div>'+(ins.slot?'<div class="ai-ii-slot"><i class="fa-regular fa-clock" style="font-size:8px;margin-right:3px"></i>'+SLOT_LABELS[ins.slot]+'</div>':'')+'</div></div>';});
+    html+='</div></div>';el.innerHTML=html;
 }
 
 /* ====================================================================
-   PROGRESS & INPUT
+   PROGRESS
    ==================================================================== */
 function updateProgress(){
     var today=getTodayKey(),td=state.data.filter(function(e){return normalizeDate(e.date)===today;});
-    var done={};SLOTS.forEach(function(s){done[s.slot]=false;});td.forEach(function(e){if(done.hasOwnProperty(e.slot))done[e.slot]=true;});
+    var done={};SLOTS.forEach(function(s){done[s.slot]=false;});
+    td.forEach(function(e){if(done.hasOwnProperty(e.slot))done[e.slot]=true;});
     var doneCount=Object.values(done).filter(function(v){return v;}).length;
     var statDoneEl=document.getElementById('statDone');if(statDoneEl)statDoneEl.textContent=doneCount;
     document.querySelectorAll('.p-slot').forEach(function(el){var slot=el.dataset.slot;if(done[slot])el.classList.add('done');else el.classList.remove('done');});
     document.querySelectorAll('.slot-btn').forEach(function(b){if(done[b.dataset.slot])b.classList.add('done-slot');else b.classList.remove('done-slot');});
     if(done['levemir'])levemirBtn.classList.add('done');else levemirBtn.classList.remove('done');
-    if(state.selectedSlot){var isDup=done[state.selectedSlot];gdsInput.disabled=isDup;submitBtn.disabled=isDup||!gdsInput.value.trim();var note=document.getElementById('dupNote');if(isDup){note.style.display='flex';var sObj=SLOTS.find(function(s){return s.slot===state.selectedSlot;});document.getElementById('dupNoteText').textContent=(sObj?sObj.label:'')+' sudah tercatat.';}else note.style.display='none';}
+    if(state.selectedSlot){var isDup=done[state.selectedSlot];gdsInput.disabled=isDup;submitBtn.disabled=isDup||!gdsInput.value.trim();var note=document.getElementById('dupNote');if(isDup){note.style.display='flex';var sObj=SLOTS.find(function(s){return s.slot===state.selectedSlot;});document.getElementById('dupNoteText').textContent=(sObj?sObj.label:'')+' sudah tercatat untuk hari ini.';}else note.style.display='none';}
 }
 
+/* ====================================================================
+   INPUT
+   ==================================================================== */
 var gdsInput=document.getElementById('gdsInput'),submitBtn=document.getElementById('submitBtn'),levemirBtn=document.getElementById('levemirBtn'),resultCard=document.getElementById('resultCard'),inputRow=document.getElementById('inputRow');
 function selectSlot(slot){
-    var today=getTodayKey(),isDup=state.data.some(function(e){return normalizeDate(e.date)===today&&e.slot===slot;});
-    if(isDup&&slot!=='levemir'){gdsInput.disabled=true;submitBtn.disabled=true;gdsInput.value='';var note=document.getElementById('dupNote');note.style.display='flex';var sObj=SLOTS.find(function(s){return s.slot===slot;});document.getElementById('dupNoteText').textContent=(sObj?sObj.label:'')+' sudah tercatat.';}
+    var today=getTodayKey();
+    var isDup=state.data.some(function(e){return normalizeDate(e.date)===today&&e.slot===slot;});
+    if(isDup&&slot!=='levemir'){gdsInput.disabled=true;submitBtn.disabled=true;gdsInput.value='';var note=document.getElementById('dupNote');note.style.display='flex';var sObj=SLOTS.find(function(s){return s.slot===slot;});document.getElementById('dupNoteText').textContent=(sObj?sObj.label:'')+' sudah tercatat untuk hari ini.';}
     else{document.getElementById('dupNote').style.display='none';gdsInput.disabled=false;}
     state.selectedSlot=slot;
     document.querySelectorAll('.slot-btn').forEach(function(b){b.classList.toggle('active',b.dataset.slot===slot);});
@@ -673,106 +664,125 @@ async function handleSubmit(){
     if(!slot||slot==='levemir'||isNaN(gdsVal)||gdsVal<0)return;
     if(state.data.some(function(e){return normalizeDate(e.date)===getTodayKey()&&e.slot===slot;})){showToast('Data sudah tercatat hari ini','error');return;}
     var s=SLOTS.find(function(s){return s.slot===slot;}),cat=getCat(gdsVal);
-    var standardDose=null,standardReason='';
-    if(s.type==='gds-insulin'){standardDose=calcStandardDose(gdsVal,slot);standardReason=getStandardReason(gdsVal);}
-    var ai=null;
-    if(s.type==='gds-insulin')ai=aiRecommend(slot,standardDose,gdsVal);
-    var finalDose=standardDose,usedAi=false;
-    if(ai&&ai.hasData){finalDose=ai.aiDose;usedAi=true;}
 
-    /* ====== PREDIKSI UNTUK SLOT YANG SAMA ====== */
-    /* Simulasikan data ini masuk, lalu hitung prediksi selanjutnya */
-    var predForNext=null;
-    if(s.type==='gds-insulin'||s.type==='gds-only'){
-        /* Buat data sementara termasuk entry ini */
-        var tempData=state.data.slice();
-        tempData.unshift({date:getTodayKey(),time:getTimeStr(),slot:slot,gds:gdsVal,dose:finalDose,doseType:s.type==='gds-insulin'?'rapid':null});
-        var origData=state.data;state.data=tempData;
-        predForNext=predictNextGds(slot);
-        state.data=origData;
+    /* ====== DOSIS STANDAR (formula asli, tetap dipakai) ====== */
+    var standardDose=null;
+    var standardReason='';
+    if(s.type==='gds-insulin'){
+        standardDose=calcStandardDose(gdsVal,slot);
+        standardReason=getStandardReason(gdsVal);
     }
+
+    /* ====== REKOMENDASI AI (tambahan di atas standar) ====== */
+    var ai=null;
+    if(s.type==='gds-insulin'){
+        ai=aiRecommend(slot,standardDose,gdsVal);
+    }
+
+    /* Dosis yang disimpan = rekomendasi AI jika ada data,否则 standar */
+    var finalDose=standardDose;
+    var usedAi=false;
+    if(ai&&ai.hasData){finalDose=ai.aiDose;usedAi=true;}
 
     var entry={date:getTodayKey(),time:getTimeStr(),slot:slot,gds:gdsVal,dose:finalDose,doseType:s.type==='gds-insulin'?'rapid':null,category:cat.cls,aiGenerated:usedAi,standardDose:standardDose};
 
     /* ====== BUILD RESULT CARD ====== */
     if(s.type==='gds-insulin'){
         var catIcon=cat.cls==='good'?'fa-circle-check':cat.cls==='warn'?'fa-circle-exclamation':'fa-triangle-exclamation';
-        var nh='';if(gdsVal>300)nh='<div class="result-note danger-note"><i class="fa-solid fa-triangle-exclamation"></i>GDS sangat tinggi! Segera konsultasi.</div>';else if(gdsVal<70)nh='<div class="result-note danger-note"><i class="fa-solid fa-triangle-exclamation"></i>Hipoglikemia terdeteksi!</div>';
+        var nh='';
+        if(gdsVal>300)nh='<div class="result-note danger-note"><i class="fa-solid fa-triangle-exclamation"></i>GDS sangat tinggi! Segera konsultasi.</div>';
+        else if(gdsVal<70)nh='<div class="result-note danger-note"><i class="fa-solid fa-triangle-exclamation"></i>Hipoglikemia terdeteksi!</div>';
+
+        /* --- Dual dose boxes --- */
         var doseDualHtml='<div class="dose-dual">';
         doseDualHtml+='<div class="dose-box standard"><div class="dose-pick-badge">Standar</div><div class="dose-box-label">Dosis Standar</div><div class="dose-box-val">'+standardDose+'<span class="dose-box-unit"> unit</span></div><div class="dose-box-sub">'+standardReason+'</div></div>';
-        doseDualHtml+='<div class="dose-box '+(usedAi?'ai-recommend':'final-pick')+'"><div class="dose-pick-badge">'+(usedAi?'AI':'Digunakan')+'</div><div class="dose-box-label">'+(usedAi?'Rekomendasi AI':'Dosis Akhir')+'</div><div class="dose-box-val">'+(usedAi?ai.aiDose:standardDose)+'<span class="dose-box-unit"> unit</span></div><div class="dose-box-sub">'+(usedAi?'Berdasarkan analisis history':'Karena belum ada data history')+'</div></div></div>';
+        doseDualHtml+='<div class="dose-box '+(usedAi?'ai-recommend':'final-pick')+'"><div class="dose-pick-badge">'+(usedAi?'AI':'Digunakan')+'</div><div class="dose-box-label">'+(usedAi?'Rekomendasi AI':'Dosis Akhir')+'</div><div class="dose-box-val">'+(usedAi?ai.aiDose:standardDose)+'<span class="dose-box-unit"> unit</span></div><div class="dose-box-sub">'+(usedAi?'Berdasarkan analisis history':'Karena belum ada data history')+'</div></div>';
+        doseDualHtml+='</div>';
+
+        /* --- AI Panel (hanya jika ada data) --- */
         var aiPanelHtml='';
         if(usedAi){
-            var confPct=ai.confidence==='high'?85:ai.confidence==='medium'?55:25;var confLabel=ai.confidence==='high'?'Tinggi':ai.confidence==='medium'?'Sedang':'Rendah';
-            var tIcon='',tCls='',tText='';
-            if(ai.trend==='improving'){tIcon='fa-arrow-trend-down';tCls='improving';tText='Tren membaik';if(ai.trendSlope)tText+=' (~'+Math.round(Math.abs(ai.trendSlope))+' mg/dL/hari)';}
-            else if(ai.trend==='worsening'){tIcon='fa-arrow-trend-up';tCls='worsening';tText='Tren memburuk';if(ai.trendSlope)tText+=' (~'+Math.round(ai.trendSlope)+' mg/dL/hari)';}
-            else if(ai.isVolatile){tIcon='fa-wave-square';tCls='volatile';tText='Fluktuatif (SD='+ai.stdDev+')';}
-            else{tIcon='fa-minus';tCls='stable';tText='Stabil (avg: '+ai.trendAvg+')';}
-            var rHtml='';ai.reasons.forEach(function(r){rHtml+='<div class="ai-reason"><i class="fa-solid fa-circle"></i><span>'+r+'</span></div>';});
-            var dv=ai.aiAdjustment,ds=dv>0?'+'+dv:dv===0?'0 (sesuai)':String(dv),di=dv>0?'fa-arrow-up':dv<0?'fa-arrow-down':'fa-equals';
-            aiPanelHtml='<div class="ai-panel"><div class="ai-panel-head"><span class="ai-badge"><i class="fa-solid fa-brain"></i>AI Dose Advisor</span><div class="ai-confidence '+ai.confidence+'"><span>'+confLabel+'</span><div class="ai-confidence-bar"><div class="ai-confidence-fill" style="width:'+confPct+'%"></div></div></div></div><div class="ai-trend-row"><div class="ai-trend-icon '+tCls+'"><i class="fa-solid '+tIcon+'"></i></div><span class="ai-trend-text">'+tText+'</span></div><div class="ai-reasons">'+rHtml+'</div><div class="ai-diff-row"><i class="fa-solid '+di+'"></i><span>Penyesuaian AI terhadap dosis standar</span><span class="ai-diff-val">'+ds+' unit</span></div><div style="margin-top:8px;font-size:9px;color:var(--muted);opacity:.7;text-align:center">Berdasarkan '+ai.dataPoints+' GDS & '+ai.dosePairs+' data dosis</div></div>';
-        }else{aiPanelHtml='<div class="ai-panel"><div class="ai-panel-head"><span class="ai-badge"><i class="fa-solid fa-brain"></i>AI</span></div><div class="ai-no-data">Belum cukup data untuk rekomendasi AI. Saat ini menggunakan dosis standar.</div></div>';}
+            var confPct=ai.confidence==='high'?85:ai.confidence==='medium'?55:25;
+            var confLabel=ai.confidence==='high'?'Tinggi':ai.confidence==='medium'?'Sedang':'Rendah';
+            var trendIcon='',trendCls='',trendText='';
+            if(ai.trend==='improving'){trendIcon='fa-arrow-trend-down';trendCls='improving';trendText='Tren membaik';if(ai.trendSlope)trendText+=' (~'+Math.round(Math.abs(ai.trendSlope))+' mg/dL/hari)';}
+            else if(ai.trend==='worsening'){trendIcon='fa-arrow-trend-up';trendCls='worsening';trendText='Tren memburuk';if(ai.trendSlope)trendText+=' (~'+Math.round(ai.trendSlope)+' mg/dL/hari)';}
+            else if(ai.isVolatile){trendIcon='fa-wave-square';trendCls='volatile';trendText='Fluktuatif (SD='+ai.stdDev+')';}
+            else{trendIcon='fa-minus';trendCls='stable';trendText='Stabil (avg: '+ai.trendAvg+')';}
 
-        /* ====== PREDIKSI PANEL ====== */
-        var predHtml='';
-        if(predForNext){
-            var pCatCls=predForNext.cat.cls;
-            var pColor=pCatCls==='good'?'var(--accent)':pCatCls==='warn'?'var(--warning)':'var(--danger)';
-            var pConfLabel=predForNext.confidence==='high'?'Tinggi':predForNext.confidence==='medium'?'Sedang':'Rendah';
-            var predReasonsHtml='';predForNext.reasons.forEach(function(r){predReasonsHtml+='<div class="ai-reason"><i class="fa-solid fa-circle"></i><span>'+r+'</span></div>';});
-            predHtml='<div class="pred-panel" style="margin-top:12px"><div class="pred-panel-head"><span class="pred-badge"><i class="fa-solid fa-wand-magic-sparkles"></i>Prediksi</span><span style="font-size:10px;color:var(--muted);margin-left:auto">GDS '+SLOT_LABELS[slot]+' berikutnya</span></div>'+
-            '<div class="pred-slot-row" style="margin-bottom:10px"><div class="pred-slot-icon"><i class="fa-solid '+(SLOT_ICONS[slot]||'fa-droplet')+'"></i></div><div class="pred-slot-info"><div class="pred-slot-name">Prediksi berikutnya</div><div class="pred-slot-time">Confidence: '+pConfLabel+' &bull; '+predForNext.dataPoints+' data</div></div><div class="pred-slot-right"><div class="pred-slot-val" style="color:'+pColor+'">'+predForNext.predicted+'</div><div class="pred-slot-range">'+predForNext.low+' — '+predForNext.high+'</div><span class="pred-slot-cat '+pCatCls+'">'+predForNext.cat.label+'</span></div></div>'+
-            '<div class="ai-reasons">'+predReasonsHtml+'</div>'+
-            (pCatCls==='danger'?'<div class="result-note danger-note" style="margin-top:8px"><i class="fa-solid fa-triangle-exclamation"></i>Prediksi menunjukkan GDS berisiko tinggi pada pengukuran selanjutnya. Pertimbangkan penyesuaian dosis.</div>':'')+
-            (pCatCls==='warn'?'<div class="result-note warn-note" style="margin-top:8px"><i class="fa-solid fa-circle-exclamation"></i>Prediksi menunjukkan GDS di luar rentang normal. Monitor lebih ketat.</div>':'')+
+            var reasonsHtml='';
+            ai.reasons.forEach(function(r){reasonsHtml+='<div class="ai-reason"><i class="fa-solid fa-circle"></i><span>'+r+'</span></div>';});
+
+            var diffVal=ai.aiAdjustment;
+            var diffStr=diffVal>0?'+'+diffVal:diffVal===0?'0 (sesuai)':String(diffVal);
+            var diffIcon=diffVal>0?'fa-arrow-up':diffVal<0?'fa-arrow-down':'fa-equals';
+
+            aiPanelHtml='<div class="ai-panel">'+
+                '<div class="ai-panel-head">'+
+                    '<span class="ai-badge"><i class="fa-solid fa-brain"></i>AI Dose Advisor</span>'+
+                    '<div class="ai-confidence '+ai.confidence+'">'+
+                        '<span>'+confLabel+'</span>'+
+                        '<div class="ai-confidence-bar"><div class="ai-confidence-fill" style="width:'+confPct+'%"></div></div>'+
+                    '</div>'+
+                '</div>'+
+                '<div class="ai-trend-row"><div class="ai-trend-icon '+trendCls+'"><i class="fa-solid '+trendIcon+'"></i></div><span class="ai-trend-text">'+trendText+'</span></div>'+
+                '<div class="ai-reasons">'+reasonsHtml+'</div>'+
+                '<div class="ai-diff-row"><i class="fa-solid '+diffIcon+'"></i><span>Penyesuaian AI terhadap dosis standar</span><span class="ai-diff-val">'+diffStr+' unit</span></div>'+
+                '<div style="margin-top:8px;font-size:9px;color:var(--muted);opacity:.7;text-align:center">Berdasarkan '+ai.dataPoints+' GDS & '+ai.dosePairs+' data dosis — selalu konsultasi dokter</div>'+
             '</div>';
         }else{
-            predHtml='<div class="pred-panel" style="margin-top:12px"><div class="pred-panel-head"><span class="pred-badge"><i class="fa-solid fa-wand-magic-sparkles"></i>Prediksi</span></div><div class="pred-no-data">Minimal 3 data pada slot ini diperlukan untuk prediksi GDS berikutnya.</div></div>';
+            aiPanelHtml='<div class="ai-panel"><div class="ai-panel-head"><span class="ai-badge"><i class="fa-solid fa-brain"></i>AI</span></div><div class="ai-no-data">Belum cukup data history untuk rekomendasi AI. Minimal 2 data GDS + 1 data dosis pada slot ini diperlukan. Saat ini menggunakan dosis standar.</div></div>';
         }
 
-        resultCard.innerHTML='<div class="result-top"><div class="result-top-icon '+cat.cls+'"><i class="fa-solid '+catIcon+'"></i></div><div class="result-top-text"><div class="rt-label">GDS '+s.label+'</div><div class="rt-value '+cat.cls+'">'+gdsVal+' <small style="font-size:12px;font-weight:400;color:var(--muted)">mg/dL</small><span class="rt-tag '+cat.cls+'">'+cat.label+'</span></div></div></div><div class="result-body">'+doseDualHtml+nh+aiPanelHtml+predHtml+'</div>';
+        resultCard.innerHTML='<div class="result-top"><div class="result-top-icon '+cat.cls+'"><i class="fa-solid '+catIcon+'"></i></div><div class="result-top-text"><div class="rt-label">GDS '+s.label+'</div><div class="rt-value '+cat.cls+'">'+gdsVal+' <small style="font-size:12px;font-weight:400;color:var(--muted)">mg/dL</small><span class="rt-tag '+cat.cls+'">'+cat.label+'</span></div></div></div><div class="result-body">'+doseDualHtml+nh+aiPanelHtml+'</div>';
     }else{
         var catIcon2=cat.cls==='good'?'fa-circle-check':cat.cls==='warn'?'fa-circle-exclamation':'fa-triangle-exclamation';
-        /* Prediksi untuk dini-hari juga */
-        var predInline='';
-        if(predForNext){
-            var pc=predForNext.cat.cls;
-            predInline='<div class="pred-result-inline"><i class="fa-solid fa-wand-magic-sparkles"></i><div class="pri-text">Prediksi GDS berikutnya: <strong>'+predForNext.predicted+' mg/dL</strong> ('+predForNext.low+'—'+predForNext.high+')</div><div class="pri-val" style="color:var(--'+pc+(pc==='good'?'):'>')+'">'+predForNext.predicted+'<small>'+predForNext.cat.label+'</small></div></div>';
-        }
-        resultCard.innerHTML='<div class="result-top"><div class="result-top-icon '+cat.cls+'"><i class="fa-solid '+catIcon2+'"></i></div><div class="result-top-text"><div class="rt-label">GDS Dini Hari</div><div class="rt-value '+cat.cls+'">'+gdsVal+' <small style="font-size:12px;font-weight:400;color:var(--muted)">mg/dL</small><span class="rt-tag '+cat.cls+'">'+cat.label+'</span></div></div></div><div class="result-body">'+predInline+'</div>';
+        resultCard.innerHTML='<div class="result-top"><div class="result-top-icon '+cat.cls+'"><i class="fa-solid '+catIcon2+'"></i></div><div class="result-top-text"><div class="rt-label">GDS Dini Hari</div><div class="rt-value '+cat.cls+'">'+gdsVal+' <small style="font-size:12px;font-weight:400;color:var(--muted)">mg/dL</small><span class="rt-tag '+cat.cls+'">'+cat.label+'</span></div></div></div><div class="result-body"></div>';
     }
+
     resultCard.classList.add('show');
     var ok=await submitData(entry);
-    if(ok){showToast('Data tersimpan — dosis '+(usedAi?'AI-recommended':'standar')+': '+finalDose+' unit');state.data.unshift(entry);updateProgress();renderDietCompact();renderAiInsights();renderPredHome();gdsInput.value='';state.selectedSlot='';document.querySelectorAll('.slot-btn').forEach(function(b){b.classList.remove('active');});document.querySelectorAll('.p-slot').forEach(function(el){el.classList.remove('active-slot');});inputRow.style.display='flex';levemirBtn.style.display='none';updateSubmitBtn();try{Telegram.WebApp.HapticFeedback.notificationOccurred('success');}catch(e){}}else showToast('Gagal menyimpan','error');
+    if(ok){showToast('Data tersimpan — dosis '+(usedAi?'AI-recommended':'standar')+': '+finalDose+' unit');state.data.unshift(entry);updateProgress();renderDietCompact();renderAiInsights();gdsInput.value='';state.selectedSlot='';document.querySelectorAll('.slot-btn').forEach(function(b){b.classList.remove('active');});document.querySelectorAll('.p-slot').forEach(function(el){el.classList.remove('active-slot');});inputRow.style.display='flex';levemirBtn.style.display='none';updateSubmitBtn();try{Telegram.WebApp.HapticFeedback.notificationOccurred('success');}catch(e){}}else showToast('Gagal menyimpan','error');
 }
 
-async function handleLevemir(){var entry={date:getTodayKey(),time:getTimeStr(),slot:'levemir',gds:null,dose:LEVEMIR_DOSE,doseType:'levemir',category:'good',aiGenerated:false};if(state.data.some(function(e){return normalizeDate(e.date)===getTodayKey()&&e.slot==='levemir';})){showToast('Levemir sudah tercatat hari ini','error');return;}var ok=await submitData(entry);if(ok){showToast('Levemir 8 unit tercatat');state.data.unshift(entry);updateProgress();renderDietCompact();try{Telegram.WebApp.HapticFeedback.notificationOccurred('success');Telegram.WebApp.close();}catch(e){}}else showToast('Gagal menyimpan','error');}
+async function handleLevemir(){
+    var entry={date:getTodayKey(),time:getTimeStr(),slot:'levemir',gds:null,dose:LEVEMIR_DOSE,doseType:'levemir',category:'good',aiGenerated:false};
+    if(state.data.some(function(e){return normalizeDate(e.date)===getTodayKey()&&e.slot==='levemir';})){showToast('Levemir sudah tercatat hari ini','error');return;}
+    var ok=await submitData(entry);
+    if(ok){showToast('Levemir 8 unit tercatat');state.data.unshift(entry);updateProgress();renderDietCompact();try{Telegram.WebApp.HapticFeedback.notificationOccurred('success');Telegram.WebApp.close();}catch(e){}}else showToast('Gagal menyimpan','error');
+}
 
 /* ====================================================================
    CHARTS
    ==================================================================== */
 function initGdsChart(){var ctx=document.getElementById('gdsCanvas').getContext('2d');state.gdsChart=new Chart(ctx,{type:'line',data:{labels:[],datasets:[{label:'GDS',data:[],borderWidth:2.5,tension:.35,fill:false,borderColor:'#00E5A0',pointBackgroundColor:'#00E5A0',pointBorderColor:'#00E5A0',pointRadius:5,pointHoverRadius:7}]},options:{responsive:true,interaction:{intersect:false,mode:'index'},plugins:{legend:{display:false},tooltip:{backgroundColor:'#142540',titleColor:'#EDF0F5',bodyColor:'#C8D0DC',borderColor:'#1C3258',borderWidth:1,cornerRadius:10,padding:12,titleFont:{family:'Space Grotesk',weight:'600'},bodyFont:{family:'Space Grotesk'}}},scales:{x:{grid:{color:'rgba(30,39,68,.5)',drawBorder:false},ticks:{color:'#5E7490',font:{family:'Space Grotesk',size:10},maxRotation:45}},y:{grid:{color:'rgba(30,39,68,.5)',drawBorder:false},ticks:{color:'#5E7490',font:{family:'Space Grotesk',size:11}},beginAtZero:false}}}});}
-function renderGdsChart(){if(!state.gdsChart)return;var entries=filterByPeriod(state.data.filter(function(e){return e.gds!=null;}),gdsPeriod);if(gdsSlot!=='all')entries=entries.filter(function(e){return e.slot===gdsSlot;});entries.sort(function(a,b){var da=new Date(normalizeDate(a.date)+'T'+(a.time||'00:00')),db=new Date(normalizeDate(b.date)+'T'+(b.time||'00:00'));return da-db;});state.gdsChart.data.labels=entries.map(function(e){return fmtLabel(e.date,e.time);});state.gdsChart.data.datasets[0].data=entries.map(function(e){return e.gds;});var colors=entries.map(function(e){return ptColor(e.gds);});state.gdsChart.data.datasets[0].pointBackgroundColor=colors;state.gdsChart.data.datasets[0].pointBorderColor=colors;state.gdsChart.data.datasets[0].pointRadius=5;state.gdsChart.data.datasets[0].pointHoverRadius=7;state.gdsChart.update();var vals=entries.map(function(e){return e.gds;});var stats=calcStats(vals);var el=document.getElementById('gdsStats');if(el){if(!vals.length){el.innerHTML='<div class="dose-stat total-stat"><div class="dv">-</div><div class="dl">Min</div></div><div class="dose-stat total-stat"><div class="dv">-</div><div class="dl">Max</div></div><div class="dose-stat total-stat"><div class="dv">-</div><div class="dl">Avg</div></div><div class="dose-stat total-stat"><div class="dv">0</div><div class="dl">Data</div></div>';return;}el.innerHTML='<div class="dose-stat total-stat"><div class="dv">'+stats.min+'</div><div class="dl">Min</div></div><div class="dose-stat total-stat"><div class="dv">'+stats.max+'</div><div class="dl">Max</div></div><div class="dose-stat total-stat"><div class="dv">'+stats.avg+'</div><div class="dl">Avg</div></div><div class="dose-stat total-stat"><div class="dv">'+vals.length+'</div><div class="dl">Data</div></div>';}}
+function renderGdsChart(){if(!state.gdsChart)return;var entries=filterByPeriod(state.data.filter(function(e){return e.gds!=null;}),gdsPeriod);if(gdsSlot!=='all')entries=entries.filter(function(e){return e.slot===gdsSlot;});entries.sort(function(a,b){var da=new Date(normalizeDate(a.date)+'T'+(a.time||'00:00')),db=new Date(normalizeDate(b.date)+'T'+(b.time||'00:00'));return da-db;});var labels=entries.map(function(e){return fmtLabel(e.date,e.time);}),vals=entries.map(function(e){return e.gds;}),colors=entries.map(function(e){return ptColor(e.gds);});state.gdsChart.data.labels=labels;state.gdsChart.data.datasets[0].data=vals;state.gdsChart.data.datasets[0].pointBackgroundColor=colors;state.gdsChart.data.datasets[0].pointBorderColor=colors;state.gdsChart.data.datasets[0].pointRadius=5;state.gdsChart.data.datasets[0].pointHoverRadius=7;state.gdsChart.update();var stats=calcStats(vals);var statsEl=document.getElementById('gdsStats');if(statsEl){if(!vals.length){statsEl.innerHTML='<div class="dose-stat total-stat"><div class="dv">-</div><div class="dl">Min</div></div><div class="dose-stat total-stat"><div class="dv">-</div><div class="dl">Max</div></div><div class="dose-stat total-stat"><div class="dv">-</div><div class="dl">Avg</div></div><div class="dose-stat total-stat"><div class="dv">0</div><div class="dl">Data</div></div>';return;}statsEl.innerHTML='<div class="dose-stat total-stat"><div class="dv">'+stats.min+'</div><div class="dl">Min</div></div><div class="dose-stat total-stat"><div class="dv">'+stats.max+'</div><div class="dl">Max</div></div><div class="dose-stat total-stat"><div class="dv">'+stats.avg+'</div><div class="dl">Avg</div></div><div class="dose-stat total-stat"><div class="dv">'+vals.length+'</div><div class="dl">Data</div></div>';}}
 function initDoseChart(){var ctx=document.getElementById('doseCanvas').getContext('2d');state.doseChart=new Chart(ctx,{type:'bar',data:{labels:[],datasets:[{label:'Insulin',data:[],borderWidth:0,borderRadius:6,backgroundColor:'#4D94FF'},{label:'Levemir',data:[],borderWidth:0,borderRadius:6,backgroundColor:'#FFB547'}]},options:{responsive:true,interaction:{intersect:false,mode:'index'},plugins:{legend:{display:false},tooltip:{backgroundColor:'#142540',titleColor:'#EDF0F5',bodyColor:'#C8D0DC',borderColor:'#1C3258',borderWidth:1,cornerRadius:10,padding:12,titleFont:{family:'Space Grotesk',weight:'600'},bodyFont:{family:'Space Grotesk'}}},scales:{x:{grid:{display:false},ticks:{color:'#5E7490',font:{family:'Space Grotesk',size:10},maxRotation:45}},y:{grid:{color:'rgba(30,39,68,.5)',drawBorder:false},ticks:{color:'#5E7490',font:{family:'Space Grotesk',size:11},stepSize:1},beginAtZero:true}}}});}
-function renderDoseChart(){if(!state.doseChart)return;var entries=filterByPeriod(state.data,dosePeriod);if(doseSlot!=='all')entries=entries.filter(function(e){return e.slot===doseSlot;});var grouped={};entries.forEach(function(e){var d=normalizeDate(e.date);if(!grouped[d])grouped[d]={ins:0,lev:0};if(e.doseType==='rapid')grouped[d].ins+=e.dose;if(e.doseType==='levemir')grouped[d].lev+=e.dose;});var dates=Object.keys(grouped).sort();state.doseChart.data.labels=dates;state.doseChart.data.datasets[0].data=dates.map(function(d){return grouped[d].ins;});state.doseChart.data.datasets[1].data=dates.map(function(d){return grouped[d].lev;});if(doseSlot==='levemir'){state.doseChart.data.datasets[0].hidden=true;state.doseChart.data.datasets[1].hidden=false;}else if(doseSlot==='sarapan'||doseSlot==='siang'||doseSlot==='malam'){state.doseChart.data.datasets[0].hidden=false;state.doseChart.data.datasets[1].hidden=true;}else{state.doseChart.data.datasets[0].hidden=false;state.doseChart.data.datasets[1].hidden=false;}state.doseChart.update();var el=document.getElementById('doseStats');if(!el)return;var iA=[],lA=[];entries.forEach(function(e){if(e.doseType==='rapid')iA.push(e.dose||0);if(e.doseType==='levemir')lA.push(e.dose||0);});var iS=calcStats(iA),lS=calcStats(lA),iSm=iA.reduce(function(a,b){return a+b;},0),lSm=lA.reduce(function(a,b){return a+b;},0);var sI=(doseSlot==='all'||doseSlot==='sarapan'||doseSlot==='siang'||doseSlot==='malam'),sL=(doseSlot==='all'||doseSlot==='levemir');function sc(arr,st,sum,cls){if(!arr.length)return'<div class="dose-stat '+cls+'"><div class="dv">-</div><div class="dl">Min</div></div><div class="dose-stat '+cls+'"><div class="dv">-</div><div class="dl">Max</div></div><div class="dose-stat '+cls+'"><div class="dv">-</div><div class="dl">Avg</div></div><div class="dose-stat '+cls+'"><div class="dv">-</div><div class="dl">Tot</div></div>';return'<div class="dose-stat '+cls+'"><div class="dv">'+st.min+'</div><div class="dl">Min</div></div><div class="dose-stat '+cls+'"><div class="dv">'+st.max+'</div><div class="dl">Max</div></div><div class="dose-stat '+cls+'"><div class="dv">'+st.avg+'</div><div class="dl">Avg</div></div><div class="dose-stat '+cls+'"><div class="dv">'+sum+'</div><div class="dl">Tot</div></div>';}var h='';if(sI)h+=sc(iA,iS,iSm,'insulin-stat');if(sL)h+=sc(lA,lS,lSm,'levemir-stat');if(!h)h='<div class="dose-stat total-stat" style="grid-column:1/-1"><div class="dv">-</div><div class="dl">Tidak ada data</div></div>';el.innerHTML=h;}
+function renderDoseChart(){if(!state.doseChart)return;var entries=filterByPeriod(state.data,dosePeriod);if(doseSlot!=='all')entries=entries.filter(function(e){return e.slot===doseSlot;});var grouped={};entries.forEach(function(e){var d=normalizeDate(e.date);if(!grouped[d])grouped[d]={ins:0,lev:0};if(e.doseType==='rapid')grouped[d].ins+=e.dose;if(e.doseType==='levemir')grouped[d].lev+=e.dose;});var dates=Object.keys(grouped).sort();state.doseChart.data.labels=dates;state.doseChart.data.datasets[0].data=dates.map(function(d){return grouped[d].ins;});state.doseChart.data.datasets[1].data=dates.map(function(d){return grouped[d].lev;});if(doseSlot==='levemir'){state.doseChart.data.datasets[0].hidden=true;state.doseChart.data.datasets[1].hidden=false;}else if(doseSlot==='sarapan'||doseSlot==='siang'||doseSlot==='malam'){state.doseChart.data.datasets[0].hidden=false;state.doseChart.data.datasets[1].hidden=true;}else{state.doseChart.data.datasets[0].hidden=false;state.doseChart.data.datasets[1].hidden=false;}state.doseChart.update();var statsEl=document.getElementById('doseStats');if(!statsEl)return;var insulinArr=[],levemirArr=[];entries.forEach(function(e){if(e.doseType==='rapid')insulinArr.push(e.dose||0);if(e.doseType==='levemir')levemirArr.push(e.dose||0);});var insStats=calcStats(insulinArr),levStats=calcStats(levemirArr);var insSum=insulinArr.reduce(function(a,b){return a+b;},0),levSum=levemirArr.reduce(function(a,b){return a+b;},0);var showIns=(doseSlot==='all'||doseSlot==='sarapan'||doseSlot==='siang'||doseSlot==='malam');var showLev=(doseSlot==='all'||doseSlot==='levemir');function sc(arr,st,sum,cls){if(!arr.length)return'<div class="dose-stat '+cls+'"><div class="dv">-</div><div class="dl">Min</div></div><div class="dose-stat '+cls+'"><div class="dv">-</div><div class="dl">Max</div></div><div class="dose-stat '+cls+'"><div class="dv">-</div><div class="dl">Avg</div></div><div class="dose-stat '+cls+'"><div class="dv">-</div><div class="dl">Tot</div></div>';return'<div class="dose-stat '+cls+'"><div class="dv">'+st.min+'</div><div class="dl">Min</div></div><div class="dose-stat '+cls+'"><div class="dv">'+st.max+'</div><div class="dl">Max</div></div><div class="dose-stat '+cls+'"><div class="dv">'+st.avg+'</div><div class="dl">Avg</div></div><div class="dose-stat '+cls+'"><div class="dv">'+sum+'</div><div class="dl">Tot</div></div>';}var html='';if(showIns)html+=sc(insulinArr,insStats,insSum,'insulin-stat');if(showLev)html+=sc(levemirArr,levStats,levSum,'levemir-stat');if(!html)html='<div class="dose-stat total-stat" style="grid-column:1/-1"><div class="dv">-</div><div class="dl">Tidak ada data</div></div>';statsEl.innerHTML=html;}
 
 /* ====================================================================
    HISTORY
    ==================================================================== */
-function renderHistory(){var entries=filterByPeriod(state.data,historyPeriod);var list=document.getElementById('historyList');if(!list)return;if(!entries.length){list.innerHTML='<div class="empty-box"><i class="fa-solid fa-clipboard-list"></i><p>Belum ada data riwayat</p></div>';return;}var grouped={};entries.forEach(function(e){var d=normalizeDate(e.date);if(!grouped[d])grouped[d]=[];grouped[d].push(e);});var html='';Object.keys(grouped).sort().reverse().forEach(function(date){html+='<div class="hp-date-label"><i class="fa-regular fa-calendar" style="font-size:10px"></i>'+date+'</div>';grouped[date].forEach(function(e){var cat=getCat(e.gds);var icon='fa-droplet',iconClass='gds';var valHtml='',badge='';if(e.doseType==='rapid'){icon='fa-syringe';iconClass=(e.gds&&(e.gds>300||e.gds<70))?'high':'insulin';var gc=e.gds?(cat.cls==='good'?'var(--accent)':cat.cls==='warn'?'var(--warning)':'var(--danger)'):'var(--muted)';valHtml='<div class="hp-item-val" style="'+(e.gds?'color:'+gc:'')+'">'+(e.gds?e.gds+' mg/dL':'—')+'</div>';if(e.dose)valHtml+='<div class="hp-item-dose">'+(e.aiGenerated?'<i class="fa-solid fa-brain" style="font-size:8px;color:var(--ai)"></i>':'<i class="fa-solid fa-syringe"></i>')+e.dose+' unit'+(e.standardDose&&e.standardDose!==e.dose?' <span style="font-size:9px;color:var(--muted);font-weight:400">(std:'+e.standardDose+')</span>':'')+'</div>';badge='<span class="hp-item-badge ins-b">Insulin'+(e.aiGenerated?' +AI':'')+'</span>';}else if(e.doseType==='levemir'){icon='fa-syringe';iconClass='levemir';valHtml='<div class="hp-item-val levemir-v">'+(e.dose?e.dose+' unit':'—')+'</div>';badge='<span class="hp-item-badge lev-b">Levemir</span>';}else{iconClass=(e.gds&&(e.gds>300||e.gds<70))?'high':'gds';valHtml='<div class="hp-item-val '+(e.gds?cat.cls:'')+'-v">'+(e.gds?e.gds+' mg/dL':'—')+'</div>';badge='<span class="hp-item-badge gds-b">GDS</span>';}html+='<div class="hp-item"><div class="hp-item-icon '+iconClass+'"><i class="fa-solid '+icon+'"></i></div><div class="hp-item-info"><div class="hp-item-title">'+e.slot+'</div><div class="hp-item-sub"><i class="fa-regular fa-clock"></i>'+e.time+'</div></div><div class="hp-item-right">'+valHtml+badge+'</div></div>';});});list.innerHTML=html;}
+function renderHistory(){var entries=filterByPeriod(state.data,historyPeriod);var list=document.getElementById('historyList');if(!list)return;if(!entries.length){list.innerHTML='<div class="empty-box"><i class="fa-solid fa-clipboard-list"></i><p>Belum ada data riwayat</p></div>';return;}var grouped={};entries.forEach(function(e){var d=normalizeDate(e.date);if(!grouped[d])grouped[d]=[];grouped[d].push(e);});var html='';Object.keys(grouped).sort().reverse().forEach(function(date){html+='<div class="hp-date-label"><i class="fa-regular fa-calendar" style="font-size:10px"></i>'+date+'</div>';grouped[date].forEach(function(e){var cat=getCat(e.gds);var icon='fa-droplet',iconClass='gds';var valHtml='',badge='';if(e.doseType==='rapid'){icon='fa-syringe';iconClass=(e.gds&&(e.gds>300||e.gds<70))?'high':'insulin';var gdsColor=e.gds?(cat.cls==='good'?'var(--accent)':cat.cls==='warn'?'var(--warning)':'var(--danger)'):'var(--muted)';valHtml='<div class="hp-item-val" style="'+(e.gds?'color:'+gdsColor:'')+'">'+(e.gds?e.gds+' mg/dL':'—')+'</div>';if(e.dose)valHtml+='<div class="hp-item-dose">'+(e.aiGenerated?'<i class="fa-solid fa-brain" style="font-size:8px;color:var(--ai)"></i>':'<i class="fa-solid fa-syringe"></i>')+e.dose+' unit'+(e.standardDose&&e.standardDose!==e.dose?' <span style="font-size:9px;color:var(--muted);font-weight:400">(std:'+e.standardDose+')</span>':'')+'</div>';badge='<span class="hp-item-badge ins-b">Insulin'+(e.aiGenerated?' +AI':'')+'</span>';}else if(e.doseType==='levemir'){icon='fa-syringe';iconClass='levemir';valHtml='<div class="hp-item-val levemir-v">'+(e.dose?e.dose+' unit':'—')+'</div>';badge='<span class="hp-item-badge lev-b">Levemir</span>';}else{iconClass=(e.gds&&(e.gds>300||e.gds<70))?'high':'gds';valHtml='<div class="hp-item-val '+(e.gds?cat.cls:'')+'-v">'+(e.gds?e.gds+' mg/dL':'—')+'</div>';badge='<span class="hp-item-badge gds-b">GDS</span>';}html+='<div class="hp-item"><div class="hp-item-icon '+iconClass+'"><i class="fa-solid '+icon+'"></i></div><div class="hp-item-info"><div class="hp-item-title">'+e.slot+'</div><div class="hp-item-sub"><i class="fa-regular fa-clock"></i>'+e.time+'</div></div><div class="hp-item-right">'+valHtml+badge+'</div></div>';});});list.innerHTML=html;}
 
 /* ====================================================================
    DIET
    ==================================================================== */
-var DIET_UI=[{slot:'makan-pagi',time:'06:00',label:'Makan Pagi',icon:'fa-mug-hot',color:'var(--warning)',bg:'var(--warning-dim)',target:'KH 45g | Protein 18g',menu:'Nasi 100 gram, Telur 1.5 butir, Sayur 75 gram'},{slot:'snack-pagi',time:'09:00',label:'Snack Pagi',icon:'fa-glass-water',color:'var(--accent)',bg:'var(--accent-dim)',target:'KH 23g | Protein 9g',menu:'Susu isocal 200 ml (42 gram)'},{slot:'makan-siang',time:'12:00',label:'Makan Siang',icon:'fa-bowl-food',color:'var(--warning)',bg:'var(--warning-dim)',target:'KH 56g | Protein 23g',menu:'Nasi 100 gram, Lauk hewani 50 gram, Tempe 50 gram, Sayur 75 gram'},{slot:'snack-siang',time:'15:00',label:'Snack Siang',icon:'fa-apple-whole',color:'var(--accent)',bg:'var(--accent-dim)',target:'KH 23g | Protein 9g',menu:'Buah 1 penukar, Telur rebus 1 butir, Gabin 2 keping'},{slot:'makan-sore',time:'18:00',label:'Makan Sore',icon:'fa-plate-wheat',color:'var(--warning)',bg:'var(--warning-dim)',target:'KH 56g | Protein 23g',menu:'Nasi 100 gram, Lauk hewani 50 gram, Tempe 50 gram, Sayur 75 gram'},{slot:'snack-malam',time:'21:00',label:'Snack Malam',icon:'fa-moon',color:'var(--accent)',bg:'var(--accent-dim)',target:'KH 23g | Protein 9g',menu:'Susu isocal 200 ml (42 gram)'}];
+var DIET_UI=[
+    {slot:'makan-pagi',time:'06:00',label:'Makan Pagi',icon:'fa-mug-hot',color:'var(--warning)',bg:'var(--warning-dim)',target:'KH 45g | Protein 18g',menu:'Nasi 100 gram, Telur 1.5 butir, Sayur 75 gram (lauk tidak perlu digoreng)'},
+    {slot:'snack-pagi',time:'09:00',label:'Snack Pagi',icon:'fa-glass-water',color:'var(--accent)',bg:'var(--accent-dim)',target:'KH 23g | Protein 9g',menu:'Susu isocal 200 ml (42 gram)'},
+    {slot:'makan-siang',time:'12:00',label:'Makan Siang',icon:'fa-bowl-food',color:'var(--warning)',bg:'var(--warning-dim)',target:'KH 56g | Protein 23g',menu:'Nasi 100 gram, Lauk hewani 50 gram, Tempe 50 gram, Sayur 75 gram (tanpa tepung)'},
+    {slot:'snack-siang',time:'15:00',label:'Snack Siang',icon:'fa-apple-whole',color:'var(--accent)',bg:'var(--accent-dim)',target:'KH 23g | Protein 9g',menu:'Buah 1 penukar, Telur rebus 1 butir, Gabin 2 keping'},
+    {slot:'makan-sore',time:'18:00',label:'Makan Sore',icon:'fa-plate-wheat',color:'var(--warning)',bg:'var(--warning-dim)',target:'KH 56g | Protein 23g',menu:'Nasi 100 gram, Lauk hewani 50 gram, Tempe 50 gram, Sayur 75 gram (tanpa tepung)'},
+    {slot:'snack-malam',time:'21:00',label:'Snack Malam',icon:'fa-moon',color:'var(--accent)',bg:'var(--accent-dim)',target:'KH 23g | Protein 9g',menu:'Susu isocal 200 ml (42 gram)'}
+];
 function renderDiet(){var list=document.getElementById('dietList');if(!list)return;var today=getTodayKey(),todayData=state.data.filter(function(e){return normalizeDate(e.date)===today;});var html='';DIET_UI.forEach(function(d){var isDone=todayData.some(function(e){return e.slot===d.slot;});html+='<div class="hp-item" style="flex-wrap:wrap;'+(isDone?'opacity:0.4;pointer-events:none;':'')+'"><div class="hp-item-icon" style="background:'+d.bg+';color:'+d.color+'"><i class="fa-solid '+d.icon+'"></i></div><div class="hp-item-info" style="flex:1;min-width:120px"><div class="hp-item-title" style="display:flex;align-items:center;gap:6px">'+d.label+(isDone?' <i class="fa-solid fa-circle-check" style="font-size:11px;color:var(--accent)"></i>':'')+'</div><div class="hp-item-sub"><i class="fa-regular fa-clock"></i>'+d.time+' &bull; '+d.target+'</div><div style="font-size:11px;color:var(--fg2);margin-top:4px;line-height:1.4">'+d.menu+'</div></div></div>';});list.innerHTML=html;}
 function renderDietCompact(){var el=document.getElementById('dietCompact');if(!el)return;var today=getTodayKey(),todayData=state.data.filter(function(e){return normalizeDate(e.date)===today;});var html='';DIET_UI.forEach(function(d){var isDone=todayData.some(function(e){return e.slot===d.slot;});html+='<div class="diet-compact-item"><div class="diet-compact-icon" style="background:'+d.bg+';color:'+d.color+'"><i class="fa-solid '+d.icon+'"></i></div><div class="diet-compact-info"><div class="diet-compact-label">'+d.label+'</div><div class="diet-compact-sub">'+d.time+' &bull; '+d.target+'</div></div><div class="diet-compact-check '+(isDone?'done':'')+'"><i class="fa-solid '+(isDone?'fa-circle-check':'fa-circle')+'"></i></div></div>';});el.innerHTML=html;}
 
 /* ====================================================================
    TABLES
    ==================================================================== */
-function renderGdsTable(){var wrap=document.getElementById('gdsTableWrap');if(!wrap)return;var entries=filterByPeriod(state.data.filter(function(e){return e.gds!=null;}),gdsPeriod);if(gdsSlot!=='all')entries=entries.filter(function(e){return e.slot===gdsSlot;});if(!entries.length){wrap.innerHTML='<div class="empty-box" style="padding:24px 20px"><i class="fa-solid fa-table"></i><p>Tidak ada data</p></div>';return;}var COLS=gdsSlot==='all'?['dini-hari','sarapan','siang','malam']:[gdsSlot];var CL={'dini-hari':'Dini Hari',sarapan:'Sarapan',siang:'Siang',malam:'Malam'};var grouped={};entries.forEach(function(e){var d=normalizeDate(e.date);if(!grouped[d])grouped[d]={};grouped[d][e.slot]=e.gds;});var dates=Object.keys(grouped).sort().reverse();if(dates.length>14)dates=dates.slice(0,14);var allVals=[];dates.forEach(function(d){COLS.forEach(function(s){if(grouped[d][s]!=null)allVals.push(grouped[d][s]);});});var stats=calcStats(allVals);var h='<table class="data-table"><thead><tr><th>Tanggal</th>';COLS.forEach(function(s){h+='<th>'+CL[s]+'</th>';});if(gdsSlot==='all')h+='<th>Rata²</th>';h+='</tr></thead><tbody>';dates.forEach(function(d){var dd=new Date(d+'T00:00:00');var label=isNaN(dd.getTime())?d:dd.toLocaleDateString('id-ID',{day:'numeric',month:'short'});h+='<tr><td>'+label+'</td>';var rv=[];COLS.forEach(function(s){var v=grouped[d][s];if(v==null)h+='<td><span class="cell-val empty">—</span></td>';else{rv.push(v);h+='<td><span class="cell-val '+getCat(v).cls+'">'+v+'</span></td>';}});if(gdsSlot==='all'&&rv.length){var a=Math.round(rv.reduce(function(a,b){return a+b;},0)/rv.length);h+='<td><span class="cell-val '+getCat(a).cls+'">'+a+'</span></td>';}else if(gdsSlot==='all')h+='<td><span class="cell-val empty">—</span></td>';h+='</tr>';});h+='<tr style="background:var(--card2)"><td class="row-total" style="padding-left:14px">Rata²</td>';COLS.forEach(function(s){var cv=[];dates.forEach(function(d){if(grouped[d][s]!=null)cv.push(grouped[d][s]);});if(cv.length){var a=Math.round(cv.reduce(function(a,b){return a+b;},0)/cv.length);h+='<td><span class="cell-val '+getCat(a).cls+'">'+a+'</span></td>';}else h+='<td><span class="cell-val empty">—</span></td>';});if(gdsSlot==='all'&&allVals.length)h+='<td><span class="cell-val '+getCat(stats.avg).cls+'" style="font-size:13px">'+stats.avg+'</span></td>';else if(gdsSlot==='all')h+='<td><span class="cell-val empty">—</span></td>';h+='</tr></tbody></table>';wrap.innerHTML=h;}
+function renderGdsTable(){var wrap=document.getElementById('gdsTableWrap');if(!wrap)return;var entries=filterByPeriod(state.data.filter(function(e){return e.gds!=null;}),gdsPeriod);if(gdsSlot!=='all')entries=entries.filter(function(e){return e.slot===gdsSlot;});if(!entries.length){wrap.innerHTML='<div class="empty-box" style="padding:24px 20px"><i class="fa-solid fa-table"></i><p>Tidak ada data</p></div>';return;}var GDS_COLS=gdsSlot==='all'?['dini-hari','sarapan','siang','malam']:[gdsSlot];var CL={'dini-hari':'Dini Hari',sarapan:'Sarapan',siang:'Siang',malam:'Malam'};var grouped={};entries.forEach(function(e){var d=normalizeDate(e.date);if(!grouped[d])grouped[d]={};grouped[d][e.slot]=e.gds;});var dates=Object.keys(grouped).sort().reverse();if(dates.length>14)dates=dates.slice(0,14);var allVals=[];dates.forEach(function(d){GDS_COLS.forEach(function(s){if(grouped[d][s]!=null)allVals.push(grouped[d][s]);});});var stats=calcStats(allVals);var h='<table class="data-table"><thead><tr><th>Tanggal</th>';GDS_COLS.forEach(function(s){h+='<th>'+CL[s]+'</th>';});if(gdsSlot==='all')h+='<th>Rata²</th>';h+='</tr></thead><tbody>';dates.forEach(function(d){var dd=new Date(d+'T00:00:00');var label=isNaN(dd.getTime())?d:dd.toLocaleDateString('id-ID',{day:'numeric',month:'short'});h+='<tr><td>'+label+'</td>';var rowVals=[];GDS_COLS.forEach(function(s){var v=grouped[d][s];if(v==null)h+='<td><span class="cell-val empty">—</span></td>';else{rowVals.push(v);var cat=getCat(v);h+='<td><span class="cell-val '+cat.cls+'">'+v+'</span></td>';}});if(gdsSlot==='all'&&rowVals.length){var avg=Math.round(rowVals.reduce(function(a,b){return a+b;},0)/rowVals.length);h+='<td><span class="cell-val '+getCat(avg).cls+'">'+avg+'</span></td>';}else if(gdsSlot==='all')h+='<td><span class="cell-val empty">—</span></td>';h+='</tr>';});h+='<tr style="background:var(--card2)"><td class="row-total" style="padding-left:14px">Rata²</td>';GDS_COLS.forEach(function(s){var colVals=[];dates.forEach(function(d){if(grouped[d][s]!=null)colVals.push(grouped[d][s]);});if(colVals.length){var avg=Math.round(colVals.reduce(function(a,b){return a+b;},0)/colVals.length);h+='<td><span class="cell-val '+getCat(avg).cls+'">'+avg+'</span></td>';}else h+='<td><span class="cell-val empty">—</span></td>';});if(gdsSlot==='all'&&allVals.length)h+='<td><span class="cell-val '+getCat(stats.avg).cls+'" style="font-size:13px">'+stats.avg+'</span></td>';else if(gdsSlot==='all')h+='<td><span class="cell-val empty">—</span></td>';h+='</tr></tbody></table>';wrap.innerHTML=h;}
 function renderDoseTable(){var wrap=document.getElementById('doseTableWrap');if(!wrap)return;var entries=filterByPeriod(state.data,dosePeriod);if(doseSlot!=='all')entries=entries.filter(function(e){return e.slot===doseSlot;});if(!entries.length){wrap.innerHTML='<div class="empty-box" style="padding:24px 20px"><i class="fa-solid fa-table"></i><p>Tidak ada data</p></div>';return;}var DC=doseSlot==='all'?['sarapan','siang','malam','levemir']:[doseSlot];var CL={sarapan:'Sarapan',siang:'Siang',malam:'Malam',levemir:'Levemir'};var CT={sarapan:'rapid',siang:'rapid',malam:'rapid',levemir:'levemir'};var grouped={};entries.forEach(function(e){var d=normalizeDate(e.date);if(!grouped[d])grouped[d]={};if(!grouped[d][e.slot])grouped[d][e.slot]={dose:0};if(e.dose!=null)grouped[d][e.slot].dose+=e.dose;});var dates=Object.keys(grouped).sort().reverse();if(dates.length>14)dates=dates.slice(0,14);var h='<table class="data-table"><thead><tr><th>Tanggal</th>';DC.forEach(function(s){h+='<th>'+CL[s]+'</th>';});h+='<th>Total</th></tr></thead><tbody>';var gt=0;dates.forEach(function(d){var dd=new Date(d+'T00:00:00');var label=isNaN(dd.getTime())?d:dd.toLocaleDateString('id-ID',{day:'numeric',month:'short'});h+='<tr><td>'+label+'</td>';var rt=0;DC.forEach(function(s){var info=grouped[d][s];var v=info&&info.dose?info.dose:0;rt+=v;var cc=CT[s]==='levemir'?'levemir-c':'insulin-c';h+='<td><span class="cell-val '+(v?cc:'empty')+'">'+(v?v+'<span class="cell-dose-unit"> u</span>':'—')+'</span></td>';});gt+=rt;h+='<td><span class="cell-val '+(rt?'good':'empty')+'" style="font-size:13px">'+(rt?rt+'<span class="cell-dose-unit"> u</span>':'—')+'</span></td></tr>';});h+='<tr style="background:var(--card2)"><td class="row-total" style="padding-left:14px">Total</td>';DC.forEach(function(s){var ct=0;dates.forEach(function(d){var info=grouped[d][s];if(info&&info.dose)ct+=info.dose;});var cc=CT[s]==='levemir'?'levemir-c':'insulin-c';h+='<td><span class="cell-val '+(ct?cc:'empty')+'">'+(ct?ct+'<span class="cell-dose-unit"> u</span>':'—')+'</span></td>';});h+='<td><span class="cell-val good" style="font-size:13px">'+(gt?gt+'<span class="cell-dose-unit"> u</span>':'—')+'</span></td></tr></tbody></table>';wrap.innerHTML=h;}
 
 /* ====================================================================
@@ -787,16 +797,20 @@ document.getElementById('historyFilters').addEventListener('click',function(e){v
 /* ====================================================================
    COUNTDOWN
    ==================================================================== */
-var SCHED=[{hour:2,minute:0,slot:'dini-hari',label:'Cek GDS Dini Hari'},{hour:6,minute:0,slot:'sarapan',label:'GDS + Insulin'},{hour:9,minute:0,slot:'snack-pagi',label:'Snack Pagi',autoDone:true},{hour:12,minute:0,slot:'siang',label:'GDS + Insulin'},{hour:15,minute:0,slot:'snack-siang',label:'Snack Siang',autoDone:true},{hour:18,minute:0,slot:'malam',label:'GDS + Insulin'},{hour:20,minute:0,slot:'levemir',label:'Suntik Levemir'},{hour:21,minute:0,slot:'snack-malam',label:'Snack Malam',autoDone:true}];
-function updateCountdown(){var now=new Date(),nowT=now.getHours()*60+now.getMinutes(),today=getTodayKey();var todayData=state.data.filter(function(e){return normalizeDate(e.date)===today;});var done={};SCHED.forEach(function(s){done[s.slot]=todayData.some(function(e){return e.slot===s.slot;});if(s.autoDone&&!done[s.slot]){if(nowT>=s.hour*60+s.minute)done[s.slot]=true;}});var next=null;for(var i=0;i<SCHED.length;i++){var s=SCHED[i];if(done[s.slot])continue;var sT=s.hour*60+s.minute;if(sT>nowT){if(!next||sT<next.total)next={hour:s.hour,minute:s.minute,label:s.label,total:sT,tomorrow:false};}else if(!next){next={hour:s.hour,minute:s.minute,label:s.label,total:sT+1440,tomorrow:true};}}if(!next){var f=SCHED[0];next={hour:f.hour,minute:f.minute,label:f.label,total:f.hour*60+f.minute+1440,tomorrow:true};}var diff=next.total-nowT,h=Math.floor(diff/60),m=diff%60;document.getElementById('nrLabel').textContent=(next.tomorrow?'Besok ':'')+String(next.hour).padStart(2,'0')+':'+String(next.minute).padStart(2,'0')+' '+next.label.split('+')[0].trim();document.getElementById('nrCountdown').textContent=String(h).padStart(2,'0')+':'+String(m).padStart(2,'0');SCHED.forEach(function(s){var sT=s.hour*60+s.minute;if(!done[s.slot]&&Math.abs(nowT-sT)<=15){var el=document.querySelector('.p-slot[data-slot="'+s.slot+'"]');if(el&&!el.classList.contains('active-slot'))el.classList.add('active-slot');}});}
+var SCHEDULES_CK=[{hour:2,minute:0,slot:'dini-hari',label:'Cek GDS Dini Hari'},{hour:6,minute:0,slot:'sarapan',label:'GDS + Insulin'},{hour:9,minute:0,slot:'snack-pagi',label:'Snack Pagi',autoDone:true},{hour:12,minute:0,slot:'siang',label:'GDS + Insulin'},{hour:15,minute:0,slot:'snack-siang',label:'Snack Siang',autoDone:true},{hour:18,minute:0,slot:'malam',label:'GDS + Insulin'},{hour:20,minute:0,slot:'levemir',label:'Suntik Levemir'},{hour:21,minute:0,slot:'snack-malam',label:'Snack Malam',autoDone:true}];
+function updateCountdown(){var now=new Date(),nowT=now.getHours()*60+now.getMinutes(),today=getTodayKey();var todayData=state.data.filter(function(e){return normalizeDate(e.date)===today;});var done={};SCHEDULES_CK.forEach(function(s){done[s.slot]=todayData.some(function(e){return e.slot===s.slot;});if(s.autoDone&&!done[s.slot]){var sT2=s.hour*60+s.minute;if(nowT>=sT2)done[s.slot]=true;}});var next=null;for(var i=0;i<SCHEDULES_CK.length;i++){var s=SCHEDULES_CK[i];if(done[s.slot])continue;var sT=s.hour*60+s.minute;if(sT>nowT){if(!next||sT<next.total)next={hour:s.hour,minute:s.minute,label:s.label,total:sT,tomorrow:false};}else if(!next){next={hour:s.hour,minute:s.minute,label:s.label,total:sT+1440,tomorrow:true};}}if(!next){var f=SCHEDULES_CK[0];next={hour:f.hour,minute:f.minute,label:f.label,total:f.hour*60+f.minute+1440,tomorrow:true};}var diff=next.total-nowT,h=Math.floor(diff/60),m=diff%60;document.getElementById('nrLabel').textContent=(next.tomorrow?'Besok ':'')+String(next.hour).padStart(2,'0')+':'+String(next.minute).padStart(2,'0')+' '+next.label.split('+')[0].trim();document.getElementById('nrCountdown').textContent=String(h).padStart(2,'0')+':'+String(m).padStart(2,'0');SCHEDULES_CK.forEach(function(s){var sT=s.hour*60+s.minute;if(!done[s.slot]&&Math.abs(nowT-sT)<=15){var el=document.querySelector('.p-slot[data-slot="'+s.slot+'"]');if(el&&!el.classList.contains('active-slot'))el.classList.add('active-slot');}});}
 
 /* ====================================================================
-   AUTO REFRESH & INIT
+   AUTO REFRESH
    ==================================================================== */
 var lastLength=0;
-setInterval(async function(){var nd=await fetchData();if(nd.length!==lastLength){lastLength=nd.length;state.data=nd;if(state.currentPage==='gdsPage'){renderGdsChart();renderGdsTable();}else if(state.currentPage==='dosePage'){renderDoseChart();renderDoseTable();}else if(state.currentPage==='historyPage')renderHistory();else if(state.currentPage==='dietPage')renderDiet();else{updateProgress();renderDietCompact();renderAiInsights();renderPredHome();}updateCountdown();}},5000);
+setInterval(async function(){var newData=await fetchData();if(newData.length!==lastLength){lastLength=newData.length;state.data=newData;if(state.currentPage==='gdsPage'){renderGdsChart();renderGdsTable();}else if(state.currentPage==='dosePage'){renderDoseChart();renderDoseTable();}else if(state.currentPage==='historyPage')renderHistory();else if(state.currentPage==='dietPage')renderDiet();else{updateProgress();renderDietCompact();renderAiInsights();}updateCountdown();}},5000);
+
+/* ====================================================================
+   INIT
+   ==================================================================== */
 var params=new URLSearchParams(window.location.search);var autoSlot=params.get('slot');
-async function init(){state.data=await fetchData();updateProgress();renderDietCompact();renderAiInsights();renderPredHome();updateCountdown();if(autoSlot)selectSlot(autoSlot);setInterval(updateCountdown,1000);}
+async function init(){state.data=await fetchData();updateProgress();renderDietCompact();renderAiInsights();updateCountdown();if(autoSlot)selectSlot(autoSlot);setInterval(updateCountdown,1000);}
 init();
 </script>
 </body>
